@@ -1073,6 +1073,25 @@
       opacity: 0.55;
     }
 
+    .modal-types .type-card.disabled {
+      background: #f7f9fc;
+      border-color: #e5e9f2;
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .modal-types .type-card.disabled:hover {
+      border-color: #e5e9f2;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .modal-types .type-card.disabled .type-k,
+    .modal-types .type-card.disabled .type-d {
+      color: #98a2b3;
+    }
+
     .type-k {
       color: var(--ink);
       font-weight: 850;
@@ -6470,7 +6489,7 @@
 <div class="divider"></div>
 <div class="subtle">
         顶部是一级模块，左侧随模块展开。<br/>
-        面向：主端、会员、生态。<br/>
+        面向：主端、生态、下载等数仓主题域。<br/>
         SQL 标签由数分维护，业务侧默认只使用。
       </div>
 </aside>
@@ -6549,13 +6568,13 @@
 <button class="data-pending-subitem active" data-pending-nav-tab="table" type="button">表确认 <em>0</em></button>
 <button class="data-pending-subitem" data-pending-nav-tab="field" type="button">字段确认 <em>0</em></button>
 </div>
-<button class="data-nav-item active" data-asset-type="event"><span class="data-nav-dot"></span>元事件 <em>86</em></button>
-<button class="data-nav-item" data-asset-type="event_property"><span class="data-nav-dot"></span>事件属性 <em>214</em></button>
-<button class="data-nav-item" data-asset-type="user_property"><span class="data-nav-dot"></span>用户属性 <em>126</em></button>
+<button class="data-nav-item active" data-asset-type="event"><span class="data-nav-dot"></span>元事件 <em>0</em></button>
+<button class="data-nav-item" data-asset-type="event_property"><span class="data-nav-dot"></span>事件属性 <em>0</em></button>
+<button class="data-nav-item" data-asset-type="user_property"><span class="data-nav-dot"></span>用户属性 <em>0</em></button>
 <div class="data-nav-title">扩展资产</div>
-<button class="data-nav-item" data-asset-type="dict"><span class="data-nav-dot"></span>属性字典 <em>39</em></button>
-<button class="data-nav-item" data-asset-type="table"><span class="data-nav-dot"></span>数据表 <em>77</em></button>
-<button class="data-nav-item" data-asset-type="metric"><span class="data-nav-dot"></span>指标 <em>47</em></button>
+<button class="data-nav-item" data-asset-type="dict"><span class="data-nav-dot"></span>属性字典 <em>0</em></button>
+<button class="data-nav-item" data-asset-type="table"><span class="data-nav-dot"></span>数据表 <em>0</em></button>
+<button class="data-nav-item" data-asset-type="metric"><span class="data-nav-dot"></span>指标 <em>0</em></button>
 </aside>
 <div class="panel data-asset-main-panel">
 <div class="panel-head data-asset-head">
@@ -6633,8 +6652,8 @@
 <div class="modal pending-adjust-modal">
 <div class="modal-head">
 <div>
-<div class="panel-title">修改推荐结论</div>
-<div class="panel-sub" id="pendingAdjustSub">先确认该字段实际是否需要生成资产，再进入确认页。</div>
+<div class="panel-title">字段修改类型</div>
+<div class="panel-sub" id="pendingAdjustSub">确认字段实际生成类型，保存后返回字段确认页。</div>
 </div>
 <button class="close-btn" id="closePendingAdjust" type="button">×</button>
 </div>
@@ -6646,7 +6665,8 @@
 </div>
 <div class="pending-adjust-section" id="pendingAdjustTypeSection">
 <div class="pending-adjust-title">生成为什么资产</div>
-<div class="pending-adjust-options pending-type-options" id="pendingAdjustTypeOptions"></div>
+<select class="select pending-adjust-select" id="pendingAdjustTypeOptions"></select>
+<div class="pending-adjust-select-desc" id="pendingAdjustTypeDesc"></div>
 </div>
 <label class="pending-adjust-reason">
 <span>调整原因</span>
@@ -6655,7 +6675,7 @@
 </div>
 <div class="modal-footer pending-adjust-footer">
 <button class="btn" id="cancelPendingAdjust" type="button">取消</button>
-<button class="btn primary" id="confirmPendingAdjust" type="button">下一步确认资产</button>
+<button class="btn primary" id="confirmPendingAdjust" type="button">确认修改</button>
 </div>
 </div>
 </div>
@@ -6731,7 +6751,7 @@
 <div class="topbar">
 <div>
 <h1>标签中心</h1>
-<div class="subline">标签是可复用的用户标签资产；当前目录从元数据中心已确认资产生成，保留规则标签创建与 SQL 标签入口。</div>
+<div class="subline">标签是可复用的用户标签资产；当前目录从元数据中心已确认用户属性同步，规则标签通过无代码规则创建。</div>
 </div>
 </div>
 <div class="panel tag-directory-panel">
@@ -6751,15 +6771,14 @@
 </div>
 <div class="tree-group">
 <div class="tree-title">标签类型</div>
-<div class="tree-row">规则标签 <span class="count">9</span></div>
-<div class="tree-row">模型标签 <span class="count">2</span></div>
-<div class="tree-row">SQL标签 <span class="count">29</span></div>
+<div class="tree-row">原子标签 <span class="count">0</span></div>
+<div class="tree-row">规则标签 <span class="count">0</span></div>
 </div>
 </div>
 <div class="content">
 <div class="filters tag-filter-grid">
 <div class="tag-filter-field search"><label>搜索</label><input class="field" id="tagSearch" placeholder="搜索标签名/业务口径"/></div>
-<div class="tag-filter-field"><label>业务域</label><select class="select" id="tagDomainFilter"><option>全部</option><option>公共</option><option>主端</option><option>会员</option><option>生态</option><option>广告</option><option>下载</option><option>云盘</option><option>播放</option><option>搜索</option><option>触达</option><option>中台</option></select></div>
+<div class="tag-filter-field"><label>业务域</label><select class="select" id="tagDomainFilter"><option>全部</option><option>公共</option><option>主端</option><option>播放</option><option>分享</option><option>活跃</option><option>取回</option><option>生态</option><option>搜索</option><option>下载</option><option>云存储</option><option>云添加</option><option>转存</option><option>最右广告</option><option>无</option></select></div>
 <div class="tag-filter-field"><label>值类型</label><select class="select" id="tagValueFilter"><option>全部</option></select></div>
 </div>
 <div class="tag-table-scroll">
@@ -6802,7 +6821,7 @@
         <div class="topbar">
           <div>
             <h1>创建标签</h1>
-            <div class="subline">业务用户走无代码路径，SQL 标签保留给数分维护。</div>
+            <div class="subline">业务用户走无代码规则标签创建；SQL 标签由数分维护，业务侧默认只读。</div>
           </div>
         </div>
 
@@ -6825,7 +6844,7 @@
               <div class="form-row rt-biz-domain-filter">
                 <label>业务域筛选</label>
                 <div class="rt-select-with-clear">
-                  <select class="select" id="tagBizDomain"><option value="">请选择业务域</option><option>广告</option><option>下载</option><option>云盘</option><option>播放</option><option>搜索</option><option>会员</option><option>触达</option><option>生态</option><option>公共</option><option>主端</option><option>中台</option><option>取回</option><option>转存</option><option>分享</option><option>活跃</option></select>
+                  <select class="select" id="tagBizDomain"><option value="">请选择业务域</option><option>公共</option><option>主端</option><option>播放</option><option>分享</option><option>活跃</option><option>取回</option><option>生态</option><option>搜索</option><option>下载</option><option>云存储</option><option>云添加</option><option>转存</option><option>最右广告</option><option>无</option></select>
                   <button class="rt-clear-select" id="clearTagBizDomain" type="button" title="清空业务域">×</button>
                 </div>
               </div>
@@ -6988,24 +7007,14 @@
               <button class="btn primary" id="estimateBtn" style="width:100%;margin-bottom:12px">计算昨日</button>
               <div class="section-title">规则解释</div>
               <ul class="timeline">
-                <li><span>分析对象</span><b>全端用户</b></li>
-                <li><span>窗口</span><b>近7天</b></li>
-                <li><span>判断</span><b>创建下载任务总时长 >= 3</b></li>
-                <li><span>排除</span><b>取回行为</b></li>
+                <li><span>标签类型</span><b>规则标签</b></li>
+                <li><span>规则组成</span><b>待配置</b></li>
+                <li><span>更新方式</span><b>待配置</b></li>
               </ul>
               <div class="section-title" style="margin-top:16px">DSL 预览</div>
               <div class="code" id="dslBox">{
-  "tag_type": "behavior_occur",
-  "subject": "user",
-  "platform": "all",
-  "window": "7d",
-  "rule": {
-    "event": "download_create",
-    "metric": "duration",
-    "op": ">=",
-    "value": 3
-  },
-  "exclude": ["cloud_retrieve"]
+  "tag_type": "rule",
+  "layers": []
 }</div>
             </div>
 
@@ -7497,8 +7506,18 @@ WHERE dt = '${bizdate}'
 <option value="all">全部</option>
 <option>公共</option>
 <option>主端</option>
-<option>会员</option>
+<option>播放</option>
+<option>分享</option>
+<option>活跃</option>
+<option>取回</option>
 <option>生态</option>
+<option>搜索</option>
+<option>下载</option>
+<option>云存储</option>
+<option>云添加</option>
+<option>转存</option>
+<option>最右广告</option>
+<option>无</option>
 </select>
 </div>
 <div class="asset-filter-field">
@@ -7762,13 +7781,13 @@ WHERE dt = '${bizdate}'
 <div class="modal-body">
 <div class="type-grid modal-types">
 <button class="type-card modal-type" data-type="rule"><span class="badge teal">无代码</span><span class="type-k">规则标签</span><span class="type-d">业务最常用 · 多分层 + 多规则组 + 嵌套 且/或。</span></button>
-<button class="type-card modal-type" data-type="lifecycle"><span class="badge blue">无代码</span><span class="type-k">生命周期标签</span><span class="type-d">新增、引入期、成长期、成熟期、沉默。</span></button>
-<button class="type-card modal-type" data-type="rfm"><span class="badge green">无代码</span><span class="type-k">RFM 标签</span><span class="type-d">按近期、频次、金额/价值分层。</span></button>
-<button class="type-card modal-type" data-type="firstlast"><span class="badge violet">无代码</span><span class="type-k">首末次标签</span><span class="type-d">首次/最近一次行为标签。</span></button>
-<button class="type-card modal-type" data-type="stat"><span class="badge amber">无代码</span><span class="type-k">统计标签</span><span class="type-d">近 N 天次数、天数、时长。</span></button>
-<button class="type-card modal-type" data-type="rank"><span class="badge teal">无代码</span><span class="type-k">排序标签</span><span class="type-d">Top 文件类型、常用端、渠道偏好。</span></button>
-<button class="type-card modal-type" data-type="calc"><span class="badge red">无代码</span><span class="type-k">计算标签</span><span class="type-d">毛利、容量使用率、转化率。</span></button>
-<button class="type-card modal-type" data-type="sql"><span class="badge gray">数分维护</span><span class="type-k">SQL 标签</span><span class="type-d">复杂口径由数分编写。</span></button>
+<button class="type-card modal-type disabled" data-type="lifecycle" aria-disabled="true"><span class="badge gray">暂未开放</span><span class="type-k">生命周期标签</span><span class="type-d">新增、引入期、成长期、成熟期、沉默。</span></button>
+<button class="type-card modal-type disabled" data-type="rfm" aria-disabled="true"><span class="badge gray">暂未开放</span><span class="type-k">RFM 标签</span><span class="type-d">按近期、频次、金额/价值分层。</span></button>
+<button class="type-card modal-type disabled" data-type="firstlast" aria-disabled="true"><span class="badge gray">暂未开放</span><span class="type-k">首末次标签</span><span class="type-d">首次/最近一次行为标签。</span></button>
+<button class="type-card modal-type disabled" data-type="stat" aria-disabled="true"><span class="badge gray">暂未开放</span><span class="type-k">统计标签</span><span class="type-d">近 N 天次数、天数、时长。</span></button>
+<button class="type-card modal-type disabled" data-type="rank" aria-disabled="true"><span class="badge gray">暂未开放</span><span class="type-k">排序标签</span><span class="type-d">Top 文件类型、常用端、渠道偏好。</span></button>
+<button class="type-card modal-type disabled" data-type="calc" aria-disabled="true"><span class="badge gray">暂未开放</span><span class="type-k">计算标签</span><span class="type-d">毛利、容量使用率、转化率。</span></button>
+<button class="type-card modal-type" data-type="sql"><span class="badge violet">数分维护</span><span class="type-k">SQL 标签</span><span class="type-d">复杂口径由数分编写，当前保留入口。</span></button>
 </div>
 </div>
 </div>
@@ -7907,7 +7926,7 @@ HarmonyOS"></textarea>
           ["规则标签", "tags", "G"],
           ["模型标签", "tags", "R"],
           ["人群池标签", "tags", "U"],
-          ["SQL 标签", "create", "S"]
+          ["SQL 标签", "create", "S", "", "tags:sql", "sql"]
         ]}
       ],
       segments: [
@@ -7963,11 +7982,12 @@ HarmonyOS"></textarea>
         <div class="nav-title">${group.title}</div>
         ${group.items.map(item => {
           const sideKey = item[4] || `${moduleKey}:${group.title}:${item[0]}:${item[1]}`;
+          const createType = item[5] || "";
           return `
           <button class="nav-item ${currentSideKey === sideKey ? "active" : ""}" data-side-key="${sideKey}" ${
             item[1] === "createModal" ? "data-open-tag-modal=\"true\"" :
             item[1] === "sqlImportModal" ? "data-open-sql-modal=\"true\"" :
-            `data-view="${item[1]}" ${item[3] ? `data-segment-mode="${item[3]}"` : ""}`
+            `data-view="${item[1]}" ${item[3] ? `data-segment-mode="${item[3]}"` : ""} ${createType ? `data-create-type="${createType}"` : ""}`
           }>
             <span class="nav-ico">${item[2]}</span>${item[0]}
           </button>
@@ -7978,7 +7998,11 @@ HarmonyOS"></textarea>
           currentSideKey = btn.dataset.sideKey || "";
           switchView(btn.dataset.view);
           if (btn.dataset.segmentMode) setSegmentMode(btn.dataset.segmentMode);
-          if (btn.textContent.includes("RFM")) setCreateType("rfm");
+          if (btn.dataset.createType) {
+            resetCreateForNew();
+            setCreateType(btn.dataset.createType);
+            if (btn.dataset.createType === "sql") showToast("已进入 SQL 标签页，业务侧默认只读");
+          } else if (btn.textContent.includes("RFM")) setCreateType("rfm");
         });
       });
       side.querySelectorAll("[data-open-tag-modal]").forEach(btn => {
@@ -7999,41 +8023,66 @@ HarmonyOS"></textarea>
 
     const currentAssetOperator = "雷婷婷";
     const currentAssetRole = "业务运营";
-    const metadataDomainOptions = ["公共", "主端", "会员", "生态", "广告", "下载", "云盘", "播放", "搜索", "触达", "中台"];
+    const metadataDomainOptions = ["公共","主端","播放","分享","活跃","取回","生态","搜索","下载","云存储","云添加","转存","最右广告","无"];
     const metadataDomainSet = new Set(metadataDomainOptions);
     function normalizeMetadataDomain(domain) {
       const raw = String(domain || "").trim();
-      const map = { "取回":"云盘", "转存":"云盘", "分享":"生态", "活跃":"主端", "站点":"主端", "全播":"播放", "浏览":"主端" };
-      return metadataDomainSet.has(raw) ? raw : (map[raw] || (raw ? "公共" : "公共"));
+      if (!raw) return "无";
+      const map = {
+        "主端整体": "主端",
+        "主端": "主端",
+        "公共": "公共",
+        "广告": "最右广告",
+        "最右广告": "最右广告",
+        "云盘": "云存储",
+        "云存储": "云存储",
+        "云添加": "云添加",
+        "cloud_add": "云添加",
+        "播放": "播放",
+        "分享": "分享",
+        "活跃": "活跃",
+        "取回": "取回",
+        "生态": "生态",
+        "搜索": "搜索",
+        "下载": "下载",
+        "转存": "转存",
+        "页面": "主端",
+        "浏览": "主端",
+        "站点": "主端",
+        "全播": "播放",
+        "会员": "无",
+        "触达": "无",
+        "中台": "无",
+        "未分配": "无",
+        "-": "无",
+        "无": "无"
+      };
+      return metadataDomainSet.has(raw) ? raw : (map[raw] || "无");
     }
 
-    const curatedTags = [
-      { name: "产品", team: "公共", teamKey: "all", category: "基础画像", type: "原子标签", valueType: "枚举型", cover: "全量", coverValue: 1200, rate: "100%", rateValue: 100, updated: "2026-05-07", update: "T+1", calls: 356, method: "系统预置", status: "已上线", color: "gray" },
-      { name: "平台", team: "公共", teamKey: "all", category: "基础画像", type: "原子标签", valueType: "多值型", cover: "全量", coverValue: 1200, rate: "100%", rateValue: 100, updated: "2026-05-06", update: "实时", calls: 331, method: "系统预置", status: "已上线", color: "gray" },
-      { name: "激活渠道", team: "生态", teamKey: "eco", category: "基础画像", type: "原子标签", valueType: "枚举型", cover: "612.7万", coverValue: 612.7, rate: "49.8%", rateValue: 49.8, updated: "2026-05-06", update: "T+1", calls: 132, method: "系统预置", status: "已上线", color: "teal" },
-      { name: "生命周期阶段", team: "公共", teamKey: "all", category: "基础画像", type: "原子标签", valueType: "枚举型", cover: "892.0万", coverValue: 892, rate: "72.4%", rateValue: 72.4, updated: "2026-05-07", update: "T+1", calls: 286, method: "系统预置", status: "已上线", color: "gray" },
-      { name: "活跃度", team: "公共", teamKey: "all", category: "基础画像", type: "规则标签", valueType: "枚举型", cover: "728.0万", coverValue: 728, rate: "59.1%", rateValue: 59.1, updated: "2026-05-07", update: "T+1", calls: 412, method: "系统预置", status: "已上线", color: "gray" },
+    function metadataDomainColor(domain) {
+      const d = normalizeMetadataDomain(domain);
+      if (["公共", "无"].includes(d)) return "gray";
+      if (d === "生态") return "teal";
+      if (d === "最右广告") return "violet";
+      if (["播放", "分享", "搜索"].includes(d)) return "teal";
+      return "blue";
+    }
 
-      { name: "下载活跃度", team: "主端", teamKey: "main", category: "行为画像", type: "规则标签", valueType: "枚举型", cover: "328.6万", coverValue: 328.6, rate: "26.7%", rateValue: 26.7, updated: "2026-05-07", update: "小时级", calls: 365, method: "系统预置", status: "已上线", color: "blue" },
-      { name: "下载来源", team: "主端", teamKey: "main", category: "行为画像", type: "原子标签", valueType: "枚举型", cover: "328.6万", coverValue: 328.6, rate: "26.7%", rateValue: 26.7, updated: "2026-05-07", update: "T+1", calls: 236, method: "系统预置", status: "已上线", color: "blue" },
-      { name: "云盘活跃度", team: "主端", teamKey: "main", category: "行为画像", type: "规则标签", valueType: "枚举型", cover: "132.3万", coverValue: 132.3, rate: "10.8%", rateValue: 10.8, updated: "2026-05-06", update: "小时级", calls: 103, method: "系统预置", status: "已上线", color: "blue" },
-      { name: "云盘行为类型", team: "主端", teamKey: "main", category: "行为画像", type: "原子标签", valueType: "多值型", cover: "212.9万", coverValue: 212.9, rate: "17.3%", rateValue: 17.3, updated: "2026-05-07", update: "T+1", calls: 126, method: "系统预置", status: "已上线", color: "blue" },
-      { name: "搜索活跃度", team: "主端", teamKey: "main", category: "行为画像", type: "规则标签", valueType: "枚举型", cover: "96.8万", coverValue: 96.8, rate: "7.9%", rateValue: 7.9, updated: "2026-05-05", update: "小时级", calls: 73, method: "系统预置", status: "已上线", color: "blue" },
-      { name: "搜索来源", team: "主端", teamKey: "main", category: "行为画像", type: "原子标签", valueType: "枚举型", cover: "61.4万", coverValue: 61.4, rate: "5.0%", rateValue: 5, updated: "2026-05-05", update: "T+1", calls: 37, method: "规则标签创建", status: "已上线", color: "blue" },
-      { name: "消费活跃度", team: "主端", teamKey: "main", category: "行为画像", type: "规则标签", valueType: "枚举型", cover: "143.7万", coverValue: 143.7, rate: "11.7%", rateValue: 11.7, updated: "2026-05-06", update: "T+1", calls: 89, method: "系统预置", status: "已上线", color: "blue" },
-      { name: "消费类型", team: "主端", teamKey: "main", category: "行为画像", type: "原子标签", valueType: "多值型", cover: "138.2万", coverValue: 138.2, rate: "11.2%", rateValue: 11.2, updated: "2026-05-06", update: "T+1", calls: 64, method: "系统预置", status: "已上线", color: "blue" },
-      { name: "关键行为状态", team: "主端", teamKey: "main", category: "行为画像", type: "规则标签", valueType: "枚举型", cover: "238.1万", coverValue: 238.1, rate: "19.3%", rateValue: 19.3, updated: "2026-05-07", update: "T+1", calls: 188, method: "规则标签创建", status: "已上线", color: "blue" },
+    function metadataDomainTeamKey(domain) {
+      const d = normalizeMetadataDomain(domain);
+      if (d === "生态") return "eco";
+      if (["公共", "无"].includes(d)) return "all";
+      return "main";
+    }
 
-      { name: "会员类型", team: "会员", teamKey: "member", category: "价值分层", type: "原子标签", valueType: "枚举型", cover: "212.4万", coverValue: 212.4, rate: "17.3%", rateValue: 17.3, updated: "2026-05-07", update: "T+1", calls: 376, method: "系统预置", status: "已上线", color: "amber" },
-      { name: "非会员细分", team: "会员", teamKey: "member", category: "价值分层", type: "规则标签", valueType: "枚举型", cover: "96.8万", coverValue: 96.8, rate: "7.9%", rateValue: 7.9, updated: "2026-05-07", update: "T+1", calls: 302, method: "规则标签创建", status: "已上线", color: "amber" },
-      { name: "会员周期", team: "会员", teamKey: "member", category: "价值分层", type: "原子标签", valueType: "枚举型", cover: "212.4万", coverValue: 212.4, rate: "17.3%", rateValue: 17.3, updated: "2026-05-06", update: "T+1", calls: 187, method: "系统预置", status: "已上线", color: "amber" },
-      { name: "RFM客户分层", team: "会员", teamKey: "member", category: "价值分层", type: "模型标签", valueType: "模型型", cover: "286.4万", coverValue: 286.4, rate: "23.3%", rateValue: 23.3, updated: "2026-05-05", update: "每日03:00", calls: 211, method: "RFM模型", status: "已上线", color: "violet" },
+    function metadataDomainCategory(domain) {
+      const d = normalizeMetadataDomain(domain);
+      if (["公共", "无", "生态"].includes(d)) return "基础画像";
+      return "行为画像";
+    }
 
-      { name: "用户价值等级", team: "中台", teamKey: "center", category: "价值分层", type: "模型标签", valueType: "枚举型", cover: "286.4万", coverValue: 286.4, rate: "23.3%", rateValue: 23.3, updated: "2026-05-05", update: "T+1", calls: 148, method: "计算标签", status: "已上线", color: "gray" },
-      { name: "客诉等级", team: "中台", teamKey: "center", category: "价值分层", type: "原子标签", valueType: "枚举型", cover: "8.2万", coverValue: 8.2, rate: "0.7%", rateValue: 0.7, updated: "2026-05-06", update: "T+1", calls: 26, method: "系统预置", status: "已上线", color: "gray" },
-      { name: "毛利贡献", team: "中台", teamKey: "center", category: "价值分层", type: "规则标签", valueType: "枚举型", cover: "89.7万", coverValue: 89.7, rate: "7.3%", rateValue: 7.3, updated: "2026-05-03", update: "T+1", calls: 41, method: "规则标签创建", status: "已上线", color: "gray" },
-      { name: "闲忙时偏好", team: "中台", teamKey: "center", category: "价值分层", type: "规则标签", valueType: "枚举型", cover: "46.3万", coverValue: 46.3, rate: "3.8%", rateValue: 3.8, updated: "2026-05-04", update: "T+1", calls: 58, method: "规则标签创建", status: "已上线", color: "gray" }
-    ];
+    const curatedTags = [];
 
     const tagRows = document.getElementById("tagRows");
     const tagSortState = { key: "calls", dir: "desc" };
@@ -8114,7 +8163,7 @@ HarmonyOS"></textarea>
           <td>${escapeHtml(t.valueType)}</td>
           <td>${escapeHtml(t.updated)}</td>
           <td>${escapeHtml(t.update)}</td>
-          <td>${t.calls}</td>
+          <td>${escapeHtml(t.calls ?? 0)}</td>
           <td>${escapeHtml(normalizeTagCreateMethod(t.method))}</td>
           <td><span class="badge ${t.status === "已上线" ? "green" : t.status === "待上线" ? "amber" : "gray"}">${escapeHtml(t.status)}</span></td>
           <td><span class="tag-action-cell">
@@ -8151,9 +8200,8 @@ HarmonyOS"></textarea>
       "基础画像": { type: "category", value: "基础画像" },
       "行为画像": { type: "category", value: "行为画像" },
       "价值分层": { type: "category", value: "价值分层" },
-      "规则标签": { type: "type", value: "规则标签" },
-      "模型标签": { type: "type", value: "模型标签" },
-      "SQL标签": { type: "type", value: "SQL标签" }
+      "原子标签": { type: "type", value: "原子标签" },
+      "规则标签": { type: "type", value: "规则标签" }
     };
     window.tagSideFilter = { type: "quick", value: "all", key: "全部标签" };
 
@@ -8286,6 +8334,7 @@ HarmonyOS"></textarea>
       ensureSelectOption(document.getElementById("tagBizDomain"), tag.team || "主端");
       ensureSelectOption(document.getElementById("tagCategory1"), tag.category === "价值分层" ? "价值分层" : tag.category || "行为画像");
       ensureSelectOption(document.getElementById("tagCategory2"), tag.category2 || (tag.category === "行为画像" ? "广告意向" : ""));
+      if (typeof currentCreateType !== "undefined") currentCreateType = "rule";
       initXunleiRuleState();
       renderCreateConfig("rule");
       updateCreatePreview("rule");
@@ -8297,7 +8346,8 @@ HarmonyOS"></textarea>
       const h = document.querySelector("#view-create h1");
       if (h) h.textContent = "创建标签";
       const sub = document.querySelector("#view-create .subline");
-      if (sub) sub.textContent = "业务用户走无代码路径，SQL 标签保留给数分维护。";
+      if (sub) sub.textContent = "业务用户走无代码规则标签创建；SQL 标签由数分维护，业务侧默认只读。";
+      if (typeof currentCreateType !== "undefined") currentCreateType = "rule";
       const btn = document.getElementById("createRuleLabel");
       if (btn) btn.textContent = "创建";
       document.getElementById("tagDisplayName") && (document.getElementById("tagDisplayName").value = "");
@@ -9889,20 +9939,22 @@ HarmonyOS"></textarea>
       return warehouseIsBehaviorTable(table) && CONTEXT_FIELD_PATTERNS.some(re => re.test(name));
     }
     function warehouseBizDomainFrom(table, field) {
-      const raw = warehouseSafeText(table.domain) || "公共";
-      const name = `${warehouseSafeText(table.name)} ${warehouseSafeText(table.display)} ${warehouseSafeText(field?.name)} ${warehouseSafeText(field?.desc)}`;
-      if (/广告|ad_/.test(name)) return "广告";
-      if (/下载|download|subtask/.test(name)) return "下载";
-      if (/播放|play|video|player/.test(name)) return "播放";
-      if (/搜索|search|browser|url/.test(name)) return "搜索";
-      if (/会员|vip|pay|支付/.test(name)) return "会员";
-      if (/云添加|cloud_add|云盘|xlpan|storage/.test(name)) return "云盘";
-      if (/转存|restore/.test(name)) return "转存";
-      if (/取回|withdraw|retrieve/.test(name)) return "取回";
-      if (/分享|share/.test(name)) return "分享";
-      if (/生态|koc|shengtai/.test(name)) return "生态";
-      if (/活跃|active|留存|retention/.test(name)) return "活跃";
-      return raw;
+      const tableDomain = normalizeMetadataDomain(table?.domain);
+      if (tableDomain && tableDomain !== "无") return tableDomain;
+      const text = `${warehouseSafeText(table?.name)} ${warehouseSafeText(table?.display)} ${warehouseSafeText(field?.name)} ${warehouseSafeText(field?.desc)}`;
+      if (/云添加|cloud_add|yunadd/.test(text)) return "云添加";
+      if (/转存|restore/.test(text)) return "转存";
+      if (/取回|withdraw|retrieve/.test(text)) return "取回";
+      if (/分享|share/.test(text)) return "分享";
+      if (/云存储|存储|storage|quota|space/.test(text)) return "云存储";
+      if (/广告|ad_/.test(text)) return "最右广告";
+      if (/下载|download|subtask/.test(text)) return "下载";
+      if (/播放|play|video|player/.test(text)) return "播放";
+      if (/搜索|search|browser|url/.test(text)) return "搜索";
+      if (/生态|shengtai|koc/.test(text)) return "生态";
+      if (/活跃|active|留存|retention/.test(text)) return "活跃";
+      if (/云盘|xlpan|cloud/.test(text)) return "云存储";
+      return "无";
     }
     function warehouseReadableName(raw, fallback = "资产") {
       const s = warehouseSafeText(raw);
@@ -10367,7 +10419,6 @@ HarmonyOS"></textarea>
           ["confirmType", "确认类型", "120px", true],
           ["owner", "创建人", "100px", true],
           ["reason", "推荐依据", "310px", false],
-          ["stage", "确认队列", "115px", true],
           ["actions", "操作", "150px", false]
         ],
         rows: [
@@ -10418,7 +10469,7 @@ HarmonyOS"></textarea>
             layer: "ADS 层",
             grain: "缺失",
             recommendedType: "暂不接入",
-            reason: "ADS 报表指标表更适合看板分析，不建议默认进入元事件 / 属性确认队列，可先仅保留血缘。",
+            reason: "ADS 报表指标表更适合看板分析，不建议默认进入元事件 / 属性确认流程，可先仅保留血缘。",
             confirmType: "暂不接入",
             status: "新表待评估",
             owner: "石日超",
@@ -10433,8 +10484,8 @@ HarmonyOS"></textarea>
             display: "下载 pv",
             domain: "下载",
             layer: "DWS层",
-            grain: "user_id",
-            subjectId: "user_id",
+            grain: "uid",
+            subjectId: "uid",
             sourceDb: "dw_xlyun",
             sourceTable: "dw_xlyun.dws_xlyun_main_user_active_d_inc",
             sourceField: "download_create_pv_current",
@@ -10455,8 +10506,8 @@ HarmonyOS"></textarea>
             display: "平台",
             domain: "公共",
             layer: "DWD层",
-            grain: "guid / user_id",
-            subjectId: "多主体",
+            grain: "guid",
+            subjectId: "guid",
             sourceDb: "dw_xlyun",
             sourceTable: "dw_xlyun.dwd_xlyun_action_android_d_inc",
             sourceField: "platform",
@@ -10522,8 +10573,8 @@ HarmonyOS"></textarea>
             display: "手机号",
             domain: "生态",
             layer: "DWS层",
-            grain: "guid / user_id",
-            subjectId: "user_id",
+            grain: "uid",
+            subjectId: "uid",
             sourceDb: "dw_xlyun",
             sourceTable: "dw_xlyun.dws_xlyun_shengtai_guid_crucial_action_an_ios_pc_d_inc",
             sourceField: "mobile",
@@ -10578,7 +10629,7 @@ HarmonyOS"></textarea>
         return {
           title: "字段确认",
           subtitle: "纳入 CDP 的 Hive 表字段进入人工确认，确认后生成元事件、事件属性、用户属性或忽略。",
-          hint: "逐行确认字段：优先确认字段中文名、字段、来源表、推荐类型和推荐依据。"
+          hint: "逐行确认字段：优先确认字段中文名、来源表、确认类型和推荐依据。"
         };
       }
       return {
@@ -10602,12 +10653,13 @@ HarmonyOS"></textarea>
     ];
 
     function xlMetadataTagTeam(domain = "公共") {
-      const d = String(domain || "公共");
-      if (["会员", "支付", "消费"].some(x => d.includes(x))) return { team: "会员", teamKey: "member", color: "amber", category: "价值分层" };
-      if (["生态", "渠道", "触达"].some(x => d.includes(x))) return { team: d.includes("触达") ? "中台" : "生态", teamKey: d.includes("触达") ? "center" : "eco", color: d.includes("触达") ? "gray" : "teal", category: "基础画像" };
-      if (["广告", "中台"].some(x => d.includes(x))) return { team: "中台", teamKey: "center", color: "gray", category: d.includes("广告") ? "行为画像" : "价值分层" };
-      if (["下载", "云盘", "播放", "搜索", "取回", "转存", "分享", "活跃"].some(x => d.includes(x))) return { team: "主端", teamKey: "main", color: "blue", category: "行为画像" };
-      return { team: "公共", teamKey: "all", color: "gray", category: "基础画像" };
+      const d = normalizeMetadataDomain(domain);
+      return {
+        team: d,
+        teamKey: metadataDomainTeamKey(d),
+        color: metadataDomainColor(d),
+        category: metadataDomainCategory(d)
+      };
     }
 
     function xlTagValueTypeFromAsset(row = {}, type = "user_property") {
@@ -10696,6 +10748,16 @@ HarmonyOS"></textarea>
       curatedTags.splice(0, curatedTags.length, ...tagRows);
       refreshTagFilterOptions();
     }
+    function normalizeAllMetadataDomains() {
+      Object.values(assetDatasets || {}).forEach(def => {
+        (def.rows || []).forEach(row => {
+          if (row && Object.prototype.hasOwnProperty.call(row, "domain")) {
+            row.domain = normalizeMetadataDomain(row.domain);
+          }
+        });
+      });
+    }
+
 
     function refreshTagSideCounts() {
       const rows = Array.from(document.querySelectorAll("#view-tags .tree-row"));
@@ -10729,6 +10791,8 @@ HarmonyOS"></textarea>
     window.__xlBootSteps.push("after buildWarehouseDerivedAssets");
     buildPendingAssetDataset();
     window.__xlBootSteps.push("after buildPendingAssetDataset");
+    normalizeAllMetadataDomains();
+    window.__xlBootSteps.push("after normalize metadata domains");
     window.assetDatasets = assetDatasets;
     window.curatedTags = curatedTags;
     window.__xlBootSteps.push("after expose datasets");
@@ -11320,9 +11384,28 @@ HarmonyOS"></textarea>
         const visibleFields = tableFields.slice(0, 80);
         sections += `<div class="asset-detail-section"><h3>字段清单${tableFields.length ? `（${tableFields.length} 个）` : ""}</h3>${visibleFields.length ? `<div class="warehouse-field-table">${visibleFields.map(f => `<div class="warehouse-field-row"><b>${escapeHtml(f.name)}</b><span class="warehouse-type-cell">${dataTypeCell(f.type)}</span><span>${escapeHtml(f.desc || "-")}</span></div>`).join("")}</div>${tableFields.length > visibleFields.length ? `<p>已展示前 ${visibleFields.length} 个字段，可通过搜索定位更多字段。</p>` : ""}` : `<div class="empty" style="min-height:96px">该表暂无字段明细</div>`}</div>`;
       } else if (type === "pending_asset") {
-        sections += `<div class="asset-detail-section"><h3>来源信息</h3>${detailKv([
-          ["确认队列", pill(row.stage)], [row.queue === "field" ? "字段" : "表名", `<code>${escapeHtml(row.name)}</code>`], ["字段中文名或表中文名", escapeHtml(row.display || "-")], ["来源库", escapeHtml(row.sourceDb || String(row.sourceTable || row.name || "").split(".")[0] || "-")], ["来源表", `<code>${escapeHtml(row.sourceTable || row.name)}</code>`], ["来源字段", row.sourceField ? `<code>${escapeHtml(row.sourceField)}</code>` : "-"], ["字段类型", dataTypeCell(row.sourceFieldType || "-")], ["数仓层级", escapeHtml(row.layer || "-")], ["表颗粒度与主体", `${escapeHtml(row.grain || "-")}${row.subjectId ? ` / ${escapeHtml(row.subjectId)}` : ""}`], ["更新周期", escapeHtml(row.update || "T+1")], ["创建人", escapeHtml(row.owner || "-")]
-        ])}</div>`;
+        const pendingSourceRows = row.queue === "table"
+          ? [
+              ["表中文名", escapeHtml(row.display || "-")],
+              ["来源库", escapeHtml(row.sourceDb || String(row.sourceTable || row.name || "").split(".")[0] || "-")],
+              ["来源表", `<code>${escapeHtml(row.sourceTable || row.name)}</code>`],
+              ["数仓层级", escapeHtml(row.layer || "-")],
+              ["表颗粒度与主体", `${escapeHtml(row.grain || "-")}${row.subjectId ? ` / ${escapeHtml(row.subjectId)}` : ""}`],
+              ["更新周期", escapeHtml(row.update || "T+1")],
+              ["创建人", escapeHtml(row.owner || "-")]
+            ]
+          : [
+              ["字段中文名", escapeHtml(row.display || "-")],
+              ["来源库", escapeHtml(row.sourceDb || String(row.sourceTable || row.name || "").split(".")[0] || "-")],
+              ["来源表", `<code>${escapeHtml(row.sourceTable || row.name)}</code>`],
+              ["来源字段", row.sourceField ? `<code>${escapeHtml(row.sourceField)}</code>` : "-"],
+              ["字段类型", dataTypeCell(row.sourceFieldType || "-")],
+              ["数仓层级", escapeHtml(row.layer || "-")],
+              ["表颗粒度与主体", `${escapeHtml(row.grain || "-")}${row.subjectId ? ` / ${escapeHtml(row.subjectId)}` : ""}`],
+              ["更新周期", escapeHtml(row.update || "T+1")],
+              ["创建人", escapeHtml(row.owner || "-")]
+            ];
+        sections += `<div class="asset-detail-section"><h3>来源信息</h3>${detailKv(pendingSourceRows)}</div>`;
         sections += `<div class="asset-detail-section"><h3>系统推荐</h3>${detailKv([
           [row.queue === "field" ? "确认类型" : "系统判断", pill(row.confirmType || row.recommendedType || "待确认")], ["推荐依据", `<span>${escapeHtml(row.reason || "-")}</span>`], ["确认状态", statusText(row.status)], ["敏感等级", escapeHtml(row.sensitive || "普通")]
         ])}</div>`;
@@ -11425,8 +11508,13 @@ HarmonyOS"></textarea>
     }
 
     const pendingAdjustAssetTypes = ["event", "event_property", "user_property"];
+    const pendingAdjustAssetTypeDesc = {
+      event: "行为事件，可统计总次数和分布。",
+      event_property: "行为上下文筛选字段，需关联元事件后进入标签规则。",
+      user_property: "用户维度状态或画像字段，可同步为标签中心原子标签。"
+    };
     const pendingAdjustResults = [
-      { value: "important", title: "实际重要", desc: "继续生成资产，下一步进入确认页" },
+      { value: "important", title: "实际重要", desc: "保存修改后返回字段确认页，可再点击确认生成资产" },
       { value: "ignore", title: "实际不重要", desc: "标记为忽略，不生成业务资产" }
     ];
     let pendingAdjustId = null;
@@ -11443,6 +11531,7 @@ HarmonyOS"></textarea>
       const current = document.getElementById("pendingAdjustCurrent");
       const resultBox = document.getElementById("pendingAdjustResultOptions");
       const typeBox = document.getElementById("pendingAdjustTypeOptions");
+      const typeDesc = document.getElementById("pendingAdjustTypeDesc");
       const typeSection = document.getElementById("pendingAdjustTypeSection");
       const confirmBtn = document.getElementById("confirmPendingAdjust");
       if (current) {
@@ -11467,15 +11556,15 @@ HarmonyOS"></textarea>
         `).join("");
       }
       if (typeBox) {
-        typeBox.innerHTML = pendingAdjustAssetTypes.map(type => `
-          <button class="pending-adjust-option ${pendingAdjustDraft.assetType === type ? "active" : ""}" data-pending-adjust-type="${type}" type="button">
-            <b>${assetTypeLabels[type]}</b>
-            <span>${type === "event" ? "行为事件，可统计次数/时长" : type === "event_property" ? "行为上下文筛选字段" : "用户维度状态或画像字段"}</span>
-          </button>
-        `).join("");
+        typeBox.innerHTML = pendingAdjustAssetTypes.map(type => {
+          const selected = pendingAdjustDraft.assetType === type ? " selected" : "";
+          return '<option value="' + escapeHtml(type) + '"' + selected + '>' + escapeHtml(assetTypeLabels[type]) + '</option>';
+        }).join("");
+        typeBox.disabled = pendingAdjustDraft.result !== "important";
       }
+      if (typeDesc) typeDesc.textContent = pendingAdjustAssetTypeDesc[pendingAdjustDraft.assetType] || "";
       typeSection?.classList.toggle("is-disabled", pendingAdjustDraft.result !== "important");
-      if (confirmBtn) confirmBtn.textContent = pendingAdjustDraft.result === "ignore" ? "保存并忽略" : "下一步确认资产";
+      if (confirmBtn) confirmBtn.textContent = pendingAdjustDraft.result === "ignore" ? "保存并忽略" : "确认修改";
     }
 
     function openPendingAdjustModal(id) {
@@ -11510,19 +11599,28 @@ HarmonyOS"></textarea>
         row.stage = "已忽略";
         row.confirmType = "忽略";
         updatePendingAssetSearch(row);
+        dataAssetState.type = "pending_asset";
+        dataAssetState.pendingTab = "field";
+        dataAssetState.page = 1;
         document.getElementById("assetDrawerMask")?.classList.remove("show");
         closePendingAdjustModal();
+        renderAssetFilters();
         renderDataAssets();
-        showToast("已调整为实际不重要，不生成业务资产");
+        showToast("已调整为实际不重要，已返回字段确认页");
         return;
       }
       row.status = "字段待确认";
       row.stage = "字段待确认";
       row.confirmType = assetTypeLabels[pendingAdjustDraft.assetType] || "事件属性";
       updatePendingAssetSearch(row);
+      dataAssetState.type = "pending_asset";
+      dataAssetState.pendingTab = "field";
+      dataAssetState.page = 1;
+      document.getElementById("assetDrawerMask")?.classList.remove("show");
       closePendingAdjustModal();
+      renderAssetFilters();
       renderDataAssets();
-      openPendingConfirmModal(row.id);
+      showToast("已确认修改，已返回字段确认页");
     }
 
     function findPendingAsset(id) {
@@ -11539,7 +11637,7 @@ HarmonyOS"></textarea>
 
     function pendingSubjectIdForField(table, field, tableRow) {
       const text = `${warehouseSafeText(table?.grain)} ${warehouseSafeText(tableRow?.grain)} ${warehouseSafeText(field?.name)}`.toLowerCase();
-      if (/user_id/.test(text)) return "user_id";
+      if (/user_id/.test(text)) return "uid";
       if (/guid/.test(text)) return "guid";
       if (/device/.test(text)) return "device_id";
       return warehouseSafeText(tableRow?.grain) || warehouseSafeText(table?.grain) || "-";
@@ -11632,7 +11730,7 @@ HarmonyOS"></textarea>
       syncPendingAssetNav();
       renderAssetFilters();
       renderDataAssets();
-      showToast(generatedRows.length ? `已接入该表，并生成 ${generatedRows.length} 个字段待确认` : "已接入该表，字段已在确认队列或暂无可推荐字段");
+      showToast(generatedRows.length ? `已接入该表，并生成 ${generatedRows.length} 个字段待确认` : "已接入该表，字段已在字段确认页或暂无可推荐字段");
     }
 
     function keepPendingTableLineage(id) {
@@ -11691,7 +11789,6 @@ HarmonyOS"></textarea>
         setAssetVal("assetNewTimeGrain", /明细|event_time/.test(pending.reason || "") ? "事件时间" : "天");
         setAssetVal("assetNewDefaultMetric", /duration|时长/.test(pending.name + pending.sourceFieldDesc) ? "时长" : "次数");
         setAssetVal("assetNewSubjectId", pending.subjectId || "guid");
-        setAssetVal("assetNewIdMapping", "接入中");
         setAssetVal("assetNewUpload", "有数据");
         setAssetVal("assetNewStatus", "可见");
         setAssetVal("assetNewLabelEnabled", "是");
@@ -11703,11 +11800,8 @@ HarmonyOS"></textarea>
       } else if (assetCreateType === "user_property") {
         setAssetVal("assetNewPropertyLogic", /^is_/.test(pending.name || "") ? "当前状态" : "最近一次");
         setAssetVal("assetNewSubjectId", pending.subjectId || "guid");
-        setAssetVal("assetNewIdMapping", "接入中");
-        setAssetVal("assetNewPartitionField", "ds");
         setAssetVal("assetNewUpdate", "T+1");
         setAssetVal("assetNewSensitive", pending.sensitive || "普通");
-        setAssetVal("assetNewBusinessVisible", pending.sensitive === "高敏" ? "否" : "是");
         setAssetVal("assetNewLabelEnabled", pending.sensitive === "高敏" ? "否" : "是");
         setAssetVal("assetNewSegmentEnabled", pending.sensitive === "高敏" ? "否" : "是");
       }
@@ -11969,7 +12063,7 @@ HarmonyOS"></textarea>
     function assetSourceTableSelect(id, selected = "") {
       const tables = currentWarehouseTables();
       const options = [`<option value="">请选择来源表</option>`].concat(tables.map(row => {
-        const label = `${row.name}｜${row.display || "-"}｜${row.domain || "未分域"}｜${row.layer || "-"}`;
+        const label = `${row.name}｜${row.display || "-"}｜${normalizeMetadataDomain(row.domain) || "未分域"}｜${row.layer || "-"}`;
         return `<option value="${escapeHtml(row.name)}" ${row.name === selected ? "selected" : ""}>${escapeHtml(label)}</option>`;
       }));
       return `<select class="select" id="${id}">${options.join("")}</select>`;
@@ -12048,7 +12142,7 @@ HarmonyOS"></textarea>
     }
 
     function inferDomainFromTable(table) {
-      return table?.domain && table.domain !== "-" ? table.domain : "公共";
+      return table?.domain && table.domain !== "-" ? normalizeMetadataDomain(table.domain) : "公共";
     }
 
     function updateSourceFieldOptions(selectedField = "") {
@@ -12879,7 +12973,6 @@ HarmonyOS"></textarea>
         setAssetVal("assetNewTimeGrain", row.timeGrain || "天");
         setAssetVal("assetNewDefaultMetric", row.defaultMetric || "次数");
         setAssetVal("assetNewSubjectId", normalizeAssetSubjectKey(row.subjectId || subjectKeysForAssetRow(row)[0] || "guid"));
-        setAssetVal("assetNewIdMapping", row.idMappingStatus || "接入中");
         setAssetVal("assetNewUpload", normalizeAssetFilterValue("upload", row.upload || "有数据"));
         setAssetVal("assetNewReceive", row.receive || "允许");
         setAssetVal("assetNewLabelEnabled", row.labelEnabled || "是");
@@ -12900,16 +12993,11 @@ HarmonyOS"></textarea>
         setAssetVal("assetNewPropertyKind", row.propertyKind || "自定义属性");
         setAssetVal("assetNewPropertyLogic", row.propertyLogic || "当前状态");
         setAssetVal("assetNewSubjectId", normalizeAssetSubjectKey(row.subjectId || subjectKeysForAssetRow(row)[0] || "guid"));
-        setAssetVal("assetNewIdMapping", row.idMappingStatus || "接入中");
-        setAssetVal("assetNewPartitionField", row.partitionField || "ds");
         setAssetVal("assetNewUpdate", row.update || "T+1");
-        setAssetVal("assetNewBusinessVisible", row.businessVisible || "是");
         setAssetVal("assetNewLabelEnabled", row.labelEnabled || "是");
         setAssetVal("assetNewSegmentEnabled", row.segmentEnabled || "是");
         setAssetVal("assetNewDict", row.dict || "");
         setAssetDefaultEnumValues(row.enumValues || []);
-        setAssetVal("assetNewCoverage", row.coverage || "待计算");
-        setAssetVal("assetNewCoverageRate", row.coverageRate || "待计算");
         setAssetVal("assetNewColumn", row.sourceField || row.name || "");
       } else {
         setAssetVal("assetNewUpdated", row.updated || "2026-05-12");
@@ -12971,7 +13059,7 @@ HarmonyOS"></textarea>
       }
       if (!validateAssetSourceRequirements()) return;
       const now = Date.now();
-      const domain = assetVal("assetNewDomain") || (selectedWarehouseTable() ? inferDomainFromTable(selectedWarehouseTable()) : "公共");
+      const domain = normalizeMetadataDomain(assetVal("assetNewDomain") || (selectedWarehouseTable() ? inferDomainFromTable(selectedWarehouseTable()) : "公共"));
       const owner = currentAssetOperator;
       const desc = assetVal("assetNewDesc") || "待补充业务口径。";
       const assetToday = "2026-05-18";
@@ -12985,11 +13073,11 @@ HarmonyOS"></textarea>
         const eventTags = assetVal("assetNewEventTag").split(/,|，/).map(x => x.trim()).filter(Boolean);
         const table = selectedWarehouseTable();
         const sourceType = table ? warehouseEventSourceType(table) : (assetVal("assetNewBehaviorSource") || existing?.sourceType || "自定义事件");
-        row = { ...(existing || {}), id: existing?.id || `custom_event_${now}`, name, display, domain, behaviorSource:pendingConfirmId ? (assetVal("assetNewBehaviorSource") || sourceType) : "自定义事件", timeGrain:assetVal("assetNewTimeGrain") || existing?.timeGrain || "天", defaultMetric:assetVal("assetNewDefaultMetric") || existing?.defaultMetric || "次数", subjectId:assetVal("assetNewSubjectId") || existing?.subjectId || "guid", idMappingStatus:assetVal("assetNewIdMapping") || existing?.idMappingStatus || "接入中", upload:normalizeAssetFilterValue("upload", assetVal("assetNewUpload") || existing?.upload || "有数据"), status:assetVal("assetNewStatus") || "可见", receive:assetVal("assetNewReceive") || "允许", labelEnabled:assetVal("assetNewLabelEnabled") || "是", segmentEnabled:"是", attrs:props.length || 0, volume30d:existing?.volume30d || "待计算", lastIngest:existing?.lastIngest || "待入库", lastUpdater:owner, lastUpdatedAt:assetToday, owner, desc, properties:props, eventTags, downstream:existing?.downstream || {tags:0, segments:0, boards:0}, trend:existing?.trend || trend(1), public:existing?.public || "否", platform:assetVal("assetNewPlatform") || existing?.platform || "全部", volumeSort:existing?.volumeSort || 0, sourceType, behaviorSourceType:sourceType, timeField:table ? warehouseTimeFieldForEvent(table, warehouseFieldRowsForTable(table.name)) : (existing?.timeField || "ds"), countField:existing?.countField || "", distributionField:existing?.distributionField || "", durationField:existing?.durationField || "", amountField:existing?.amountField || "", capacityField:existing?.capacityField || "", primaryMeasureType:existing?.primaryMeasureType || "count", supportedMeasures:existing?.supportedMeasures || ["总次数", "分布"], ...sourcePayload, createdBy: existing?.createdBy || currentAssetOperator, editable:true };
+        row = { ...(existing || {}), id: existing?.id || `custom_event_${now}`, name, display, domain, behaviorSource:pendingConfirmId ? (assetVal("assetNewBehaviorSource") || sourceType) : "自定义事件", timeGrain:assetVal("assetNewTimeGrain") || existing?.timeGrain || "天", defaultMetric:assetVal("assetNewDefaultMetric") || existing?.defaultMetric || "次数", subjectId:assetVal("assetNewSubjectId") || existing?.subjectId || "guid", upload:normalizeAssetFilterValue("upload", assetVal("assetNewUpload") || existing?.upload || "有数据"), status:assetVal("assetNewStatus") || "可见", receive:assetVal("assetNewReceive") || "允许", labelEnabled:assetVal("assetNewLabelEnabled") || "是", segmentEnabled:"是", attrs:props.length || 0, volume30d:existing?.volume30d || "待计算", lastIngest:existing?.lastIngest || "待入库", lastUpdater:owner, lastUpdatedAt:assetToday, owner, desc, properties:props, eventTags, downstream:existing?.downstream || {tags:0, segments:0, boards:0}, trend:existing?.trend || trend(1), public:existing?.public || "否", platform:assetVal("assetNewPlatform") || existing?.platform || "全部", volumeSort:existing?.volumeSort || 0, sourceType, behaviorSourceType:sourceType, timeField:table ? warehouseTimeFieldForEvent(table, warehouseFieldRowsForTable(table.name)) : (existing?.timeField || "ds"), countField:existing?.countField || "", distributionField:existing?.distributionField || "", durationField:existing?.durationField || "", amountField:existing?.amountField || "", capacityField:existing?.capacityField || "", primaryMeasureType:existing?.primaryMeasureType || "count", supportedMeasures:existing?.supportedMeasures || ["总次数", "分布"], ...sourcePayload, createdBy: existing?.createdBy || currentAssetOperator, editable:true };
       } else if (assetCreateType === "event_property") {
         row = { ...(existing || {}), id: existing?.id || `custom_ep_${now}`, name, display, domain, propertyKind:assetVal("assetNewPropertyKind") || existing?.propertyKind || (pendingConfirmId ? "公共属性" : "自定义属性"), type:sourcePayload.sourceFieldType || existing?.type || "STRING", propertyScope:existing?.propertyScope || "待关联", enum:defaultEnumValues.length ? "是" : "否", filterEnabled:existing?.filterEnabled || "是", events:existing?.events || ["待关联元事件"], dict:assetVal("assetNewDict") || "无", fillRate:existing?.fillRate || "待计算", fillSort:existing?.fillSort || 0, sample:existing?.sample || "--", owner, desc, enumValues:defaultEnumValues, upload:existing?.upload || "有", update:assetVal("assetNewUpdate") || "T+1", status:assetVal("assetNewStatus") || "可见", lastUpdater:owner, lastUpdatedAt:assetToday, public:(assetVal("assetNewPropertyKind") || existing?.propertyKind) === "公共属性" ? "是" : (existing?.public || "否"), ...sourcePayload, createdBy: existing?.createdBy || currentAssetOperator, editable:true };
       } else if (assetCreateType === "user_property") {
-        row = { ...(existing || {}), id: existing?.id || `custom_up_${now}`, name, display, domain, propertyKind:assetVal("assetNewPropertyKind") || existing?.propertyKind || "自定义属性", type:sourcePayload.sourceFieldType || existing?.type || "STRING", propertyLogic:assetVal("assetNewPropertyLogic") || "当前状态", subjectId:assetVal("assetNewSubjectId") || "guid", idMappingStatus:assetVal("assetNewIdMapping") || "接入中", partitionField:assetVal("assetNewPartitionField") || "ds", businessVisible:assetVal("assetNewBusinessVisible") || "是", labelEnabled:assetVal("assetNewLabelEnabled") || "是", segmentEnabled:assetVal("assetNewSegmentEnabled") || "是", update:assetVal("assetNewUpdate") || "T+1", coverage:assetVal("assetNewCoverage") || "待计算", coverageRate:assetVal("assetNewCoverageRate") || "待计算", coverageSort:existing?.coverageSort || 0, owner, desc, dict:assetVal("assetNewDict") || "无", enum:defaultEnumValues.length ? "是" : "否", status:assetVal("assetNewStatus") || "可见", lastUpdater:owner, lastUpdatedAt:assetToday, public:(assetVal("assetNewPropertyKind") || existing?.propertyKind) === "公共属性" ? "是" : "否", enumValues:defaultEnumValues, ...sourcePayload, createdBy: existing?.createdBy || currentAssetOperator, editable:true };
+        row = { ...(existing || {}), id: existing?.id || `custom_up_${now}`, name, display, domain, propertyKind:assetVal("assetNewPropertyKind") || existing?.propertyKind || "自定义属性", type:sourcePayload.sourceFieldType || existing?.type || "STRING", propertyLogic:assetVal("assetNewPropertyLogic") || "当前状态", subjectId:assetVal("assetNewSubjectId") || "guid", labelEnabled:assetVal("assetNewLabelEnabled") || "是", segmentEnabled:assetVal("assetNewSegmentEnabled") || "是", update:assetVal("assetNewUpdate") || "T+1", owner, desc, dict:assetVal("assetNewDict") || "无", enum:defaultEnumValues.length ? "是" : "否", status:assetVal("assetNewStatus") || "可见", lastUpdater:owner, lastUpdatedAt:assetToday, public:(assetVal("assetNewPropertyKind") || existing?.propertyKind) === "公共属性" ? "是" : "否", enumValues:defaultEnumValues, ...sourcePayload, createdBy: existing?.createdBy || currentAssetOperator, editable:true };
       } else if (assetCreateType === "dict") {
         row = { ...(existing || {}), id: existing?.id || `custom_dict_${now}`, name, domain, enumCount:existing?.enumCount || 0, related:existing?.related || "待关联", updated:assetVal("assetNewUpdated") || "2026-05-12", owner, desc, enumValues:existing?.enumValues || [], display, status:assetVal("assetNewStatus") || "可见", ...sourcePayload, createdBy: existing?.createdBy || currentAssetOperator, editable:true };
       } else if (assetCreateType === "table") {
@@ -13119,10 +13207,9 @@ HarmonyOS"></textarea>
       pendingAdjustDraft.result = btn.dataset.pendingAdjustResult || "important";
       renderPendingAdjustModal();
     });
-    document.getElementById("pendingAdjustTypeOptions")?.addEventListener("click", e => {
-      const btn = e.target.closest("[data-pending-adjust-type]");
-      if (!btn || pendingAdjustDraft.result !== "important") return;
-      pendingAdjustDraft.assetType = btn.dataset.pendingAdjustType || "event_property";
+    document.getElementById("pendingAdjustTypeOptions")?.addEventListener("change", e => {
+      if (pendingAdjustDraft.result !== "important") return;
+      pendingAdjustDraft.assetType = e.currentTarget.value || "event_property";
       renderPendingAdjustModal();
     });
     document.getElementById("confirmPendingAdjust")?.addEventListener("click", applyPendingAdjustModal);
@@ -13170,6 +13257,7 @@ HarmonyOS"></textarea>
     ];
     segmentListData.forEach((row, index) => {
       row.id = row.id || `segment_${index + 1}`;
+      row.domain = normalizeMetadataDomain(row.domain);
     });
 
     function refreshSegmentNavCounts() {
@@ -13373,10 +13461,10 @@ HarmonyOS"></textarea>
         return row.kind === filter;
       }).filter(row => {
         if (!segmentFilterValueMatches(listFilters.method, row.method)) return false;
-        if (!segmentFilterValueMatches(listFilters.domain, row.domain)) return false;
+        if (!segmentFilterValueMatches(listFilters.domain, normalizeMetadataDomain(row.domain))) return false;
         if (!segmentFilterValueMatches(listFilters.status, row.status)) return false;
         if (!listFilters.keyword) return true;
-        const haystack = [row.name, row.method, row.domain, row.status, row.app, row.update].join(" ").toLowerCase();
+        const haystack = [row.name, row.method, normalizeMetadataDomain(row.domain), row.status, row.app, row.update].join(" ").toLowerCase();
         return haystack.includes(listFilters.keyword);
       });
       segmentPageState.lastRows = filteredRows;
@@ -13853,6 +13941,18 @@ HarmonyOS"></textarea>
     document.querySelectorAll(".modal-type").forEach(card => {
       card.addEventListener("click", () => {
         const type = card.dataset.type;
+        if (card.classList.contains("disabled")) {
+          showToast("该标签类型暂未开放");
+          return;
+        }
+        if (type === "sql") {
+          tagTypeModal.classList.remove("show");
+          resetCreateForNew();
+          switchView("create");
+          setCreateType("sql");
+          showToast("已进入 SQL 标签页，业务侧默认只读");
+          return;
+        }
         if (type !== "rule") {
           showToast("未开发：当前仅支持新建规则标签，其他标签类型暂不开放");
           return;
@@ -16620,24 +16720,51 @@ where dt = '\${bizdate}'</textarea></div>
       }
     });
 
+    let currentCreateType = "rule";
+
     function renderCreateConfig(type = "rule") {
       const target = document.getElementById("typeSpecificConfig");
       if (!target) return;
+      if (type === "sql") {
+        target.innerHTML = `
+          <div class="config-card">
+            <h3>SQL 标签配置</h3>
+            <p class="config-note">SQL 标签由数分维护，业务侧默认只读；业务可以提交口径需求，数分补充 SQL、返回字段与调试结果。</p>
+            <div class="config-grid">
+              <div class="form-row"><label>维护角色</label><select class="select"><option selected>数分维护</option><option>数据开发维护</option><option>业务只读</option></select></div>
+              <div class="form-row"><label>分析对象</label><select class="select"><option selected>userid</option><option>guid</option><option>device_id</option></select></div>
+              <div class="form-row"><label>返回字段</label><input class="field" value="user_id, tag_value" readonly></div>
+            </div>
+            <div class="form-row"><label>SQL 口径</label><textarea class="sql-editor" readonly>select
+  userid,
+  case when pay_amt_180d > 0 and active_days_30d = 0 then 1 else 0 end as tag_value
+from ads_user_profile_wide
+where dt = '\${bizdate}'</textarea></div>
+            <div class="enum-row"><span class="badge gray">调试</span><select class="select"><option selected>抽样1000条</option><option>全量预估</option></select><input class="field" value="命中字段必须包含主键和 tag_value" readonly></div>
+          </div>
+        `;
+        updateCreatePreview("sql");
+        return;
+      }
       initXunleiRuleState();
       target.innerHTML = renderXunleiRuleBuilder();
       bindRuleTagInteractions();
       enhanceXlRuleAssetSelects();
-      updateCreatePreview("rule");
+      updateCreatePreview(currentCreateType || "rule");
     }
 
     function setCreateType(type = "rule") {
-      if (type !== "rule") showToast("当前原型先聚焦规则标签：用户属性 + 用户事件");
+      const resolvedType = type === "sql" ? "sql" : "rule";
+      currentCreateType = resolvedType;
+      if (type !== "rule" && type !== "sql") showToast("当前原型先聚焦规则标签：用户属性 + 用户事件");
       document.getElementById("standardRuleConfig").style.display = "block";
       document.getElementById("rfmRuleConfig").style.display = "none";
       document.getElementById("standardPreview").style.display = "block";
       document.getElementById("rfmPreview").style.display = "none";
-      document.getElementById("standardRuleTitle").textContent = "创建规则";
-      renderCreateConfig("rule");
+      document.getElementById("standardRuleTitle").textContent = resolvedType === "sql" ? "SQL 标签配置" : "创建规则";
+      const createBtn = document.getElementById("createRuleLabel");
+      if (createBtn) createBtn.textContent = resolvedType === "sql" ? "提交需求" : "创建";
+      renderCreateConfig(resolvedType);
     }
 
     function bindRuleTagInteractions() {
@@ -16874,7 +17001,7 @@ where dt = '\${bizdate}'</textarea></div>
             row.unit = xlAggUnit(row.agg);
           }
         }
-        updateCreatePreview("rule");
+        updateCreatePreview(currentCreateType || "rule");
         if (target.dataset.rowUpdate === "field" || target.dataset.rowUpdate === "event") renderCreateConfig("rule");
         return;
       }
@@ -16891,7 +17018,7 @@ where dt = '\${bizdate}'</textarea></div>
             filter.value = xlDefaultValueForAsset(asset, filter.value);
           }
         }
-        updateCreatePreview("rule");
+        updateCreatePreview(currentCreateType || "rule");
         if (target.dataset.filterUpdate === "field") renderCreateConfig("rule");
         return;
       }
@@ -16902,6 +17029,43 @@ where dt = '\${bizdate}'</textarea></div>
         if (key === "days") Object.assign(state.timeDraft, xlRelativeDateRange(state.timeDraft.days, `过去 ${state.timeDraft.days || 1} 天`));
         renderCreateConfig("rule");
       }
+    }
+
+    function xlValidAttrRows(layer) {
+      return (layer?.attrGroups || []).flatMap(group => (group.rows || []).filter(row => String(row.field || "").trim()));
+    }
+
+    function xlValidBehaviorRows(layer) {
+      return (layer?.behaviorGroups || []).flatMap(group => (group.rows || []).filter(row => String(row.event || "").trim()));
+    }
+
+    function xlValidFilterRows(row) {
+      return (row?.filters || []).filter(filter => String(filter.field || "").trim());
+    }
+
+    function xlSerializeAttrGroups(layer) {
+      return (layer.attrGroups || []).map(group => ({
+        inner_logic: group.logic === "and" ? "AND" : "OR",
+        conditions: (group.rows || []).filter(r => String(r.field || "").trim()).map(r => ({ ...xlAssetTrace(xlResolveAttrAsset(r.field)), field: r.field, op: r.op, value: r.value }))
+      })).filter(group => group.conditions.length);
+    }
+
+    function xlSerializeBehaviorGroups(layer) {
+      return (layer.behaviorGroups || []).map(group => ({
+        inner_logic: group.logic === "and" ? "AND" : "OR",
+        conditions: (group.rows || []).filter(r => String(r.event || "").trim()).map(r => ({
+          time: { label: r.timeLabel, mode: r.timeMode, start: r.start, end: r.end, days: r.days },
+          action: r.action,
+          ...xlAssetTrace(xlResolveEventAsset(r.event)),
+          event: r.event,
+          ...(xlValidFilterRows(r).length > 1 ? { filter_logic: r.filterLogic === "or" ? "OR" : "AND" } : {}),
+          filters: xlValidFilterRows(r).map(f => ({ ...xlAssetTrace(xlResolveFilterAsset(r.event, f.field)), field: f.field, op: f.op, value: f.value })),
+          aggregate: r.agg,
+          op: r.op,
+          value: r.value,
+          unit: r.unit || "次"
+        }))
+      })).filter(group => group.conditions.length);
     }
 
     function xlSerializeState() {
@@ -16922,10 +17086,10 @@ where dt = '\${bizdate}'</textarea></div>
           layer_name: xlLayerFallbackName(layer, index),
           remark: layer.remark,
           attr_behavior_relation: layer.relation === "and" ? "AND" : "OR",
-          user_attribute_group_relation: layer.attrGroups.length > 1 ? (xlGetSectionRelation(layer, "attr") === "and" ? "AND" : "OR") : null,
-          user_attributes: layer.attrGroups.map(group => ({ inner_logic: group.logic === "and" ? "AND" : "OR", conditions: group.rows.map(r => ({ ...xlAssetTrace(xlResolveAttrAsset(r.field)), field: r.field, op: r.op, value: r.value })) })),
-          user_event_group_relation: layer.behaviorGroups.length > 1 ? (xlGetSectionRelation(layer, "behavior") === "and" ? "AND" : "OR") : null,
-          user_events: layer.behaviorGroups.map(group => ({ inner_logic: group.logic === "and" ? "AND" : "OR", conditions: group.rows.map(r => ({ time: { label: r.timeLabel, mode: r.timeMode, start: r.start, end: r.end, days: r.days }, action: r.action, ...xlAssetTrace(xlResolveEventAsset(r.event)), event: r.event, ...(r.filters.length > 1 ? { filter_logic: r.filterLogic === "or" ? "OR" : "AND" } : {}), filters: r.filters.map(f => ({ ...xlAssetTrace(xlResolveFilterAsset(r.event, f.field)), field: f.field, op: f.op, value: f.value })), aggregate: r.agg, op: r.op, value: r.value, unit: r.unit || "次" })) }))
+          user_attribute_group_relation: xlSerializeAttrGroups(layer).length > 1 ? (xlGetSectionRelation(layer, "attr") === "and" ? "AND" : "OR") : null,
+          user_attributes: xlSerializeAttrGroups(layer),
+          user_event_group_relation: xlSerializeBehaviorGroups(layer).length > 1 ? (xlGetSectionRelation(layer, "behavior") === "and" ? "AND" : "OR") : null,
+          user_events: xlSerializeBehaviorGroups(layer)
         }))
       };
     }
@@ -16935,9 +17099,9 @@ where dt = '\${bizdate}'</textarea></div>
       initXunleiRuleState();
       const active = getXlActiveLayer();
       const activeIndex = window.xunleiRuleState.layers.findIndex(l => l.id === active.id);
-      const attrRows = active.attrGroups.reduce((sum, g) => sum + g.rows.length, 0);
-      const behRows = active.behaviorGroups.reduce((sum, g) => sum + g.rows.length, 0);
-      const filters = active.behaviorGroups.reduce((sum, g) => sum + g.rows.reduce((s, r) => s + (r.filters?.length || 0), 0), 0);
+      const attrRows = xlValidAttrRows(active).length;
+      const behRows = xlValidBehaviorRows(active).length;
+      const filters = xlValidBehaviorRows(active).reduce((sum, row) => sum + xlValidFilterRows(row).length, 0);
       const includesToday = window.xunleiRuleState.layers.some(layer => xlLayerIncludesToday(layer));
       const estimateStatus = document.getElementById("estimateStatus");
       const coverCount = document.getElementById("coverCount");
@@ -16967,13 +17131,42 @@ where dt = '\${bizdate}'</textarea></div>
       if (!suffix) missing.push("标签名称");
       if (suffix && !/^[a-zA-Z0-9_]+$/.test(suffix)) missing.push("标签名称只能包含英文、数字、下划线");
       if (!document.getElementById("tagCategory1")?.value) missing.push("一级标签");
-      const emptyLayer = window.xunleiRuleState?.layers?.find((layer, idx) => !xlLayerFallbackName(layer, idx).trim());
+      const emptyLayer = window.xunleiRuleState?.layers?.find(layer => !String(layer.name || "").trim());
       if (emptyLayer) missing.push("分层名");
       return missing;
     }
 
     function getXlTodayString(){const n=new Date();return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`;}
-    function xlMakeCreatedTag(status="草稿"){const cfg=xlGetUpdateConfig();const c1=document.getElementById("tagCategory1")?.value||"行为画像";const c2=document.getElementById("tagCategory2")?.value||"";const domain=document.getElementById("tagBizDomain")?.value||"未分配";const cover=document.getElementById("coverCount")?.textContent||"待计算";const teamKeyMap={"公共":"all","未分配":"all","主端":"main","会员":"member","生态":"eco","中台":"center","广告":"main","下载":"main","云盘":"main","播放":"main","搜索":"main","触达":"main","取回":"main","转存":"main","分享":"main","活跃":"main"};const colorMap={"公共":"gray","未分配":"gray","主端":"blue","会员":"amber","生态":"teal","中台":"gray","广告":"blue","下载":"blue","云盘":"blue","播放":"teal","搜索":"teal","触达":"amber","取回":"blue","转存":"blue","分享":"teal","活跃":"teal"};return {name:document.getElementById("tagDisplayName")?.value.trim()||"未命名规则标签",tagSuffix:document.getElementById("tagNameSuffix")?.value.trim()||"rule_tag",description:document.getElementById("tagDescription")?.value.trim()||"",team:domain,teamKey:teamKeyMap[domain]||"all",category:c1,category2:c2,type:"规则标签",valueType:"枚举型",cover,coverValue:parseFloat(String(cover).replace(/[^0-9.]/g,""))||0,rate:"待计算",rateValue:0,updated:getXlTodayString(),update:cfg.update_mode==="routine"?`每日 ${cfg.earliest_time}`:"手动",calls:0,method:"无代码规则",status,color:colorMap[domain]||"gray",createdAt:Date.now(),createdBy:currentAssetOperator};}
+    function xlMakeCreatedTag(status="草稿"){
+      const cfg=xlGetUpdateConfig();
+      const c1=document.getElementById("tagCategory1")?.value||"行为画像";
+      const c2=document.getElementById("tagCategory2")?.value||"";
+      const domain=normalizeMetadataDomain(document.getElementById("tagBizDomain")?.value||"公共");
+      const cover=document.getElementById("coverCount")?.textContent||"待计算";
+      return {
+        name:document.getElementById("tagDisplayName")?.value.trim()||"未命名规则标签",
+        tagSuffix:document.getElementById("tagNameSuffix")?.value.trim()||"rule_tag",
+        description:document.getElementById("tagDescription")?.value.trim()||"",
+        team:domain,
+        teamKey:metadataDomainTeamKey(domain),
+        category:c1,
+        category2:c2,
+        type:"规则标签",
+        valueType:"枚举型",
+        cover,
+        coverValue:parseFloat(String(cover).replace(/[^0-9.]/g,""))||0,
+        rate:"待计算",
+        rateValue:0,
+        updated:getXlTodayString(),
+        update:cfg.update_mode==="routine"?`每日 ${cfg.earliest_time}`:"手动",
+        calls:0,
+        method:"无代码规则",
+        status,
+        color:metadataDomainColor(domain),
+        createdAt:Date.now(),
+        createdBy:currentAssetOperator
+      };
+    }
     function xlUpsertCreatedTag(status="草稿"){const tag=xlMakeCreatedTag(status);const keyName=window.currentEditingTagName||tag.name;const i=curatedTags.findIndex(x=>x.name===keyName);if(i>=0)curatedTags.splice(i,1);curatedTags.unshift(tag);window.currentEditingTagName=tag.name;tagSortState.key="createdAt";tagSortState.dir="desc";document.querySelectorAll("#view-tags th.sortable").forEach(x=>x.classList.remove("asc","desc"));document.querySelectorAll(".team-tabs .tab").forEach(t=>t.classList.toggle("active",t.dataset.team==="all"));currentTagTeam="all";return tag;}
     function xlSaveRuleDraftFromQuickButton(){initXunleiRuleState();const missing=validateXlRuleBasicInfo();if(missing.length){showToast(`请先补充：${missing.join("、")}`);return false;}const tag=xlUpsertCreatedTag("草稿");updateCreatePreview("rule");showToast(`已保存当前规则：${tag.name}`);return true;}
     function xlGetUpdateConfig() {
@@ -17000,13 +17193,20 @@ where dt = '\${bizdate}'</textarea></div>
         if (help) help.textContent = isRoutine
           ? "系统将在每日最早计算时间之后进行自动更新；若行为规则包含今日数据，则顺延到明日凌晨计算。"
           : "选择手动后，系统不会自动更新，需要人工触发计算。";
-        updateCreatePreview("rule");
+        updateCreatePreview(currentCreateType || "rule");
       }
       card.querySelectorAll("[data-update-mode]").forEach(btn => {
         btn.addEventListener("click", () => setUpdateMode(btn.dataset.updateMode));
       });
-      timeInput?.addEventListener("change", () => updateCreatePreview("rule"));
+      timeInput?.addEventListener("change", () => updateCreatePreview(currentCreateType || "rule"));
       document.getElementById("createRuleLabel")?.addEventListener("click", () => {
+        if (currentCreateType === "sql") {
+          const displayName = document.getElementById("tagDisplayName")?.value.trim() || "未命名 SQL 标签";
+          switchView("tags", { trackHistory: false });
+          renderTags("all");
+          showToast(`已提交 SQL 标签需求：${displayName}`);
+          return;
+        }
         initXunleiRuleState();
         const missing = validateXlRuleBasicInfo();
         if (missing.length) { showToast(`请先补充：${missing.join("、")}`); return; }
@@ -17032,9 +17232,9 @@ where dt = '\${bizdate}'</textarea></div>
       document.getElementById("estimateBtn")?.addEventListener("click", () => {
         initXunleiRuleState();
         const active = getXlActiveLayer();
-        const attrRows = active.attrGroups.reduce((sum, g) => sum + g.rows.length, 0);
-        const behRows = active.behaviorGroups.reduce((sum, g) => sum + g.rows.length, 0);
-        const filters = active.behaviorGroups.reduce((sum, g) => sum + g.rows.reduce((s, r) => s + (r.filters?.length || 0), 0), 0);
+        const attrRows = xlValidAttrRows(active).length;
+        const behRows = xlValidBehaviorRows(active).length;
+        const filters = xlValidBehaviorRows(active).reduce((sum, row) => sum + xlValidFilterRows(row).length, 0);
         document.getElementById("estimateStatus").textContent = "正在计算昨日 Hive 分区...";
         document.getElementById("coverCount").textContent = "计算中";
         setTimeout(() => {
@@ -17046,13 +17246,13 @@ where dt = '\${bizdate}'</textarea></div>
       });
       ["tagDisplayName", "tagNameSuffix", "tagDescription", "tagBizDomain", "tagCategory1", "tagCategory2"].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.addEventListener(id === "tagDisplayName" || id === "tagNameSuffix" || id === "tagDescription" ? "input" : "change", () => updateCreatePreview("rule"));
+        if (el) el.addEventListener(id === "tagDisplayName" || id === "tagNameSuffix" || id === "tagDescription" ? "input" : "change", () => updateCreatePreview(currentCreateType || "rule"));
       });
     }
 
 
-    document.getElementById("clearTagCategory2")?.addEventListener("click",()=>{const s=document.getElementById("tagCategory2"); if(s){s.value=""; updateCreatePreview("rule"); showToast("已清空二级标签");}});
-    document.getElementById("clearTagBizDomain")?.addEventListener("click",()=>{const s=document.getElementById("tagBizDomain"); if(s){s.value=""; updateCreatePreview("rule"); showToast("已清空业务域");}});
+    document.getElementById("clearTagCategory2")?.addEventListener("click",()=>{const s=document.getElementById("tagCategory2"); if(s){s.value=""; updateCreatePreview(currentCreateType || "rule"); showToast("已清空二级标签");}});
+    document.getElementById("clearTagBizDomain")?.addEventListener("click",()=>{const s=document.getElementById("tagBizDomain"); if(s){s.value=""; updateCreatePreview(currentCreateType || "rule"); showToast("已清空业务域");}});
     document.getElementById("quickBackTop")?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
     document.getElementById("quickSaveDraft")?.addEventListener("click",()=>xlSaveRuleDraftFromQuickButton());
     document.getElementById("ruleEarliestTime")?.addEventListener("click",e=>{if(e.currentTarget.showPicker) e.currentTarget.showPicker();});
@@ -17755,7 +17955,7 @@ where dt = '\${bizdate}'</textarea></div>
   min-width: 1335px !important;
 }
 #view-data .asset-meta-table.pending-field-mode {
-  min-width: 1760px !important;
+  min-width: 1640px !important;
 }
 #view-data .asset-meta-table.asset-property-mode th:nth-child(1),
 #view-data .asset-meta-table.asset-property-mode td:nth-child(1),
@@ -18070,6 +18270,25 @@ where dt = '\${bizdate}'</textarea></div>
 #pendingAdjustModal .pending-type-options {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+#pendingAdjustModal .pending-adjust-select {
+  width: 100%;
+  height: 44px;
+  border-radius: 8px;
+  font-weight: 800;
+  color: #172033;
+}
+#pendingAdjustModal .pending-adjust-select:disabled {
+  cursor: not-allowed;
+  color: #8a96aa;
+  background: #f6f8fb;
+}
+#pendingAdjustModal .pending-adjust-select-desc {
+  margin-top: 6px;
+  min-height: 18px;
+  color: #667085;
+  font-size: 12px;
+  line-height: 1.5;
+}
 #pendingAdjustModal .pending-adjust-option {
   min-height: 62px;
   padding: 9px 12px;
@@ -18104,6 +18323,9 @@ where dt = '\${bizdate}'</textarea></div>
 }
 #pendingAdjustModal .pending-adjust-section.is-disabled .pending-adjust-option {
   cursor: not-allowed;
+}
+#pendingAdjustModal .pending-adjust-section.is-disabled .pending-adjust-select-desc {
+  color: #98a2b3;
 }
 #pendingAdjustModal .pending-adjust-reason {
   display: grid;
