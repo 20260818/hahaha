@@ -74,15 +74,6 @@
     color: var(--muted);
     font-weight: 500;
   }
-  .coach-badge {
-    background: var(--accent-soft);
-    color: var(--accent);
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    white-space: nowrap;
-  }
 
   /* Page content */
   .page {
@@ -97,6 +88,55 @@
   @keyframes slideUp {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card, .match-card, .oppo-card, .inspire-card, .tip-card, .task-item, .stat-box, .player-card {
+    animation: fadeInUp 0.4s ease-out both;
+  }
+  .card:hover, .match-card:hover, .oppo-card:hover, .inspire-card:hover, .tip-card:hover, .stat-box:hover, .player-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  .card, .match-card, .oppo-card, .inspire-card, .tip-card, .stat-box, .player-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .task-item {
+    transition: transform 0.15s, box-shadow 0.2s ease;
+  }
+  .task-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  @keyframes pulseBg {
+    0%, 100% { background: linear-gradient(135deg, #FF6B35 0%, #FF9558 100%); }
+    50% { background: linear-gradient(135deg, #FF7A4A 0%, #FFA06E 100%); }
+  }
+  .next-match {
+    animation: pulseBg 3s ease-in-out infinite;
+  }
+
+  @keyframes tabPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+  .tab-item.active .tab-icon {
+    animation: tabPop 0.3s ease;
+  }
+
+  @keyframes checkBounce {
+    0% { transform: scale(0.8); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+  .task-check.checked {
+    animation: checkBounce 0.3s ease;
   }
 
   /* Section title */
@@ -267,6 +307,233 @@
   .tag-next { background: var(--accent-soft); color: var(--accent); }
   .tag-done { background: var(--green-soft); color: var(--green); }
   .tag-todo { background: var(--blue-soft); color: var(--blue); }
+  .tag-win { background: var(--green-soft); color: var(--green); }
+  .tag-loss { background: var(--red-soft); color: var(--red); }
+
+  /* Score input area */
+  .score-area {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px;
+    margin-bottom: 12px;
+    animation: fadeInUp 0.4s ease-out both;
+  }
+  .score-area:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .score-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .score-team {
+    text-align: center;
+    flex: 1;
+  }
+  .score-team-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .score-input {
+    width: 64px;
+    height: 48px;
+    font-size: 22px;
+    font-weight: 800;
+    text-align: center;
+    border: 2px solid var(--rule);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .score-input:focus {
+    border-color: var(--accent);
+    background: var(--surface);
+  }
+  .score-sep {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--muted2);
+  }
+  .score-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  .btn {
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-primary:active { transform: scale(0.96); }
+  .btn-secondary {
+    background: var(--rule);
+    color: var(--ink);
+  }
+  .score-result {
+    text-align: center;
+    padding-top: 10px;
+    border-top: 0.5px solid var(--rule);
+    margin-top: 10px;
+  }
+  .score-result-text {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .score-result-tag {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  /* Standings */
+  .standings-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .standings-table th {
+    text-align: left;
+    padding: 10px 8px;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--rule);
+  }
+  .standings-table td {
+    padding: 12px 8px;
+    border-bottom: 0.5px solid var(--rule);
+    font-weight: 500;
+  }
+  .standings-table tr:last-child td { border-bottom: none; }
+  .standings-table .team-sz {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-left: 6px;
+  }
+  .standings-table tr.highlight {
+    background: var(--accent-soft);
+  }
+  .standings-table tr.highlight td {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Knockout path */
+  .ko-path {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px;
+    margin-bottom: 12px;
+    animation: fadeInUp 0.4s ease-out both;
+  }
+  .ko-path:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .ko-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .ko-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .ko-box {
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .ko-arrow {
+    color: var(--muted2);
+    font-size: 16px;
+  }
+  .ko-detail {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+  }
+  .ko-detail strong {
+    color: var(--ink);
+  }
+
+  /* A Ranking selector */
+  .a-ranking {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px;
+    margin-bottom: 12px;
+    animation: fadeInUp 0.4s ease-out both;
+  }
+  .a-ranking:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .a-ranking-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 0.5px solid var(--rule);
+  }
+  .a-ranking-row:last-child { border-bottom: none; }
+  .a-ranking-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .a-ranking-select {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1.5px solid var(--rule);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--bg);
+    outline: none;
+    min-width: 120px;
+  }
+  .a-ranking-select:focus { border-color: var(--accent); }
 
   /* Opponent card */
   .oppo-card {
@@ -686,7 +953,6 @@
       <h1>教练工作台</h1>
       <div class="subtitle">深圳男子乙组 · 省运会篮球</div>
     </div>
-    <div class="coach-badge">张家维 主教练</div>
   </div>
 </header>
 
@@ -802,7 +1068,9 @@
 <!-- Page: 赛程 -->
 <div id="page-schedule" class="page">
   <div class="section-label">小组赛 · B组</div>
-  <div class="match-card next">
+
+  <!-- Match 1: 深圳 vs 江门 -->
+  <div class="match-card next" data-match-idx="0">
     <div class="match-date">
       <div class="match-day">周一</div>
       <div class="match-num">04</div>
@@ -815,6 +1083,25 @@
     </div>
     <div class="match-tag tag-next">第一轮</div>
   </div>
+  <div class="score-area" id="score-area-0">
+    <div class="score-row">
+      <div class="score-team">
+        <div class="score-team-name">深圳</div>
+        <input type="number" class="score-input" id="score-0-a" placeholder="0" min="0">
+      </div>
+      <div class="score-sep">:</div>
+      <div class="score-team">
+        <div class="score-team-name">江门</div>
+        <input type="number" class="score-input" id="score-0-b" placeholder="0" min="0">
+      </div>
+    </div>
+    <div class="score-actions">
+      <button class="btn btn-primary" onclick="saveScore(0)">保存比分</button>
+    </div>
+    <div class="score-result" id="score-result-0" style="display:none;"></div>
+  </div>
+
+  <!-- Match 2: 中山 vs 佛山 (no Shenzhen) -->
   <div class="match-card">
     <div class="match-date">
       <div class="match-day">周一</div>
@@ -828,7 +1115,9 @@
     </div>
     <div class="match-tag tag-todo">第一轮</div>
   </div>
-  <div class="match-card next">
+
+  <!-- Match 3: 佛山 vs 深圳 -->
+  <div class="match-card next" data-match-idx="1">
     <div class="match-date">
       <div class="match-day">周三</div>
       <div class="match-num">06</div>
@@ -841,6 +1130,25 @@
     </div>
     <div class="match-tag tag-next">第二轮</div>
   </div>
+  <div class="score-area" id="score-area-1">
+    <div class="score-row">
+      <div class="score-team">
+        <div class="score-team-name">佛山</div>
+        <input type="number" class="score-input" id="score-1-a" placeholder="0" min="0">
+      </div>
+      <div class="score-sep">:</div>
+      <div class="score-team">
+        <div class="score-team-name">深圳</div>
+        <input type="number" class="score-input" id="score-1-b" placeholder="0" min="0">
+      </div>
+    </div>
+    <div class="score-actions">
+      <button class="btn btn-primary" onclick="saveScore(1)">保存比分</button>
+    </div>
+    <div class="score-result" id="score-result-1" style="display:none;"></div>
+  </div>
+
+  <!-- Match 4: 江门 vs 中山 (no Shenzhen) -->
   <div class="match-card">
     <div class="match-date">
       <div class="match-day">周三</div>
@@ -854,7 +1162,9 @@
     </div>
     <div class="match-tag tag-todo">第二轮</div>
   </div>
-  <div class="match-card next">
+
+  <!-- Match 5: 中山 vs 深圳 -->
+  <div class="match-card next" data-match-idx="2">
     <div class="match-date">
       <div class="match-day">周四</div>
       <div class="match-num">07</div>
@@ -867,6 +1177,25 @@
     </div>
     <div class="match-tag tag-next">第三轮</div>
   </div>
+  <div class="score-area" id="score-area-2">
+    <div class="score-row">
+      <div class="score-team">
+        <div class="score-team-name">中山</div>
+        <input type="number" class="score-input" id="score-2-a" placeholder="0" min="0">
+      </div>
+      <div class="score-sep">:</div>
+      <div class="score-team">
+        <div class="score-team-name">深圳</div>
+        <input type="number" class="score-input" id="score-2-b" placeholder="0" min="0">
+      </div>
+    </div>
+    <div class="score-actions">
+      <button class="btn btn-primary" onclick="saveScore(2)">保存比分</button>
+    </div>
+    <div class="score-result" id="score-result-2" style="display:none;"></div>
+  </div>
+
+  <!-- Match 6: 江门 vs 佛山 (no Shenzhen) -->
   <div class="match-card">
     <div class="match-date">
       <div class="match-day">周四</div>
@@ -879,6 +1208,25 @@
       <div class="match-meta"><span>10:00</span><span>奥体1号馆</span></div>
     </div>
     <div class="match-tag tag-todo">第三轮</div>
+  </div>
+
+  <div class="section-label">B组实时排名</div>
+  <div class="card card-pad" id="standings-card">
+    <table class="standings-table" id="standings-table">
+      <thead>
+        <tr>
+          <th>排名</th>
+          <th>队伍</th>
+          <th>胜</th>
+          <th>负</th>
+          <th>净胜分</th>
+          <th>积分</th>
+        </tr>
+      </thead>
+      <tbody id="standings-body">
+        <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:16px 0;">录入比分后自动计算</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <div class="section-label">第二阶段 · 8进4</div>
@@ -899,6 +1247,76 @@
     <div class="info-row">
       <div class="info-label">场次40 · 16:00</div>
       <div class="info-value">B1 vs A4</div>
+    </div>
+  </div>
+
+  <div class="ko-path" id="ko-path">
+    <div class="ko-title">深圳晋级路径</div>
+    <div class="ko-flow" id="ko-flow">
+      <div class="ko-box">小组赛</div>
+      <div class="ko-arrow">→</div>
+      <div class="ko-box" id="ko-qf">8进4 待定</div>
+    </div>
+    <div class="ko-detail" id="ko-detail">录入B组比赛比分后自动推算</div>
+  </div>
+
+  <div class="section-label">A组排名设置</div>
+  <div class="a-ranking">
+    <div class="note" style="margin-bottom:10px;">选择A组最终排名，确定淘汰赛具体对阵</div>
+    <div class="a-ranking-row">
+      <div class="a-ranking-label">A1</div>
+      <select class="a-ranking-select" id="a-rank-1" onchange="saveARankingFromUI()">
+        <option value="">--选择--</option>
+        <option value="茂名">茂名</option>
+        <option value="广州">广州</option>
+        <option value="东莞">东莞</option>
+        <option value="肇庆">肇庆</option>
+        <option value="珠海">珠海</option>
+      </select>
+    </div>
+    <div class="a-ranking-row">
+      <div class="a-ranking-label">A2</div>
+      <select class="a-ranking-select" id="a-rank-2" onchange="saveARankingFromUI()">
+        <option value="">--选择--</option>
+        <option value="茂名">茂名</option>
+        <option value="广州">广州</option>
+        <option value="东莞">东莞</option>
+        <option value="肇庆">肇庆</option>
+        <option value="珠海">珠海</option>
+      </select>
+    </div>
+    <div class="a-ranking-row">
+      <div class="a-ranking-label">A3</div>
+      <select class="a-ranking-select" id="a-rank-3" onchange="saveARankingFromUI()">
+        <option value="">--选择--</option>
+        <option value="茂名">茂名</option>
+        <option value="广州">广州</option>
+        <option value="东莞">东莞</option>
+        <option value="肇庆">肇庆</option>
+        <option value="珠海">珠海</option>
+      </select>
+    </div>
+    <div class="a-ranking-row">
+      <div class="a-ranking-label">A4</div>
+      <select class="a-ranking-select" id="a-rank-4" onchange="saveARankingFromUI()">
+        <option value="">--选择--</option>
+        <option value="茂名">茂名</option>
+        <option value="广州">广州</option>
+        <option value="东莞">东莞</option>
+        <option value="肇庆">肇庆</option>
+        <option value="珠海">珠海</option>
+      </select>
+    </div>
+    <div class="a-ranking-row">
+      <div class="a-ranking-label">A5</div>
+      <select class="a-ranking-select" id="a-rank-5" onchange="saveARankingFromUI()">
+        <option value="">--选择--</option>
+        <option value="茂名">茂名</option>
+        <option value="广州">广州</option>
+        <option value="东莞">东莞</option>
+        <option value="肇庆">肇庆</option>
+        <option value="珠海">珠海</option>
+      </select>
     </div>
   </div>
 
@@ -1494,10 +1912,272 @@ var SCHEDULE = [
 
 var WEEKDAYS = ['周日','周一','周二','周三','周四','周五','周六'];
 
+// Score data
+var SZ_MATCHES = [
+  { idx: 0, teamA: '深圳', teamB: '江门', round: '第一轮' },
+  { idx: 1, teamA: '佛山', teamB: '深圳', round: '第二轮' },
+  { idx: 2, teamA: '中山', teamB: '深圳', round: '第三轮' }
+];
+
+var B_TEAMS = ['深圳', '江门', '佛山', '中山'];
+var A_TEAMS = ['茂名', '广州', '东莞', '肇庆', '珠海'];
+
+function saveScore(matchIdx) {
+  var inputA = document.getElementById('score-' + matchIdx + '-a');
+  var inputB = document.getElementById('score-' + matchIdx + '-b');
+  var valA = parseInt(inputA.value, 10);
+  var valB = parseInt(inputB.value, 10);
+
+  if (isNaN(valA) || isNaN(valB)) {
+    alert('请输入有效比分');
+    return;
+  }
+
+  var scores = loadScores();
+  scores[matchIdx] = { a: valA, b: valB };
+  localStorage.setItem('coach_scores', JSON.stringify(scores));
+
+  renderScoreResult(matchIdx, valA, valB);
+  calculateStandings();
+  renderStandings();
+  updateKnockoutPath();
+  updateNextMatch();
+}
+
+function loadScores() {
+  try {
+    var raw = localStorage.getItem('coach_scores');
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return {};
+}
+
+function renderScoreInputs() {
+  var scores = loadScores();
+  for (var i = 0; i < SZ_MATCHES.length; i++) {
+    var s = scores[i];
+    if (s) {
+      var inputA = document.getElementById('score-' + i + '-a');
+      var inputB = document.getElementById('score-' + i + '-b');
+      if (inputA) inputA.value = s.a;
+      if (inputB) inputB.value = s.b;
+      renderScoreResult(i, s.a, s.b);
+    }
+  }
+}
+
+function renderScoreResult(matchIdx, scoreA, scoreB) {
+  var resultDiv = document.getElementById('score-result-' + matchIdx);
+  if (!resultDiv) return;
+
+  var match = SZ_MATCHES[matchIdx];
+  var isWin, displayA, displayB, teamADisplay, teamBDisplay;
+
+  if (match.teamA === '深圳') {
+    isWin = scoreA > scoreB;
+    displayA = scoreA;
+    displayB = scoreB;
+    teamADisplay = match.teamA;
+    teamBDisplay = match.teamB;
+  } else {
+    isWin = scoreB > scoreA;
+    displayA = scoreA;
+    displayB = scoreB;
+    teamADisplay = match.teamA;
+    teamBDisplay = match.teamB;
+  }
+
+  var tagClass = isWin ? 'tag-win' : 'tag-loss';
+  var tagText = isWin ? '胜' : '负';
+
+  resultDiv.innerHTML =
+    '<div class="score-result-text">' + teamADisplay + ' ' + displayA + ' : ' + displayB + ' ' + teamBDisplay + '</div>' +
+    '<div class="score-result-tag ' + tagClass + '">' + tagText + '</div>';
+  resultDiv.style.display = 'block';
+}
+
+function calculateStandings() {
+  var scores = loadScores();
+  var stats = {};
+  for (var i = 0; i < B_TEAMS.length; i++) {
+    stats[B_TEAMS[i]] = { w: 0, l: 0, pts: 0, diff: 0 };
+  }
+
+  for (var idx in scores) {
+    if (!scores.hasOwnProperty(idx)) continue;
+    var s = scores[idx];
+    var match = SZ_MATCHES[idx];
+    if (!match) continue;
+
+    var teamA = match.teamA;
+    var teamB = match.teamB;
+    var a = s.a;
+    var b = s.b;
+
+    stats[teamA].diff += (a - b);
+    stats[teamB].diff += (b - a);
+
+    if (a > b) {
+      stats[teamA].w += 1;
+      stats[teamA].pts += 2;
+      stats[teamB].l += 1;
+      stats[teamB].pts += 1;
+    } else if (b > a) {
+      stats[teamB].w += 1;
+      stats[teamB].pts += 2;
+      stats[teamA].l += 1;
+      stats[teamA].pts += 1;
+    }
+  }
+
+  // Other B group matches (中山 vs 佛山, 江门 vs 中山, 江门 vs 佛山) need manual entry or we can only track SZ matches
+  // For now, we compute based on available SZ matches + mock others if needed
+  // Since we only have SZ match inputs, standings will be partial. That's acceptable per requirements.
+
+  return stats;
+}
+
+function renderStandings() {
+  var stats = calculateStandings();
+  var tbody = document.getElementById('standings-body');
+  if (!tbody) return;
+
+  var rows = [];
+  for (var i = 0; i < B_TEAMS.length; i++) {
+    var t = B_TEAMS[i];
+    var s = stats[t];
+    rows.push({ team: t, w: s.w, l: s.l, diff: s.diff, pts: s.pts });
+  }
+
+  rows.sort(function(a, b) {
+    if (b.pts !== a.pts) return b.pts - a.pts;
+    return b.diff - a.diff;
+  });
+
+  var html = '';
+  for (var r = 0; r < rows.length; r++) {
+    var row = rows[r];
+    var highlight = row.team === '深圳' ? ' class="highlight"' : '';
+    var szTag = row.team === '深圳' ? '<span class="team-sz">深圳</span>' : '';
+    html += '<tr' + highlight + '>' +
+      '<td>' + (r + 1) + '</td>' +
+      '<td>' + row.team + szTag + '</td>' +
+      '<td>' + row.w + '</td>' +
+      '<td>' + row.l + '</td>' +
+      '<td>' + (row.diff > 0 ? '+' : '') + row.diff + '</td>' +
+      '<td>' + row.pts + '</td>' +
+      '</tr>';
+  }
+
+  tbody.innerHTML = html;
+}
+
+function getKnockoutOpponent() {
+  var stats = calculateStandings();
+  var rows = [];
+  for (var i = 0; i < B_TEAMS.length; i++) {
+    var t = B_TEAMS[i];
+    var s = stats[t];
+    rows.push({ team: t, w: s.w, l: s.l, diff: s.diff, pts: s.pts });
+  }
+  rows.sort(function(a, b) {
+    if (b.pts !== a.pts) return b.pts - a.pts;
+    return b.diff - a.diff;
+  });
+
+  var szRank = -1;
+  for (var r = 0; r < rows.length; r++) {
+    if (rows[r].team === '深圳') {
+      szRank = r + 1;
+      break;
+    }
+  }
+
+  if (szRank === -1) return null;
+
+  var aRanking = loadARanking();
+  var aOrder = [];
+  for (var k = 1; k <= 5; k++) {
+    aOrder.push(aRanking['A' + k] || null);
+  }
+
+  var opponentMap = {
+    1: { rank: 'A4', slot: 3 },
+    2: { rank: 'A3', slot: 2 },
+    3: { rank: 'A2', slot: 1 },
+    4: { rank: 'A1', slot: 0 }
+  };
+
+  var mapping = opponentMap[szRank];
+  if (!mapping) return null;
+
+  var opponent = aOrder[mapping.slot];
+  return { szRank: szRank, opponentRank: mapping.rank, opponent: opponent };
+}
+
+function updateKnockoutPath() {
+  var ko = getKnockoutOpponent();
+  var flow = document.getElementById('ko-flow');
+  var detail = document.getElementById('ko-detail');
+  var qf = document.getElementById('ko-qf');
+
+  if (!ko) {
+    if (qf) qf.textContent = '8进4 待定';
+    if (detail) detail.textContent = '录入B组比赛比分后自动推算';
+    return;
+  }
+
+  var oppText = ko.opponent || '待定';
+  if (qf) qf.textContent = '8进4 vs ' + oppText;
+
+  var sfInfo = '';
+  if (ko.szRank <= 2) {
+    sfInfo = '若晋级，半决赛对阵另一场8进4胜者（B' + (ko.szRank === 1 ? '2 vs A3' : '1 vs A4') + '的胜者）';
+  } else {
+    sfInfo = '若晋级，半决赛对阵另一场8进4胜者（B' + (ko.szRank === 3 ? '4 vs A1' : '3 vs A2') + '的胜者）';
+  }
+
+  var finalInfo = '若再晋级，决赛/三四名决赛对阵另一场半决赛胜者';
+
+  if (detail) {
+    detail.innerHTML = '深圳以 <strong>B' + ko.szRank + '</strong> 出线，8进4对阵 <strong>' + ko.opponentRank + ' ' + oppText + '</strong><br>' + sfInfo + '<br>' + finalInfo;
+  }
+}
+
+function saveARanking(ranking) {
+  localStorage.setItem('coach_a_ranking', JSON.stringify(ranking));
+}
+
+function loadARanking() {
+  try {
+    var raw = localStorage.getItem('coach_a_ranking');
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return {};
+}
+
+function saveARankingFromUI() {
+  var ranking = {};
+  for (var i = 1; i <= 5; i++) {
+    var sel = document.getElementById('a-rank-' + i);
+    if (sel) ranking['A' + i] = sel.value || null;
+  }
+  saveARanking(ranking);
+  updateKnockoutPath();
+  updateNextMatch();
+}
+
+function loadARankingToUI() {
+  var ranking = loadARanking();
+  for (var i = 1; i <= 5; i++) {
+    var sel = document.getElementById('a-rank-' + i);
+    if (sel && ranking['A' + i]) sel.value = ranking['A' + i];
+  }
+}
+
 function updateNextMatch() {
   var now = new Date();
   var nextMatch = null;
-  var prevMatch = null;
 
   for (var i = 0; i < SCHEDULE.length; i++) {
     var matchDate = new Date(SCHEDULE[i].date);
@@ -1505,11 +2185,9 @@ function updateNextMatch() {
       nextMatch = SCHEDULE[i];
       break;
     }
-    prevMatch = SCHEDULE[i];
   }
 
   if (!nextMatch) {
-    // 所有比赛结束
     var card = document.getElementById('nextMatchCard');
     if (card) {
       card.innerHTML = '<div class="next-match-label">赛事已结束</div><div class="next-match-teams"><div class="nm-team-name" style="font-size:20px;">本届省运会圆满结束</div></div>';
@@ -1522,7 +2200,6 @@ function updateNextMatch() {
   var day = matchDate.getDate();
   var weekday = WEEKDAYS[matchDate.getDay()];
 
-  // 计算倒计时
   var diff = matchDate - now;
   var days = Math.floor(diff / (1000 * 60 * 60 * 24));
   var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -1536,18 +2213,45 @@ function updateNextMatch() {
     countdownText = '即将开始';
   }
 
-  document.getElementById('nextMatchLabel').textContent = '下一场比赛 · ' + countdownText;
+  var label = document.getElementById('nextMatchLabel');
+  if (label) label.textContent = '下一场比赛 · ' + countdownText;
 
-  var teamA = nextMatch.isKO ? '待定' : nextMatch.teamA;
-  var teamB = nextMatch.isKO ? '待定' : nextMatch.teamB;
-  document.getElementById('nmTeamA').textContent = teamA;
-  document.getElementById('nmTeamB').textContent = teamB;
+  var teamA, teamB;
+  if (nextMatch.isKO) {
+    var ko = getKnockoutOpponent();
+    if (ko && ko.opponent) {
+      if (nextMatch.round === '8进4') {
+        teamA = '深圳';
+        teamB = ko.opponent;
+      } else if (nextMatch.round === '5-8名/半决赛') {
+        teamA = '深圳';
+        teamB = ko.opponent ? '待定' : '待定';
+      } else {
+        teamA = '深圳';
+        teamB = '待定';
+      }
+    } else {
+      teamA = '待定';
+      teamB = '待定';
+    }
+  } else {
+    teamA = nextMatch.teamA;
+    teamB = nextMatch.teamB;
+  }
 
-  document.getElementById('nmMeta').innerHTML =
-    '<span>' + month + '月' + day + '日 ' + weekday + '</span>' +
-    '<span>' + nextMatch.time + '</span>' +
-    '<span>' + nextMatch.venue + '</span>' +
-    '<span style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:8px;">' + nextMatch.round + '</span>';
+  var nmA = document.getElementById('nmTeamA');
+  var nmB = document.getElementById('nmTeamB');
+  if (nmA) nmA.textContent = teamA;
+  if (nmB) nmB.textContent = teamB;
+
+  var meta = document.getElementById('nmMeta');
+  if (meta) {
+    meta.innerHTML =
+      '<span>' + month + '月' + day + '日 ' + weekday + '</span>' +
+      '<span>' + nextMatch.time + '</span>' +
+      '<span>' + nextMatch.venue + '</span>' +
+      '<span style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:8px;">' + nextMatch.round + '</span>';
+  }
 }
 
 // 页面加载时立即更新，然后每小时刷新一次
@@ -1555,11 +2259,12 @@ updateNextMatch();
 setInterval(updateNextMatch, 3600000);
 
 function showPage(id, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-item').forEach(function(t) { t.classList.remove('active'); });
   document.getElementById('page-' + id).classList.add('active');
   el.classList.add('active');
   window.scrollTo(0, 0);
+  applyStaggerAnimation('#page-' + id);
 }
 
 var totalTasks = document.querySelectorAll('.task-item').length;
@@ -1578,11 +2283,36 @@ function updateProgress() {
   document.getElementById('progressFill').style.width = pct + '%';
 }
 
+// Stagger animation
+function applyStaggerAnimation(selector) {
+  var container = document.querySelector(selector);
+  if (!container) return;
+  var items = container.querySelectorAll('.card, .match-card, .oppo-card, .inspire-card, .tip-card, .task-item, .stat-box, .player-card, .score-area, .ko-path, .a-ranking');
+  items.forEach(function(item, index) {
+    item.style.animationDelay = (index * 0.06) + 's';
+  });
+}
+
+// IntersectionObserver for initial load
+if ('IntersectionObserver' in window) {
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = 'running';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.card, .match-card, .oppo-card, .inspire-card, .tip-card, .task-item, .stat-box, .player-card').forEach(function(el) {
+    observer.observe(el);
+  });
+}
+
 // Radar chart
 (function() {
   var el = document.getElementById('chart-radar');
   if (!el) return;
-  var style = getComputedStyle(document.documentElement);
   var accent = '#FF6B35';
   var blue = '#007AFF';
   var red = '#FF3B30';
@@ -1630,6 +2360,15 @@ function updateProgress() {
   });
   window.addEventListener('resize', function() { chart.resize(); });
 })();
+
+// Init
+renderScoreInputs();
+loadARankingToUI();
+calculateStandings();
+renderStandings();
+updateKnockoutPath();
+updateNextMatch();
+applyStaggerAnimation('#page-overview');
 </script>
 
 </body>
