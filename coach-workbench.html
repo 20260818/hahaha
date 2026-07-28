@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>教练工作台 · 深圳男子乙组</title>
-<script src="./_shared/js/echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
 <style>
   :root {
     --bg: #F5F5F7;
@@ -692,18 +692,18 @@
 
 <!-- Page: 概览 -->
 <div id="page-overview" class="page active">
-  <div class="next-match">
-    <div class="next-match-label">下一场比赛</div>
+  <div class="next-match" id="nextMatchCard">
+    <div class="next-match-label" id="nextMatchLabel">下一场比赛</div>
     <div class="next-match-teams">
       <div class="nm-team">
-        <div class="nm-team-name">深圳</div>
+        <div class="nm-team-name" id="nmTeamA">深圳</div>
       </div>
       <div class="nm-vs">VS</div>
       <div class="nm-team">
-        <div class="nm-team-name">江门</div>
+        <div class="nm-team-name" id="nmTeamB">江门</div>
       </div>
     </div>
-    <div class="nm-meta">
+    <div class="nm-meta" id="nmMeta">
       <span>8月4日 周一</span>
       <span>10:00</span>
       <span>庙街体育馆</span>
@@ -1482,6 +1482,78 @@
 </nav>
 
 <script>
+// === 赛程数据 ===
+var SCHEDULE = [
+  { date: '2026-08-04T10:00:00', teamA: '深圳', teamB: '江门', time: '10:00', venue: '庙街体育馆', round: '第一轮' },
+  { date: '2026-08-06T08:30:00', teamA: '佛山', teamB: '深圳', time: '08:30', venue: '庙街体育馆', round: '第二轮' },
+  { date: '2026-08-07T10:00:00', teamA: '中山', teamB: '深圳', time: '10:00', venue: '庙街体育馆', round: '第三轮' },
+  { date: '2026-08-08T14:30:00', teamA: null, teamB: null, time: '待定', venue: '待定', round: '8进4', isKO: true },
+  { date: '2026-08-09T10:00:00', teamA: null, teamB: null, time: '待定', venue: '待定', round: '5-8名/半决赛', isKO: true },
+  { date: '2026-08-10T10:00:00', teamA: null, teamB: null, time: '待定', venue: '待定', round: '决赛', isKO: true }
+];
+
+var WEEKDAYS = ['周日','周一','周二','周三','周四','周五','周六'];
+
+function updateNextMatch() {
+  var now = new Date();
+  var nextMatch = null;
+  var prevMatch = null;
+
+  for (var i = 0; i < SCHEDULE.length; i++) {
+    var matchDate = new Date(SCHEDULE[i].date);
+    if (matchDate > now) {
+      nextMatch = SCHEDULE[i];
+      break;
+    }
+    prevMatch = SCHEDULE[i];
+  }
+
+  if (!nextMatch) {
+    // 所有比赛结束
+    var card = document.getElementById('nextMatchCard');
+    if (card) {
+      card.innerHTML = '<div class="next-match-label">赛事已结束</div><div class="next-match-teams"><div class="nm-team-name" style="font-size:20px;">本届省运会圆满结束</div></div>';
+    }
+    return;
+  }
+
+  var matchDate = new Date(nextMatch.date);
+  var month = matchDate.getMonth() + 1;
+  var day = matchDate.getDate();
+  var weekday = WEEKDAYS[matchDate.getDay()];
+
+  // 计算倒计时
+  var diff = matchDate - now;
+  var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+  var countdownText;
+  if (days > 0) {
+    countdownText = '还有 ' + days + ' 天 ' + hours + ' 小时';
+  } else if (hours > 0) {
+    countdownText = '还有 ' + hours + ' 小时';
+  } else {
+    countdownText = '即将开始';
+  }
+
+  document.getElementById('nextMatchLabel').textContent = '下一场比赛 · ' + countdownText;
+
+  var teamA = nextMatch.isKO ? '待定' : nextMatch.teamA;
+  var teamB = nextMatch.isKO ? '待定' : nextMatch.teamB;
+  document.getElementById('nmTeamA').textContent = teamA;
+  document.getElementById('nmTeamB').textContent = teamB;
+
+  document.getElementById('nmMeta').innerHTML =
+    '<span>' + month + '月' + day + '日 ' + weekday + '</span>' +
+    '<span>' + nextMatch.time + '</span>' +
+    '<span>' + nextMatch.venue + '</span>' +
+    '<span style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:8px;">' + nextMatch.round + '</span>';
+}
+
+// 页面加载时立即更新，然后每小时刷新一次
+updateNextMatch();
+setInterval(updateNextMatch, 3600000);
+
 function showPage(id, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
