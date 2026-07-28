@@ -738,6 +738,186 @@
   .pill-routine { background: var(--blue-soft); color: var(--blue); }
   .pill-mental { background: var(--green-soft); color: var(--green); }
 
+  /* === Cheer Hero (Pudding-inspired) === */
+  .cheer-hero {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    padding: 40px 24px 32px;
+    text-align: center;
+  }
+  .cheer-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at 50% 50%, rgba(255,107,53,0.12) 0%, transparent 50%);
+    animation: cheerGlow 4s ease-in-out infinite;
+  }
+  @keyframes cheerGlow {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.1); opacity: 1; }
+  }
+  .cheer-hero-tag {
+    position: relative;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .cheer-hero-title {
+    position: relative;
+    font-size: 64px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    color: #FFFFFF;
+    line-height: 1;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+  }
+  .cheer-hero-title span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(30px) rotateX(-90deg);
+    animation: cheerLetterReveal 0.6s ease-out forwards;
+  }
+  .cheer-hero-title span:nth-child(1) { animation-delay: 0.1s; }
+  .cheer-hero-title span:nth-child(2) { animation-delay: 0.25s; }
+  @keyframes cheerLetterReveal {
+    to { opacity: 1; transform: translateY(0) rotateX(0); }
+  }
+  .cheer-hero-sub {
+    position: relative;
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.5s forwards;
+  }
+  .cheer-countdown {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.7s forwards;
+  }
+  .cheer-countdown-item {
+    text-align: center;
+  }
+  .cheer-countdown-num {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .cheer-countdown-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .cheer-countdown-sep {
+    font-size: 28px;
+    color: rgba(255,255,255,0.2);
+    font-weight: 700;
+    align-self: center;
+  }
+
+  /* Cheer phrases (scroll reveal) */
+  .cheer-phrase {
+    padding: 28px 20px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .cheer-phrase.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .cheer-phrase-text {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+  }
+  .cheer-phrase-accent {
+    color: var(--accent);
+  }
+  .cheer-phrase-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  /* Battle cry */
+  .cheer-battlecry {
+    background: linear-gradient(135deg, #FF6B35 0%, #FF9558 100%);
+    border-radius: var(--radius);
+    padding: 36px 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cheer-battlecry::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+    animation: cheerShine 3s ease-in-out infinite;
+  }
+  @keyframes cheerShine {
+    0%, 100% { transform: translateX(-100%); }
+    50% { transform: translateX(100%); }
+  }
+  .cheer-battlecry-text {
+    position: relative;
+    font-size: 36px;
+    font-weight: 900;
+    color: #FFFFFF;
+    letter-spacing: 0.1em;
+    line-height: 1.2;
+  }
+  .cheer-battlecry-sub {
+    position: relative;
+    font-size: 15px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 600;
+    margin-top: 10px;
+  }
+
+  /* Cheer values */
+  .cheer-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .cheer-value-tag {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    color: var(--ink);
+  }
+  .cheer-value-tag:nth-child(odd) { color: var(--accent); }
+  .cheer-value-tag:nth-child(even) { color: var(--blue); }
+
   /* Inspiration */
   .inspire-card {
     background: var(--surface);
@@ -1041,10 +1221,6 @@
     <div class="info-row">
       <div class="info-label">8月3日 10:00-11:00</div>
       <div class="info-value">庙街体育馆</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">8月3日 13:00-14:00</div>
-      <div class="info-value">奥体1号馆</div>
     </div>
   </div>
 
@@ -1833,6 +2009,65 @@
 
 <!-- Page: 能量 -->
 <div id="page-inspire" class="page">
+  <!-- Cheer Hero -->
+  <div class="cheer-hero">
+    <div class="cheer-hero-tag">SHENZHEN BASKETBALL</div>
+    <div class="cheer-hero-title">
+      <span>深</span><span>圳</span>
+    </div>
+    <div class="cheer-hero-sub">男子乙组 · 广东省第十七届运动会</div>
+    <div class="cheer-countdown" id="cheerCountdown">
+      <div class="cheer-countdown-item">
+        <div class="cheer-countdown-num" id="cdDays">--</div>
+        <div class="cheer-countdown-label">天</div>
+      </div>
+      <div class="cheer-countdown-sep">:</div>
+      <div class="cheer-countdown-item">
+        <div class="cheer-countdown-num" id="cdHours">--</div>
+        <div class="cheer-countdown-label">时</div>
+      </div>
+      <div class="cheer-countdown-sep">:</div>
+      <div class="cheer-countdown-item">
+        <div class="cheer-countdown-num" id="cdMins">--</div>
+        <div class="cheer-countdown-label">分</div>
+      </div>
+      <div class="cheer-countdown-sep">:</div>
+      <div class="cheer-countdown-item">
+        <div class="cheer-countdown-num" id="cdSecs">--</div>
+        <div class="cheer-countdown-label">秒</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Motivational Phrases -->
+  <div class="cheer-phrase">
+    <div class="cheer-phrase-text">每一滴汗水，都是<span class="cheer-phrase-accent">通往胜利的路</span></div>
+    <div class="cheer-phrase-sub">训练馆里的每一组折返跑，都不会白费</div>
+  </div>
+  <div class="cheer-phrase">
+    <div class="cheer-phrase-text">每一场都是<span class="cheer-phrase-accent">决战</span></div>
+    <div class="cheer-phrase-sub">小组赛没有弱队，尊重每一个对手，拼尽每一秒钟</div>
+  </div>
+  <div class="cheer-phrase">
+    <div class="cheer-phrase-text">深圳的篮球，<span class="cheer-phrase-accent">从不退缩</span></div>
+    <div class="cheer-phrase-sub">从基层到省运赛场，每一步都走得踏实而坚定</div>
+  </div>
+
+  <!-- Team Values -->
+  <div class="cheer-values">
+    <div class="cheer-value-tag">血性</div>
+    <div class="cheer-value-tag">纪律</div>
+    <div class="cheer-value-tag">团结</div>
+    <div class="cheer-value-tag">执行力</div>
+    <div class="cheer-value-tag">永不放弃</div>
+  </div>
+
+  <!-- Battle Cry -->
+  <div class="cheer-battlecry">
+    <div class="cheer-battlecry-text">深圳加油</div>
+    <div class="cheer-battlecry-sub">走上赛场，就是我们的主场</div>
+  </div>
+
   <div class="section-label">教练正能量故事</div>
 
   <div class="inspire-card">
@@ -2366,6 +2601,49 @@ function updateNextMatch() {
 updateNextMatch();
 setInterval(updateNextMatch, 3600000);
 
+// === Cheer countdown ===
+function updateCheerCountdown() {
+  var target = new Date('2026-08-04T10:00:00+08:00');
+  var now = new Date();
+  var diff = target - now;
+  if (diff < 0) {
+    var cdEl = document.getElementById('cheerCountdown');
+    if (cdEl) cdEl.innerHTML = '<div style="font-size:18px;font-weight:700;color:var(--accent);">比赛已经开始，全力拼搏！</div>';
+    return;
+  }
+  var d = Math.floor(diff / 86400000);
+  var h = Math.floor((diff % 86400000) / 3600000);
+  var m = Math.floor((diff % 3600000) / 60000);
+  var s = Math.floor((diff % 60000) / 1000);
+  var pad = function(n) { return n < 10 ? '0' + n : '' + n; };
+  var el;
+  if ((el = document.getElementById('cdDays'))) el.textContent = d;
+  if ((el = document.getElementById('cdHours'))) el.textContent = pad(h);
+  if ((el = document.getElementById('cdMins'))) el.textContent = pad(m);
+  if ((el = document.getElementById('cdSecs'))) el.textContent = pad(s);
+}
+updateCheerCountdown();
+setInterval(updateCheerCountdown, 1000);
+
+// === Scroll-triggered cheer phrase reveal ===
+function initCheerScrollReveal() {
+  var phrases = document.querySelectorAll('.cheer-phrase');
+  if (!('IntersectionObserver' in window)) {
+    phrases.forEach(function(p) { p.classList.add('visible'); });
+    return;
+  }
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  phrases.forEach(function(p) { obs.observe(p); });
+}
+initCheerScrollReveal();
+
 function showPage(id, el) {
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.querySelectorAll('.tab-item').forEach(function(t) { t.classList.remove('active'); });
@@ -2373,6 +2651,9 @@ function showPage(id, el) {
   el.classList.add('active');
   window.scrollTo(0, 0);
   applyStaggerAnimation('#page-' + id);
+  if (id === 'inspire') {
+    setTimeout(initCheerScrollReveal, 100);
+  }
 }
 
 var totalTasks = document.querySelectorAll('.task-item').length;
