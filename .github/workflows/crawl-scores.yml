@@ -1,0 +1,42 @@
+name: Crawl Basketball Scores
+
+on:
+  schedule:
+    # Beijing Time: 10:00, 12:00, 14:00, 16:00, 18:00, 20:00
+    # UTC: 02:00, 04:00, 06:00, 08:00, 10:00, 12:00
+    - cron: '0 2,4,6,8,10,12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run crawler
+        run: python .github/scripts/crawler.py
+
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add scores.json a_ranking.json
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: update scores from crawler [$(date -u +%Y-%m-%d_%H:%M:%S)]"
+            git push
+          else
+            echo "No score changes to commit."
+          fi
