@@ -2007,6 +2007,56 @@ function loadScores() {
   return {};
 }
 
+// Load external scores from JSON file (crawler data)
+function loadExternalScores(callback) {
+  fetch('./scores.json?v=' + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var localScores = loadScores();
+      var hasNewData = false;
+      for (var i = 0; i < ALL_B_MATCHES.length; i++) {
+        var key = String(i);
+        // Only fill from external if local user hasn't manually entered this match
+        if (data[key] && data[key].a !== null && data[key].b !== null && !localScores[key]) {
+          localScores[key] = { a: data[key].a, b: data[key].b, source: 'crawler' };
+          hasNewData = true;
+        }
+      }
+      if (hasNewData) {
+        localStorage.setItem('coach_scores', JSON.stringify(localScores));
+      }
+      if (callback) callback();
+    })
+    .catch(function(e) {
+      if (callback) callback();
+    });
+}
+
+// Load external A ranking from JSON file
+function loadExternalARanking(callback) {
+  fetch('./a_ranking.json?v=' + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var localRanking = loadARanking();
+      var hasNewData = false;
+      for (var i = 1; i <= 5; i++) {
+        var key = 'A' + i;
+        // Only fill from external if local user hasn't manually set this rank
+        if (data[key] && !localRanking[key]) {
+          localRanking[key] = data[key];
+          hasNewData = true;
+        }
+      }
+      if (hasNewData) {
+        localStorage.setItem('coach_a_ranking', JSON.stringify(localRanking));
+      }
+      if (callback) callback();
+    })
+    .catch(function(e) {
+      if (callback) callback();
+    });
+}
+
 function renderScoreInputs() {
   var scores = loadScores();
   for (var i = 0; i < ALL_B_MATCHES.length; i++) {
@@ -2419,14 +2469,23 @@ if ('IntersectionObserver' in window) {
   window.addEventListener('resize', function() { chart.resize(); });
 })();
 
-// Init
-renderScoreInputs();
-loadARankingToUI();
-calculateStandings();
-renderStandings();
-updateKnockoutPath();
-updateNextMatch();
-applyStaggerAnimation('#page-overview');
+// Init - load external data first, then render
+function initApp() {
+  renderScoreInputs();
+  loadARankingToUI();
+  calculateStandings();
+  renderStandings();
+  updateKnockoutPath();
+  updateNextMatch();
+  applyStaggerAnimation('#page-overview');
+}
+
+// Try loading external data first, then init
+loadExternalScores(function() {
+  loadExternalARanking(function() {
+    initApp();
+  });
+});
 </script>
 
 </body>
