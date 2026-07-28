@@ -1036,6 +1036,18 @@
     <div class="match-tag tag-todo">待赛</div>
   </div>
 
+  <div class="section-label">训练日程</div>
+  <div class="card card-pad">
+    <div class="info-row">
+      <div class="info-label">8月3日 10:00-11:00</div>
+      <div class="info-value">庙街体育馆</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">8月3日 13:00-14:00</div>
+      <div class="info-value">奥体1号馆</div>
+    </div>
+  </div>
+
   <div class="section-label">关键信息</div>
   <div class="card card-pad">
     <div class="info-row">
@@ -1115,6 +1127,23 @@
     </div>
     <div class="match-tag tag-todo">第一轮</div>
   </div>
+  <div class="score-area" id="score-area-3">
+    <div class="score-row">
+      <div class="score-team">
+        <div class="score-team-name">中山</div>
+        <input type="number" class="score-input" id="score-3-a" placeholder="0" min="0">
+      </div>
+      <div class="score-sep">:</div>
+      <div class="score-team">
+        <div class="score-team-name">佛山</div>
+        <input type="number" class="score-input" id="score-3-b" placeholder="0" min="0">
+      </div>
+    </div>
+    <div class="score-actions">
+      <button class="btn btn-primary" onclick="saveScore(3)">保存比分</button>
+    </div>
+    <div class="score-result" id="score-result-3" style="display:none;"></div>
+  </div>
 
   <!-- Match 3: 佛山 vs 深圳 -->
   <div class="match-card next" data-match-idx="1">
@@ -1161,6 +1190,23 @@
       <div class="match-meta"><span>08:30</span><span>奥体1号馆</span></div>
     </div>
     <div class="match-tag tag-todo">第二轮</div>
+  </div>
+  <div class="score-area" id="score-area-4">
+    <div class="score-row">
+      <div class="score-team">
+        <div class="score-team-name">江门</div>
+        <input type="number" class="score-input" id="score-4-a" placeholder="0" min="0">
+      </div>
+      <div class="score-sep">:</div>
+      <div class="score-team">
+        <div class="score-team-name">中山</div>
+        <input type="number" class="score-input" id="score-4-b" placeholder="0" min="0">
+      </div>
+    </div>
+    <div class="score-actions">
+      <button class="btn btn-primary" onclick="saveScore(4)">保存比分</button>
+    </div>
+    <div class="score-result" id="score-result-4" style="display:none;"></div>
   </div>
 
   <!-- Match 5: 中山 vs 深圳 -->
@@ -1209,8 +1255,26 @@
     </div>
     <div class="match-tag tag-todo">第三轮</div>
   </div>
+  <div class="score-area" id="score-area-5">
+    <div class="score-row">
+      <div class="score-team">
+        <div class="score-team-name">江门</div>
+        <input type="number" class="score-input" id="score-5-a" placeholder="0" min="0">
+      </div>
+      <div class="score-sep">:</div>
+      <div class="score-team">
+        <div class="score-team-name">佛山</div>
+        <input type="number" class="score-input" id="score-5-b" placeholder="0" min="0">
+      </div>
+    </div>
+    <div class="score-actions">
+      <button class="btn btn-primary" onclick="saveScore(5)">保存比分</button>
+    </div>
+    <div class="score-result" id="score-result-5" style="display:none;"></div>
+  </div>
 
   <div class="section-label">B组实时排名</div>
+  <div class="note" style="margin-bottom:8px;">录入全部6场B组比赛比分后排名自动更新（含非深圳比赛）</div>
   <div class="card card-pad" id="standings-card">
     <table class="standings-table" id="standings-table">
       <thead>
@@ -1341,18 +1405,6 @@
     <div class="info-row">
       <div class="info-label">珠海市</div>
       <div class="info-value">—</div>
-    </div>
-  </div>
-
-  <div class="section-label">训练日程</div>
-  <div class="card card-pad">
-    <div class="info-row">
-      <div class="info-label">8月3日 10:00-11:00</div>
-      <div class="info-value">庙街体育馆</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">8月3日 13:00-14:00</div>
-      <div class="info-value">奥体1号馆</div>
     </div>
   </div>
 </div>
@@ -1912,11 +1964,14 @@ var SCHEDULE = [
 
 var WEEKDAYS = ['周日','周一','周二','周三','周四','周五','周六'];
 
-// Score data
-var SZ_MATCHES = [
+// Score data - ALL B group matches (index matches HTML score-area IDs)
+var ALL_B_MATCHES = [
   { idx: 0, teamA: '深圳', teamB: '江门', round: '第一轮' },
   { idx: 1, teamA: '佛山', teamB: '深圳', round: '第二轮' },
-  { idx: 2, teamA: '中山', teamB: '深圳', round: '第三轮' }
+  { idx: 2, teamA: '中山', teamB: '深圳', round: '第三轮' },
+  { idx: 3, teamA: '中山', teamB: '佛山', round: '第一轮' },
+  { idx: 4, teamA: '江门', teamB: '中山', round: '第二轮' },
+  { idx: 5, teamA: '江门', teamB: '佛山', round: '第三轮' }
 ];
 
 var B_TEAMS = ['深圳', '江门', '佛山', '中山'];
@@ -1954,7 +2009,7 @@ function loadScores() {
 
 function renderScoreInputs() {
   var scores = loadScores();
-  for (var i = 0; i < SZ_MATCHES.length; i++) {
+  for (var i = 0; i < ALL_B_MATCHES.length; i++) {
     var s = scores[i];
     if (s) {
       var inputA = document.getElementById('score-' + i + '-a');
@@ -1970,7 +2025,7 @@ function renderScoreResult(matchIdx, scoreA, scoreB) {
   var resultDiv = document.getElementById('score-result-' + matchIdx);
   if (!resultDiv) return;
 
-  var match = SZ_MATCHES[matchIdx];
+  var match = ALL_B_MATCHES[matchIdx];
   var isWin, displayA, displayB, teamADisplay, teamBDisplay;
 
   if (match.teamA === '深圳') {
@@ -1979,20 +2034,27 @@ function renderScoreResult(matchIdx, scoreA, scoreB) {
     displayB = scoreB;
     teamADisplay = match.teamA;
     teamBDisplay = match.teamB;
-  } else {
+  } else if (match.teamB === '深圳') {
     isWin = scoreB > scoreA;
+    displayA = scoreA;
+    displayB = scoreB;
+    teamADisplay = match.teamA;
+    teamBDisplay = match.teamB;
+  } else {
+    // Non-Shenzhen match - no win/loss tag for Shenzhen
+    isWin = null;
     displayA = scoreA;
     displayB = scoreB;
     teamADisplay = match.teamA;
     teamBDisplay = match.teamB;
   }
 
-  var tagClass = isWin ? 'tag-win' : 'tag-loss';
-  var tagText = isWin ? '胜' : '负';
+  var tagClass = isWin === null ? '' : (isWin ? 'tag-win' : 'tag-loss');
+  var tagText = isWin === null ? '' : (isWin ? '胜' : '负');
 
   resultDiv.innerHTML =
     '<div class="score-result-text">' + teamADisplay + ' ' + displayA + ' : ' + displayB + ' ' + teamBDisplay + '</div>' +
-    '<div class="score-result-tag ' + tagClass + '">' + tagText + '</div>';
+    (tagText ? '<div class="score-result-tag ' + tagClass + '">' + tagText + '</div>' : '');
   resultDiv.style.display = 'block';
 }
 
@@ -2006,7 +2068,7 @@ function calculateStandings() {
   for (var idx in scores) {
     if (!scores.hasOwnProperty(idx)) continue;
     var s = scores[idx];
-    var match = SZ_MATCHES[idx];
+    var match = ALL_B_MATCHES[idx];
     if (!match) continue;
 
     var teamA = match.teamA;
@@ -2029,10 +2091,6 @@ function calculateStandings() {
       stats[teamA].pts += 1;
     }
   }
-
-  // Other B group matches (中山 vs 佛山, 江门 vs 中山, 江门 vs 佛山) need manual entry or we can only track SZ matches
-  // For now, we compute based on available SZ matches + mock others if needed
-  // Since we only have SZ match inputs, standings will be partial. That's acceptable per requirements.
 
   return stats;
 }
