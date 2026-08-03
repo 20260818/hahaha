@@ -26,11 +26,12 @@ Opponents and Tasks are removed from navigation, markup, state, and event handli
 
 ### Home
 
-- Show one stable, action-oriented confidence prompt.
-- Show the next match with opponent, time, venue, stage, and a countdown precise to the second.
+- Show one stable, action-oriented confidence prompt in a light, warm treatment rather than a dark card.
+- Show the current preparation target as “本场比赛” with opponent, time, venue, stage, and a countdown precise to the second.
+- Show the following Shenzhen match as “下一场比赛” without a competing second-by-second countdown.
+- Treat a match as current from its scheduled start until two hours later; outside that window, use the nearest upcoming match as the current preparation target.
 - Do not show a separate page introduction or a "daily status suggestion" label above the confidence prompt.
-- Show the tournament schedule from August 4 through August 10.
-- Keep uncertain August 9 and August 10 details visible as pending instead of hiding those dates.
+- Do not show the complete schedule on Home; keep it only in the Schedule destination.
 
 ### Schedule
 
@@ -55,6 +56,7 @@ Opponents and Tasks are removed from navigation, markup, state, and event handli
 - Put the pre-game energy-card experience first.
 - Let the coach hold a question privately; the product must not require camera, microphone, motion-sensor, or text input access.
 - Show a contained horizontal deck of 78 face-down cards. The coach swipes the deck to shuffle/cut it, then draws the card closest to the center marker.
+- Present the deck as a seamless circular strip so no first or last card is ever exposed while swiping in either direction.
 - Require at least one deliberate swipe before enabling the draw action.
 - Draw from the full 78-card deck with an even chance of upright or reversed orientation.
 - Present the card face, orientation, energy theme, confidence cue, team phrase, and concrete action without predicting winning or losing.
@@ -70,13 +72,15 @@ Opponents and Tasks are removed from navigation, markup, state, and event handli
 ## Acceptance Criteria
 
 - Only four primary navigation items remain.
-- August 9 and August 10 are visible on Home and Schedule.
+- August 9 and August 10 remain visible on Schedule.
+- Home contains no complete schedule list and shows separate “本场比赛” and “下一场比赛” cards.
 - Each main view is reachable and usable with mouse, keyboard, and touch-sized controls.
 - Tactical records survive a page refresh and can be removed.
 - Offensive and defensive tactics accept custom text, and the lineup strip scrolls without causing page-level horizontal overflow.
 - Unstarted group matches do not show score inputs or affect standings.
 - The energy card survives refresh for the same match and never displays negative fortune language.
 - The energy deck scrolls independently without causing page-level horizontal overflow.
+- The energy deck can continue in both directions without exposing a first or last card or changing the logical selected card during a seamless recenter.
 - Entering the Energy page downloads only the shared card back; no face image loads until a card is drawn or restored.
 - Drawing one card loads only that card face, records upright/reversed orientation, and survives refresh for the same match.
 - Reduced-motion users receive an immediate state change without a flip animation.

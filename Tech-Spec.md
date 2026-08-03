@@ -18,6 +18,13 @@ Date: 2026-08-03
 - Tactical records persist under a versioned localStorage key.
 - Energy-card selections persist under `coach_energy_v2`, keyed only by match ID so a match cannot be redrawn on a later date.
 
+## Home Match Pair
+
+- `getHomeMatchPair()` selects the current and following Shenzhen matches from `TEAM_MATCHES`.
+- A match remains current from its scheduled start until two hours later; otherwise the nearest upcoming match becomes the current preparation target.
+- Only the current match receives a second-by-second countdown. The following match remains visually secondary.
+- Home does not render a schedule list; complete tournament dates remain available in Schedule.
+
 ## Tactical Record Contract
 
 ```ts
@@ -71,12 +78,14 @@ interface EnergySelection {
 ## Energy Interaction
 
 1. Build a shuffled in-memory order for all 78 cards.
-2. Render 78 lightweight card-back elements inside one contained horizontal scroller; the repeated back uses one cached asset.
-3. Track a deliberate pointer/touch/keyboard scroll before enabling draw.
-4. On draw, find the card whose center is closest to the scroller center.
-5. Assign the selected face image only after draw, wait for image decoding, then reveal it.
-6. Persist the card ID, orientation, and draw timestamp by match ID.
-7. Restore the same result on refresh without rendering or downloading the other 77 faces.
+2. Render three consecutive copies of the shuffled 78-card order inside one contained horizontal scroller; all 234 card backs reuse one cached asset.
+3. Start in the middle copy and silently recenter to the equivalent position whenever scrolling enters an outer copy, producing a seamless circular strip.
+4. Convert the centered rendered index to a logical card index with modulo 78 so recentering never changes the selected card.
+5. Track a deliberate pointer/touch/keyboard scroll before enabling draw.
+6. On draw, select the logical card closest to the center marker.
+7. Assign the selected face image only after draw, wait for image decoding, then reveal it.
+8. Persist the card ID, orientation, and draw timestamp by match ID.
+9. Restore the same result on refresh without rendering or downloading the other 77 faces.
 
 ## Tarot Assets
 
@@ -98,9 +107,16 @@ interface EnergySelection {
 - The tarot deck is the only intentional horizontal gesture region on the Energy page. It uses `overscroll-behavior-inline: contain`, visible instructions, a center marker, and a non-gesture draw button.
 - Motion respects `prefers-reduced-motion`.
 
+## Visual System
+
+- Use a warm sports-tool palette: warm ivory background, white surfaces, energetic orange primary actions, trust blue secondary states, and deep blue-gray body text.
+- The confidence cue uses a light amber/orange gradient with dark text; no black or near-black motivational panel.
+- Keep the tarot stage as a contained deep-indigo exception for ritual focus rather than applying dark surfaces across the application.
+- Preserve readable contrast, visible focus rings, and restrained shadows.
+
 ## Time-Gated Behavior
 
-- The next-match countdown updates once per second and renders `days + HH:MM:SS` when at least one full day remains, otherwise `HH:MM:SS`.
+- The current-match countdown updates once per second and renders `days + HH:MM:SS` when at least one full day remains, otherwise `HH:MM:SS`.
 - Group-match score forms render only when the scheduled start timestamp is not in the future.
 - Standings and optional `scores.json` hydration ignore scores for matches whose scheduled start timestamp is still in the future.
 
@@ -112,11 +128,11 @@ interface EnergySelection {
 4. Verify all four primary views at desktop and mobile widths.
 5. Create a tactical record, refresh, and confirm persistence.
 6. Draw an energy card, refresh, and confirm persistence.
-7. Confirm August 9 and August 10 appear in rendered content.
+7. Confirm August 9 and August 10 appear in Schedule and that Home contains no complete schedule list.
 8. Confirm an unstarted group match has no score inputs and does not change standings even if stale local score data exists.
 9. Confirm the countdown changes every second and the lineup strip scrolls independently at desktop and mobile widths.
 10. Confirm the Energy page does not request camera, microphone, motion, or location permission.
-11. Confirm the deck requires a swipe, the center card draws, and the same card/orientation persists after refresh and match switching.
+11. Confirm the deck requires a swipe, can continue through both boundaries without exposing an end, the center logical card draws, and the same card/orientation persists after refresh and match switching.
 12. Confirm no more than one tarot face image is loaded in a fresh draw flow.
 13. Verify desktop, 390px mobile, 375px mobile, landscape, keyboard operation, and reduced-motion behavior.
 

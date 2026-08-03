@@ -3,32 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f5f5f7">
+<meta name="theme-color" content="#fff7ed">
 <title>教练工作台 · 深圳男子乙组</title>
 <script defer src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
 <style>
   :root {
-    --bg: #f5f5f7;
+    --bg: #fff7ed;
     --surface: #ffffff;
-    --surface-subtle: #fafafa;
-    --ink: #1d1d1f;
-    --muted: #65656b;
-    --rule: #dedee3;
-    --accent: #e95725;
-    --accent-strong: #c94416;
-    --accent-soft: #fff0eb;
-    --blue: #0868d7;
-    --blue-soft: #eaf4ff;
-    --green: #227a3a;
-    --green-soft: #eaf8ee;
-    --purple: #7044a3;
-    --purple-soft: #f4edfb;
-    --navy: #17213f;
+    --surface-subtle: #fffaf5;
+    --ink: #172033;
+    --muted: #697386;
+    --rule: #eadfd4;
+    --accent: #ea580c;
+    --accent-strong: #c2410c;
+    --accent-deep: #9a3412;
+    --accent-soft: #fff0e5;
+    --blue: #2563eb;
+    --blue-soft: #eff6ff;
+    --green: #15803d;
+    --green-soft: #ecfdf3;
+    --purple: #6d4acb;
+    --purple-soft: #f4f0ff;
+    --navy: #243354;
     --danger: #b3261e;
     --danger-soft: #fff0ef;
     --radius: 18px;
     --radius-sm: 12px;
-    --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.05);
+    --shadow: 0 1px 3px rgba(75, 42, 20, 0.04), 0 8px 24px rgba(75, 42, 20, 0.06);
     --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
   }
 
@@ -47,7 +48,7 @@
   button, input, select, textarea { font: inherit; }
   button, select, input[type="checkbox"] { touch-action: manipulation; }
   button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible {
-    outline: 3px solid rgba(8, 104, 215, 0.35);
+    outline: 3px solid rgba(37, 99, 235, 0.35);
     outline-offset: 2px;
   }
   button:disabled { cursor: not-allowed; opacity: 0.72; }
@@ -67,8 +68,8 @@
     position: sticky;
     top: 0;
     z-index: 50;
-    border-bottom: 1px solid rgba(222, 222, 227, 0.9);
-    background: rgba(255, 255, 255, 0.94);
+    border-bottom: 1px solid rgba(234, 223, 212, 0.92);
+    background: rgba(255, 250, 245, 0.94);
     backdrop-filter: blur(18px);
   }
   .header-inner {
@@ -107,41 +108,54 @@
   .small { font-size: 13px; }
 
   .card {
-    border: 1px solid rgba(222, 222, 227, 0.82);
+    border: 1px solid rgba(234, 223, 212, 0.9);
     border-radius: var(--radius);
     background: var(--surface);
     box-shadow: var(--shadow);
   }
   .card-pad { padding: 18px; }
   .stack { display: grid; gap: 12px; }
-  .home-grid { display: grid; gap: 14px; }
+  .home-stack { display: grid; gap: 14px; }
 
   .confidence-card {
-    position: relative;
-    overflow: hidden;
-    padding: 22px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    border: 1px solid #fdba74;
     border-radius: var(--radius);
-    background: linear-gradient(135deg, #17213f 0%, #25345e 100%);
-    color: #fff;
-    box-shadow: 0 14px 34px rgba(23, 33, 63, 0.18);
+    background: linear-gradient(120deg, #fff4dc 0%, #ffe5bf 100%);
+    color: var(--ink);
+    box-shadow: 0 10px 28px rgba(234, 88, 12, 0.1);
   }
-  .confidence-copy { max-width: 720px; margin: 0; font-size: clamp(20px, 3.6vw, 29px); font-weight: 800; line-height: 1.42; }
-  .confidence-action { margin-top: 12px; color: #dfe7ff; font-size: 14px; }
+  .confidence-icon { display: grid; width: 46px; height: 46px; place-items: center; border-radius: 14px; background: var(--surface); color: var(--accent-strong); box-shadow: 0 4px 14px rgba(194, 65, 12, 0.12); }
+  .confidence-icon svg { width: 24px; height: 24px; }
+  .confidence-copy { max-width: 720px; margin: 0; font-size: clamp(18px, 3vw, 24px); font-weight: 850; line-height: 1.35; }
+  .confidence-action { margin-top: 5px; color: #7c3d16; font-size: 14px; }
 
-  .next-match {
+  .home-match-grid { display: grid; gap: 14px; }
+  .home-match-card {
+    min-width: 0;
     padding: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.36);
+    border: 1px solid var(--rule);
     border-radius: var(--radius);
-    background: linear-gradient(135deg, #f15d2d 0%, #ff8b55 100%);
-    color: #fff;
-    box-shadow: 0 12px 28px rgba(233, 87, 37, 0.18);
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: var(--shadow);
   }
-  .next-match-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; font-weight: 700; }
-  .countdown { padding: 4px 9px; border-radius: 999px; background: rgba(255, 255, 255, 0.2); }
-  .next-match-teams { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; margin: 22px 0 14px; text-align: center; }
-  .next-match-team { font-size: clamp(23px, 5vw, 32px); font-weight: 850; }
-  .versus { color: rgba(255, 255, 255, 0.74); font-size: 13px; font-weight: 800; }
-  .next-match-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px 14px; font-size: 14px; }
+  .home-match-current { border-color: #fdba74; background: linear-gradient(145deg, #ffffff 48%, #fff1e4 100%); box-shadow: 0 12px 30px rgba(234, 88, 12, 0.1); }
+  .home-match-following { border-color: #bfdbfe; background: linear-gradient(145deg, #ffffff 48%, #eff6ff 100%); }
+  .home-match-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; font-weight: 800; }
+  .home-match-label { color: var(--accent-strong); letter-spacing: 0.03em; }
+  .home-match-following .home-match-label { color: var(--blue); }
+  .countdown, .match-status { padding: 5px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-strong); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .match-status.live { background: var(--green-soft); color: var(--green); }
+  .match-status.finished { background: #f1f3f6; color: var(--muted); }
+  .home-match-teams { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 14px; margin: 22px 0 14px; text-align: center; }
+  .home-match-team { overflow-wrap: anywhere; font-size: clamp(22px, 4.5vw, 30px); font-weight: 850; }
+  .versus { color: var(--muted); font-size: 13px; font-weight: 800; }
+  .home-match-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px 14px; color: var(--muted); font-size: 14px; }
   .inline-button {
     display: inline-flex;
     min-height: 44px;
@@ -149,13 +163,14 @@
     justify-content: center;
     margin-top: 16px;
     padding: 10px 15px;
-    border: 1px solid rgba(255, 255, 255, 0.68);
+    border: 1px solid var(--accent-strong);
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.13);
+    background: var(--accent-strong);
     color: #fff;
     font-weight: 750;
     cursor: pointer;
   }
+  .inline-button:hover { border-color: var(--accent-deep); background: var(--accent-deep); }
 
   .schedule-list { display: grid; gap: 10px; }
   .schedule-row {
@@ -195,7 +210,7 @@
     padding: 4px;
     border: 1px solid var(--rule);
     border-radius: 14px;
-    background: #eaeaee;
+    background: #f3ebe4;
   }
   .segment-button {
     min-height: 44px;
@@ -240,8 +255,8 @@
     font-weight: 750;
     cursor: pointer;
   }
-  .primary-button { border: 1px solid var(--accent); background: var(--accent); color: #fff; }
-  .primary-button:hover { background: var(--accent-strong); }
+  .primary-button { border: 1px solid var(--accent-strong); background: var(--accent-strong); color: #fff; }
+  .primary-button:hover { border-color: var(--accent-deep); background: var(--accent-deep); }
   .secondary-button { border: 1px solid var(--rule); background: var(--surface); color: var(--ink); }
   .danger-button { border: 1px solid #edb8b4; background: var(--danger-soft); color: var(--danger); }
   .form-status { min-height: 22px; margin-top: 10px; color: var(--muted); font-size: 13px; }
@@ -296,9 +311,9 @@
     background: var(--surface);
     cursor: pointer;
   }
-  .player-option input:focus-visible + label { outline: 3px solid rgba(8, 104, 215, 0.35); outline-offset: 2px; }
+  .player-option input:focus-visible + label { outline: 3px solid rgba(37, 99, 235, 0.35); outline-offset: 2px; }
   .player-option input:checked + label { border-color: var(--accent); background: var(--accent-soft); }
-  .jersey { display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; border-radius: 9px; background: #f0f0f3; font-weight: 850; }
+  .jersey { display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; border-radius: 9px; background: #fff1e5; color: var(--accent-strong); font-weight: 850; }
   .player-name { min-width: 0; font-size: 14px; font-weight: 750; }
   .player-year { color: var(--muted); font-size: 11px; }
   .rule-note { padding: 12px 14px; border-radius: 12px; background: var(--blue-soft); color: #174a79; font-size: 13px; }
@@ -347,6 +362,8 @@
     touch-action: pan-x;
   }
   .tarot-deck::-webkit-scrollbar { display: none; }
+  .tarot-deck.positioning { scroll-snap-type: none; }
+  .tarot-deck.initializing { opacity: 0; }
   .deck-card {
     width: 112px;
     height: 168px;
@@ -429,11 +446,11 @@
     width: min(100%, 660px);
     grid-template-columns: repeat(4, minmax(0, 1fr));
     transform: translateX(-50%);
-    border: 1px solid rgba(222, 222, 227, 0.94);
+    border: 1px solid rgba(234, 223, 212, 0.96);
     border-bottom: 0;
     border-radius: 20px 20px 0 0;
-    background: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.08);
+    background: rgba(255, 250, 245, 0.97);
+    box-shadow: 0 -8px 30px rgba(75, 42, 20, 0.08);
     backdrop-filter: blur(18px);
     padding: 6px 8px calc(7px + env(safe-area-inset-bottom));
   }
@@ -457,9 +474,8 @@
   [hidden] { display: none !important; }
   @media (min-width: 760px) {
     .page { padding: 28px 24px 34px; }
-    .home-grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); align-items: stretch; }
-    .home-grid > * { min-width: 0; }
-    .confidence-card, .next-match { min-height: 280px; display: flex; flex-direction: column; justify-content: center; }
+    .home-match-grid { grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr); align-items: stretch; }
+    .home-match-card { display: flex; min-height: 260px; flex-direction: column; justify-content: center; }
     .tactics-layout { grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr); align-items: start; }
     .energy-layout { grid-template-columns: minmax(340px, 0.9fr) minmax(320px, 1.1fr); align-items: start; }
     .energy-result-layout { grid-template-columns: minmax(150px, 210px) minmax(0, 1fr); align-items: start; }
@@ -474,6 +490,8 @@
     .schedule-row .status-tag { grid-column: 2; justify-self: start; }
     .pending-score-note { padding-left: 74px; }
     .score-form { grid-template-columns: 1fr auto 1fr; gap: 8px; }
+    .confidence-card { grid-template-columns: 1fr; }
+    .confidence-icon { width: 42px; height: 42px; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -495,16 +513,19 @@
   <section id="page-home" class="page active" aria-labelledby="home-heading">
     <h2 id="home-heading" class="sr-only">首页</h2>
 
-    <div class="home-grid">
+    <div class="home-stack">
       <article class="confidence-card" aria-labelledby="confidence-title">
-        <p id="confidence-title" class="confidence-copy">你们今天会比平时更快进入比赛状态。</p>
-        <div class="confidence-action">开场先守住三个回合，比赛会按照你们熟悉的节奏展开。</div>
+        <span class="confidence-icon" aria-hidden="true"><i data-lucide="sparkles"></i></span>
+        <div>
+          <p id="confidence-title" class="confidence-copy">你们今天会比平时更快进入比赛状态。</p>
+          <div class="confidence-action">开场先守住三个回合，比赛会按照你们熟悉的节奏展开。</div>
+        </div>
       </article>
-      <article class="next-match" id="next-match-card" aria-labelledby="next-match-title"></article>
+      <div class="home-match-grid">
+        <article class="home-match-card home-match-current" id="current-match-card" aria-labelledby="current-match-title"></article>
+        <article class="home-match-card home-match-following" id="following-match-card" aria-labelledby="following-match-title"></article>
+      </div>
     </div>
-
-    <h3 class="section-heading">完整赛程 · 8月4日—10日</h3>
-    <div id="home-schedule" class="schedule-list"></div>
 
     <details class="card details-card">
       <summary>赛事信息</summary>
@@ -688,6 +709,7 @@
   var SCORE_STORAGE_KEY = 'coach_scores';
   var TACTICS_STORAGE_KEY = 'coach_tactics_v1';
   var ENERGY_STORAGE_KEY = 'coach_energy_v2';
+  var HOME_MATCH_DURATION_MS = 2 * 60 * 60 * 1000;
 
   var GROUP_MATCHES = [
     { id: 'g1', scoreIndex: 0, date: '2026-08-04T10:00:00+08:00', teamA: '深圳', teamB: '江门', time: '10:00', venue: '庙街体育馆', stage: '小组赛第一轮' },
@@ -805,8 +827,12 @@
 
   var ENERGY_CARDS = MAJOR_ARCANA.concat(createMinorArcana());
   var ENERGY_CARD_STEP = 54;
+  var ENERGY_DECK_COPIES = 3;
   var energyDeckOrder = [];
   var energyCenteredIndex = 0;
+  var energyCenteredRenderedIndex = 0;
+  var energyDeckSpan = 0;
+  var energyShuffleOrigin = 0;
   var energyHasShuffled = false;
   var energyPointerStart = null;
 
@@ -845,6 +871,22 @@
     return null;
   }
 
+  function getHomeMatchPair() {
+    var now = Date.now();
+    var currentIndex = TEAM_MATCHES.findIndex(function (match) {
+      var start = new Date(match.date).getTime();
+      return start <= now && now < start + HOME_MATCH_DURATION_MS;
+    });
+    if (currentIndex < 0) {
+      currentIndex = TEAM_MATCHES.findIndex(function (match) { return new Date(match.date).getTime() > now; });
+    }
+    if (currentIndex < 0 && TEAM_MATCHES.length) currentIndex = TEAM_MATCHES.length - 1;
+    return {
+      current: currentIndex >= 0 ? TEAM_MATCHES[currentIndex] : null,
+      following: currentIndex >= 0 && currentIndex + 1 < TEAM_MATCHES.length ? TEAM_MATCHES[currentIndex + 1] : null
+    };
+  }
+
   function getMatchLabel(match) {
     return match.teamA + ' vs ' + match.teamB;
   }
@@ -873,37 +915,61 @@
     return days > 0 ? '还有 ' + days + '天 ' + clock : '还有 ' + clock;
   }
 
-  function renderHome() {
-    var nextMatch = getNextMatch();
-    var nextCard = document.getElementById('next-match-card');
-    if (nextMatch) {
-      var parts = dateParts(nextMatch);
-      nextCard.dataset.matchId = nextMatch.id;
-      nextCard.innerHTML = '<div class="next-match-top"><span id="next-match-title">下一场比赛</span><span id="next-match-countdown" class="countdown">' + escapeHtml(countdownText(nextMatch)) + '</span></div>' +
-        '<div class="next-match-teams"><div class="next-match-team">' + escapeHtml(nextMatch.teamA) + '</div><div class="versus">VS</div><div class="next-match-team">' + escapeHtml(nextMatch.teamB) + '</div></div>' +
-        '<div class="next-match-meta"><span>' + escapeHtml(parts.label) + '</span><span>' + escapeHtml(nextMatch.time) + '</span><span>' + escapeHtml(nextMatch.venue) + '</span><span>' + escapeHtml(nextMatch.stage) + '</span></div>' +
-        '<button class="inline-button" type="button" data-go-to-tactics="true">记录本场战术</button>';
-    } else {
-      delete nextCard.dataset.matchId;
-      nextCard.innerHTML = '<div class="next-match-top"><span id="next-match-title">赛事已结束</span></div><div class="next-match-teams" style="grid-template-columns:1fr;"><div class="next-match-team">把经验带回下一场</div></div>';
-    }
-
-    var nextId = nextMatch ? nextMatch.id : '';
-    document.getElementById('home-schedule').innerHTML = TEAM_MATCHES.map(function (match) {
-      return renderScheduleRow(match, { isNext: match.id === nextId });
-    }).join('');
+  function currentMatchStatus(match) {
+    var start = new Date(match.date).getTime();
+    var now = Date.now();
+    if (now < start) return { text: countdownText(match), className: 'countdown' };
+    if (now < start + HOME_MATCH_DURATION_MS) return { text: '进行中', className: 'match-status live' };
+    return { text: '已结束', className: 'match-status finished' };
   }
 
-  function updateNextMatchCountdown() {
-    var nextMatch = getNextMatch();
-    var nextCard = document.getElementById('next-match-card');
-    if (!nextMatch || nextCard.dataset.matchId !== nextMatch.id) {
+  function renderHome() {
+    var pair = getHomeMatchPair();
+    var currentCard = document.getElementById('current-match-card');
+    var followingCard = document.getElementById('following-match-card');
+    if (pair.current) {
+      var currentParts = dateParts(pair.current);
+      var status = currentMatchStatus(pair.current);
+      currentCard.dataset.matchId = pair.current.id;
+      currentCard.innerHTML = '<div class="home-match-top"><span id="current-match-title" class="home-match-label">本场比赛</span><span id="current-match-status" class="' + status.className + '">' + escapeHtml(status.text) + '</span></div>' +
+        '<div class="home-match-teams"><div class="home-match-team">' + escapeHtml(pair.current.teamA) + '</div><div class="versus">VS</div><div class="home-match-team">' + escapeHtml(pair.current.teamB) + '</div></div>' +
+        '<div class="home-match-meta"><span>' + escapeHtml(currentParts.label) + '</span><span>' + escapeHtml(pair.current.time) + '</span><span>' + escapeHtml(pair.current.venue) + '</span><span>' + escapeHtml(pair.current.stage) + '</span></div>' +
+        '<button class="inline-button" type="button" data-go-to-tactics="true">记录本场战术</button>';
+    } else {
+      delete currentCard.dataset.matchId;
+      currentCard.innerHTML = '<div class="home-match-top"><span id="current-match-title" class="home-match-label">本场比赛</span></div><div class="empty-state">暂无比赛安排</div>';
+    }
+
+    if (pair.following) {
+      var followingParts = dateParts(pair.following);
+      followingCard.dataset.matchId = pair.following.id;
+      followingCard.innerHTML = '<div class="home-match-top"><span id="following-match-title" class="home-match-label">下一场比赛</span><span class="status-tag' + (pair.following.conditional ? ' pending' : '') + '">' + escapeHtml(pair.following.conditional ? '条件场次' : '待赛') + '</span></div>' +
+        '<div class="home-match-teams"><div class="home-match-team">' + escapeHtml(pair.following.teamA) + '</div><div class="versus">VS</div><div class="home-match-team">' + escapeHtml(pair.following.teamB) + '</div></div>' +
+        '<div class="home-match-meta"><span>' + escapeHtml(followingParts.label) + '</span><span>' + escapeHtml(pair.following.time) + '</span><span>' + escapeHtml(pair.following.venue) + '</span><span>' + escapeHtml(pair.following.stage) + '</span></div>';
+    } else {
+      delete followingCard.dataset.matchId;
+      followingCard.innerHTML = '<div class="home-match-top"><span id="following-match-title" class="home-match-label">下一场比赛</span></div><div class="empty-state">当前赛程暂无下一场安排</div>';
+    }
+  }
+
+  function updateHomeMatchStatus() {
+    var pair = getHomeMatchPair();
+    var currentCard = document.getElementById('current-match-card');
+    var followingCard = document.getElementById('following-match-card');
+    var currentId = pair.current ? pair.current.id : '';
+    var followingId = pair.following ? pair.following.id : '';
+    if (currentCard.dataset.matchId !== currentId || followingCard.dataset.matchId !== followingId) {
       renderHome();
       renderScheduleView();
       return;
     }
-    var countdown = document.getElementById('next-match-countdown');
-    if (countdown) countdown.textContent = countdownText(nextMatch);
+    if (!pair.current) return;
+    var status = currentMatchStatus(pair.current);
+    var statusElement = document.getElementById('current-match-status');
+    if (statusElement) {
+      statusElement.textContent = status.text;
+      statusElement.className = status.className;
+    }
   }
 
   function loadScores() {
@@ -1205,19 +1271,36 @@
     return cards;
   }
 
-  function setCenteredEnergyCard(index) {
-    var safeIndex = Math.max(0, Math.min(energyDeckOrder.length - 1, index));
-    if (safeIndex === energyCenteredIndex && document.querySelector('.deck-card.centered')) return;
+  function setCenteredEnergyCard(renderedIndex) {
+    var renderedCardCount = energyDeckOrder.length * ENERGY_DECK_COPIES;
+    var safeRenderedIndex = Math.max(0, Math.min(renderedCardCount - 1, renderedIndex));
+    if (safeRenderedIndex === energyCenteredRenderedIndex && document.querySelector('.deck-card.centered')) return;
     var previous = document.querySelector('.deck-card.centered');
     if (previous) previous.classList.remove('centered');
-    var next = document.querySelector('[data-energy-card-index="' + safeIndex + '"]');
+    var next = document.querySelector('[data-energy-rendered-index="' + safeRenderedIndex + '"]');
     if (next) next.classList.add('centered');
-    energyCenteredIndex = safeIndex;
+    energyCenteredRenderedIndex = safeRenderedIndex;
+    energyCenteredIndex = safeRenderedIndex % energyDeckOrder.length;
   }
 
   function updateCenteredEnergyCard() {
     var deck = document.getElementById('energy-deck');
     setCenteredEnergyCard(Math.round(deck.scrollLeft / ENERGY_CARD_STEP));
+  }
+
+  function recenterEnergyDeck() {
+    if (!energyDeckSpan) return;
+    var deck = document.getElementById('energy-deck');
+    var target = null;
+    if (deck.scrollLeft < energyDeckSpan * 0.5) target = deck.scrollLeft + energyDeckSpan;
+    if (deck.scrollLeft > energyDeckSpan * 2.5) target = deck.scrollLeft - energyDeckSpan;
+    if (target === null) return;
+    var shift = target - deck.scrollLeft;
+    deck.classList.add('positioning');
+    deck.scrollLeft = target;
+    if (energyPointerStart !== null) energyPointerStart += shift;
+    updateCenteredEnergyCard();
+    window.requestAnimationFrame(function () { deck.classList.remove('positioning'); });
   }
 
   function markEnergyShuffled() {
@@ -1232,13 +1315,27 @@
   function prepareEnergyDeck() {
     energyDeckOrder = shuffledEnergyCards();
     energyCenteredIndex = 0;
+    energyCenteredRenderedIndex = energyDeckOrder.length;
+    energyDeckSpan = energyDeckOrder.length * ENERGY_CARD_STEP;
+    energyShuffleOrigin = energyDeckSpan;
     energyHasShuffled = false;
     energyPointerStart = null;
     var deck = document.getElementById('energy-deck');
-    deck.innerHTML = energyDeckOrder.map(function (_, index) {
-      return '<div class="deck-card' + (index === 0 ? ' centered' : '') + '" data-energy-card-index="' + index + '" aria-hidden="true"></div>';
-    }).join('');
-    deck.scrollLeft = 0;
+    var deckMarkup = [];
+    for (var copyIndex = 0; copyIndex < ENERGY_DECK_COPIES; copyIndex += 1) {
+      energyDeckOrder.forEach(function (_, logicalIndex) {
+        var renderedIndex = copyIndex * energyDeckOrder.length + logicalIndex;
+        deckMarkup.push('<div class="deck-card' + (renderedIndex === energyCenteredRenderedIndex ? ' centered' : '') + '" data-energy-card-index="' + logicalIndex + '" data-energy-rendered-index="' + renderedIndex + '" aria-hidden="true"></div>');
+      });
+    }
+    deck.innerHTML = deckMarkup.join('');
+    deck.classList.add('positioning', 'initializing');
+    deck.scrollLeft = energyDeckSpan;
+    window.requestAnimationFrame(function () {
+      deck.scrollLeft = energyDeckSpan;
+      updateCenteredEnergyCard();
+      window.requestAnimationFrame(function () { deck.classList.remove('positioning', 'initializing'); });
+    });
     document.getElementById('shuffle-status').textContent = '左右滑动牌组开始洗牌';
     document.getElementById('draw-energy').disabled = true;
     document.getElementById('draw-energy').setAttribute('aria-label', '抽取中间这张牌，需先左右滑动洗牌');
@@ -1451,9 +1548,10 @@
     energyDeck.addEventListener('pointercancel', function () { energyPointerStart = null; });
     energyDeck.addEventListener('scroll', function () {
       updateCenteredEnergyCard();
-      if (Math.abs(energyDeck.scrollLeft) >= 24 || (energyPointerStart !== null && Math.abs(energyDeck.scrollLeft - energyPointerStart) >= 24)) {
+      if (Math.abs(energyDeck.scrollLeft - energyShuffleOrigin) >= 24 || (energyPointerStart !== null && Math.abs(energyDeck.scrollLeft - energyPointerStart) >= 24)) {
         markEnergyShuffled();
       }
+      recenterEnergyDeck();
     }, { passive: true });
     energyDeck.addEventListener('keydown', function (event) {
       if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
@@ -1476,7 +1574,7 @@
     loadCurrentEnergyCard();
     activatePage(window.location.hash.slice(1) || 'home', false);
     loadExternalScores();
-    window.setInterval(updateNextMatchCountdown, 1000);
+    window.setInterval(updateHomeMatchStatus, 1000);
     if (window.lucide) window.lucide.createIcons();
   }
 
