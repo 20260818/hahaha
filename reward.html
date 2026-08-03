@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="扭蛋奖励">
-<title>扭蛋奖励 · 深圳男子乙组</title>
+<title>扭蛋奖励</title>
 <style>
   :root {
     --color-primary: #C85C3A;
@@ -91,7 +91,61 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* === Gacha Machine (using image assets) === */
+  /* === Name Input === */
+  .name-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(45,40,31,.06);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: fadeInUp 0.4s ease-out both;
+  }
+  .name-card .name-icon { font-size: 20px; flex-shrink: 0; }
+  .name-card .name-label {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+  .name-card .name-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    font-family: var(--font);
+    color: var(--color-dark);
+    font-weight: 700;
+    outline: none;
+  }
+  .name-card .name-input::placeholder { color: var(--color-text-muted); font-weight: 400; }
+  .name-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .name-chip {
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-dark);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .name-chip:active {
+    background: var(--color-accent-bg);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  /* === Gacha Machine === */
   .machine-stage {
     border: 1px solid var(--color-border);
     border-radius: 8px;
@@ -104,10 +158,7 @@
     padding: clamp(22px, 4vw, 36px);
     overflow: hidden;
   }
-
-  .stage-copy {
-    text-align: center;
-  }
+  .stage-copy { text-align: center; }
   .stage-copy h2 {
     font-size: clamp(26px, 5vw, 40px);
     font-weight: 900;
@@ -132,8 +183,6 @@
     width: 100%;
     aspect-ratio: 2 / 3;
   }
-
-  /* Machine body image */
   .machine-art {
     position: absolute;
     inset: 0;
@@ -145,8 +194,6 @@
     -webkit-user-select: none;
     user-select: none;
   }
-
-  /* Sticker on machine */
   .machine-sticker {
     position: absolute;
     top: 34%;
@@ -161,8 +208,6 @@
     user-select: none;
     transform: translate(-50%, -50%);
   }
-
-  /* Ball window inside dome */
   .machine-ball-window {
     position: absolute;
     top: 15%;
@@ -189,8 +234,6 @@
     0%, 100% { transform: rotate(var(--base-rotate)) translateY(0); }
     50% { transform: rotate(calc(var(--base-rotate) + 180deg)) translateY(-8px); }
   }
-
-  /* Turn knob */
   .turn-knob {
     position: absolute;
     top: 68.5%;
@@ -222,8 +265,6 @@
     0% { transform: rotate(0); }
     100% { transform: rotate(360deg); }
   }
-
-  /* Dropped ball */
   .dropped-task-ball {
     position: absolute;
     top: 73%;
@@ -239,11 +280,7 @@
     transform: translate(-50%, -50%) scale(0);
     opacity: 0;
   }
-  .dropped-task-ball img {
-    display: block;
-    width: 100%;
-    border-radius: 50%;
-  }
+  .dropped-task-ball img { display: block; width: 100%; border-radius: 50%; }
   .dropped-task-ball.dropping {
     animation: task-ball-drop 0.76s cubic-bezier(.2,.82,.28,1) forwards;
   }
@@ -264,11 +301,7 @@
     0%, 100% { transform: translate(-50%, -73%) scale(1); }
     50% { transform: translate(-50%, -76%) scale(1.03); }
   }
-
-  /* Machine shake */
-  .gacha-machine.shaking {
-    animation: machineShake 0.5s ease-in-out;
-  }
+  .gacha-machine.shaking { animation: machineShake 0.5s ease-in-out; }
   @keyframes machineShake {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-3px); }
@@ -291,22 +324,9 @@
     transition: transform 0.15s, box-shadow 0.15s;
     letter-spacing: 0.03em;
   }
-  .primary-action:active {
-    transform: scale(0.96);
-    box-shadow: 0 8px 18px rgba(32,33,36,.12);
-  }
-  .primary-action:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .draw-info {
-    text-align: center;
-    font-size: 14px;
-    color: var(--color-text-secondary);
-    font-weight: 500;
-    margin-top: 4px;
-  }
+  .primary-action:active { transform: scale(0.96); box-shadow: 0 8px 18px rgba(32,33,36,.12); }
+  .primary-action:disabled { opacity: 0.5; cursor: not-allowed; }
+  .draw-info { text-align: center; font-size: 14px; color: var(--color-text-secondary); font-weight: 500; margin-top: 4px; }
   .draw-info span { color: var(--red); font-weight: 800; }
 
   /* === Reward Modal === */
@@ -322,12 +342,8 @@
     z-index: 200;
     padding: 24px;
   }
-  .reward-overlay.show {
-    display: flex;
-    animation: fadeIn 0.3s ease;
-  }
+  .reward-overlay.show { display: flex; animation: fadeIn 0.3s ease; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
   .reward-card {
     background: var(--color-bg-card);
     border: 1px solid var(--color-border);
@@ -357,26 +373,15 @@
     60% { transform: translateY(8px) scale(1.1); opacity: 1; }
     100% { transform: translateY(0) scale(1); }
   }
-  .reward-label {
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    color: var(--red);
-    margin-bottom: 6px;
-  }
-  .reward-name {
-    font-size: 26px;
-    font-weight: 900;
-    color: var(--color-dark);
-    margin-bottom: 8px;
-    letter-spacing: -0.01em;
-  }
-  .reward-desc {
-    font-size: 15px;
+  .reward-person {
+    font-size: 14px;
+    font-weight: 700;
     color: var(--color-text-secondary);
-    line-height: 1.5;
-    margin-bottom: 24px;
+    margin-bottom: 4px;
   }
+  .reward-label { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; color: var(--red); margin-bottom: 6px; }
+  .reward-name { font-size: 26px; font-weight: 900; color: var(--color-dark); margin-bottom: 8px; letter-spacing: -0.01em; }
+  .reward-desc { font-size: 15px; color: var(--color-text-secondary); line-height: 1.5; margin-bottom: 24px; }
   .reward-close-btn {
     width: 100%;
     height: 48px;
@@ -391,13 +396,29 @@
   }
   .reward-close-btn:active { opacity: 0.7; }
 
-  /* === History === */
+  /* === History / Records === */
   .section-label {
     font-size: 13px;
     font-weight: 800;
     color: var(--color-text-secondary);
     margin: 24px 0 10px;
     letter-spacing: 0.02em;
+  }
+  .date-group-header {
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--color-dark);
+    margin: 20px 0 8px;
+    padding: 6px 12px;
+    background: var(--color-accent-bg);
+    border-radius: 8px;
+    display: inline-block;
+  }
+  .date-group-header .date-count {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-accent);
+    margin-left: 6px;
   }
   .history-card {
     background: var(--color-bg-card);
@@ -411,27 +432,20 @@
     gap: 12px;
     animation: fadeInUp 0.4s ease-out both;
   }
-  .history-ball {
-    width: 36px;
-    height: 36px;
-    flex-shrink: 0;
-  }
-  .history-name {
+  .history-ball { width: 36px; height: 36px; flex-shrink: 0; }
+  .history-info { flex: 1; min-width: 0; }
+  .history-person {
     font-size: 15px;
     font-weight: 800;
     color: var(--color-dark);
-    flex: 1;
   }
-  .history-time {
-    font-size: 12px;
-    color: var(--color-text-muted);
+  .history-reward {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin-top: 2px;
   }
-  .empty-state {
-    text-align: center;
-    padding: 32px 20px;
-    color: var(--color-text-muted);
-    font-size: 14px;
-  }
+  .history-time { font-size: 12px; color: var(--color-text-muted); flex-shrink: 0; }
+  .empty-state { text-align: center; padding: 32px 20px; color: var(--color-text-muted); font-size: 14px; }
 
   /* === Settings Page === */
   .setting-card {
@@ -451,22 +465,10 @@
     border-bottom: 1px solid var(--color-border);
   }
   .reward-row:last-child { border-bottom: none; }
-  .reward-ball-icon {
-    width: 36px;
-    height: 36px;
-    flex-shrink: 0;
-  }
+  .reward-ball-icon { width: 36px; height: 36px; flex-shrink: 0; }
   .reward-info { flex: 1; min-width: 0; }
-  .reward-info-name {
-    font-size: 15px;
-    font-weight: 800;
-    color: var(--color-dark);
-  }
-  .reward-info-meta {
-    font-size: 12px;
-    color: var(--color-text-muted);
-    margin-top: 2px;
-  }
+  .reward-info-name { font-size: 15px; font-weight: 800; color: var(--color-dark); }
+  .reward-info-meta { font-size: 12px; color: var(--color-text-muted); margin-top: 2px; }
   .reward-info-meta .prob { color: var(--red); font-weight: 700; }
   .reward-actions { display: flex; gap: 6px; }
   .icon-btn {
@@ -483,7 +485,6 @@
     transition: background 0.15s;
   }
   .icon-btn:active { background: var(--color-border); }
-
   .add-btn {
     width: 100%;
     height: 48px;
@@ -498,20 +499,8 @@
     margin-bottom: 12px;
   }
   .add-btn:active { border-color: var(--color-primary); color: var(--color-primary); }
-
-  /* Probability bar */
-  .prob-bar {
-    height: 8px;
-    border-radius: 999px;
-    background: var(--color-border);
-    overflow: hidden;
-    margin: 4px 0 8px;
-  }
-  .prob-bar-fill {
-    height: 100%;
-    border-radius: 999px;
-    transition: width 0.4s ease;
-  }
+  .prob-bar { height: 8px; border-radius: 999px; background: var(--color-border); overflow: hidden; margin: 4px 0 8px; }
+  .prob-bar-fill { height: 100%; border-radius: 999px; transition: width 0.4s ease; }
   .prob-summary {
     font-size: 13px;
     font-weight: 700;
@@ -523,8 +512,6 @@
   }
   .prob-summary.ok { color: var(--green); }
   .prob-summary.warn { color: var(--red); }
-
-  /* Template chips */
   .template-chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .template-chip {
     padding: 8px 14px;
@@ -564,26 +551,11 @@
     padding: 8px 20px calc(24px + env(safe-area-inset-bottom, 0));
     animation: sheetUp 0.3s ease;
   }
-  @keyframes sheetUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-  .sheet-handle {
-    width: 36px;
-    height: 5px;
-    border-radius: 3px;
-    background: var(--color-text-muted);
-    margin: 0 auto 20px;
-  }
+  @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .sheet-handle { width: 36px; height: 5px; border-radius: 3px; background: var(--color-text-muted); margin: 0 auto 20px; }
   .sheet-title { font-size: 20px; font-weight: 900; margin-bottom: 20px; color: var(--color-dark); }
   .form-group { margin-bottom: 16px; }
-  .form-label {
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--color-text-secondary);
-    margin-bottom: 6px;
-    display: block;
-  }
+  .form-label { font-size: 13px; font-weight: 800; color: var(--color-text-secondary); margin-bottom: 6px; display: block; }
   .form-input {
     width: 100%;
     height: 44px;
@@ -671,8 +643,6 @@
   }
   .lock-input:focus { outline: none; border-color: var(--color-primary); }
   .lock-error { color: var(--red); font-size: 14px; margin-top: 12px; height: 20px; }
-
-  /* Inventory badge */
   .inv-badge {
     display: inline-block;
     padding: 2px 8px;
@@ -725,11 +695,19 @@
 <div class="app-header">
   <div class="eyebrow">GACHA REWARD</div>
   <h1>扭蛋奖励</h1>
-  <div class="subtitle">深圳男子乙组 · 扭出好态度，抽到好奖励</div>
+  <div class="subtitle">扭出好态度，抽到好奖励</div>
 </div>
 
 <!-- ====== Page 1: Gacha Draw ====== -->
 <div id="page-draw" class="page active">
+  <!-- Name input -->
+  <div class="name-card">
+    <span class="name-icon">👤</span>
+    <span class="name-label">抽奖人</span>
+    <input type="text" class="name-input" id="playerName" placeholder="输入名字" maxlength="10" oninput="onNameInput()">
+  </div>
+  <div class="name-suggestions" id="nameSuggestions"></div>
+
   <div class="machine-stage">
     <div class="stage-copy">
       <h2>扭出今天的奖励</h2>
@@ -738,17 +716,12 @@
 
     <div class="gacha-wrap">
       <div class="gacha-machine" id="gachaMachine">
-        <!-- Ball window (behind machine image) -->
         <div class="machine-ball-window" id="ballWindow"></div>
-        <!-- Machine body image -->
         <img class="machine-art" src="https://gacha.lanlanplus.dev/assets/gacha-machine.png" alt="" draggable="false">
-        <!-- Sticker -->
         <img class="machine-sticker" src="https://gacha.lanlanplus.dev/assets/gacha-sticker.png" alt="" draggable="false">
-        <!-- Turn knob -->
         <button class="turn-knob" id="turnKnob" onclick="drawReward()">
           <img src="https://gacha.lanlanplus.dev/assets/gacha-knob.png" alt="扭蛋旋钮" draggable="false">
         </button>
-        <!-- Dropped ball -->
         <div class="dropped-task-ball" id="droppedBall"></div>
       </div>
     </div>
@@ -756,14 +729,17 @@
     <button class="primary-action" id="drawBtn" onclick="drawReward()">扭一下</button>
     <div class="draw-info">今日已扭 <span id="todayCount">0</span> 次</div>
   </div>
+</div>
 
+<!-- ====== Page 2: Records ====== -->
+<div id="page-records" class="page">
   <div class="section-label">扭蛋记录</div>
   <div id="historyList">
     <div class="empty-state">还没有扭过蛋，扭一个试试吧 🎰</div>
   </div>
 </div>
 
-<!-- ====== Page 2: Settings ====== -->
+<!-- ====== Page 3: Settings ====== -->
 <div id="page-settings" class="page">
   <div class="lock-overlay hide" id="lockOverlay">
     <div class="lock-icon">🔒</div>
@@ -810,6 +786,7 @@
 <div class="reward-overlay" id="rewardOverlay" onclick="closeReward(event)">
   <div class="reward-card" id="rewardCard">
     <img class="reward-ball-img" id="rewardBallImg" src="https://gacha.lanlanplus.dev/assets/task-ball-blue.png" alt="">
+    <div class="reward-person" id="rewardPerson"></div>
     <div class="reward-label">恭喜抽中</div>
     <div class="reward-name" id="rewardName">—</div>
     <div class="reward-desc" id="rewardDesc">—</div>
@@ -857,6 +834,10 @@
     <div class="tab-icon">🎰</div>
     <div class="tab-label">扭蛋</div>
   </div>
+  <div class="tab-item" onclick="showPage('records', this)">
+    <div class="tab-icon">📋</div>
+    <div class="tab-label">记录</div>
+  </div>
   <div class="tab-item" onclick="showPage('settings', this)">
     <div class="tab-icon">⚙️</div>
     <div class="tab-label">设置</div>
@@ -875,8 +856,10 @@ var BALL_IMAGES = [
 
 // ====== Constants ======
 var STORAGE_KEY = 'gacha_rewards_v2';
-var HISTORY_KEY = 'gacha_history_v2';
+var HISTORY_KEY = 'gacha_history_v3';
 var PASSWORD_KEY = 'gacha_password_v2';
+var NAMES_KEY = 'gacha_names_v1';
+var LAST_NAME_KEY = 'gacha_last_name_v1';
 var DEFAULT_PASSWORD = '1234';
 
 var TEMPLATES = {
@@ -934,6 +917,47 @@ function loadHistory() {
 function saveHistory(h) { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); }
 function getPassword() { return localStorage.getItem(PASSWORD_KEY) || DEFAULT_PASSWORD; }
 
+function loadNames() {
+  try { var d = localStorage.getItem(NAMES_KEY); if (d) return JSON.parse(d); } catch(e) {}
+  return [];
+}
+function saveName(name) {
+  if (!name) return;
+  var names = loadNames();
+  if (names.indexOf(name) === -1) {
+    names.push(name);
+    localStorage.setItem(NAMES_KEY, JSON.stringify(names));
+  }
+  localStorage.setItem(LAST_NAME_KEY, name);
+}
+function getLastName() { return localStorage.getItem(LAST_NAME_KEY) || ''; }
+
+// ====== Name input ======
+function onNameInput() {
+  renderNameSuggestions();
+}
+function renderNameSuggestions() {
+  var input = document.getElementById('playerName');
+  var val = input.value.trim();
+  var names = loadNames();
+  var container = document.getElementById('nameSuggestions');
+  if (val) {
+    names = names.filter(function(n) { return n !== val; });
+  }
+  if (names.length === 0) { container.innerHTML = ''; return; }
+  container.innerHTML = '';
+  names.slice(0, 6).forEach(function(n) {
+    var chip = document.createElement('div');
+    chip.className = 'name-chip';
+    chip.textContent = n;
+    chip.onclick = function() {
+      input.value = n;
+      renderNameSuggestions();
+    };
+    container.appendChild(chip);
+  });
+}
+
 // ====== Init ball window ======
 function initBallWindow() {
   var win = document.getElementById('ballWindow');
@@ -962,6 +986,12 @@ function initBallWindow() {
 // ====== Draw Logic ======
 function drawReward() {
   if (isDrawing) return;
+  var name = document.getElementById('playerName').value.trim();
+  if (!name) {
+    alert('请先输入抽奖人名字');
+    document.getElementById('playerName').focus();
+    return;
+  }
   var available = rewards.filter(function(r) { return r.stock === 0 || r.stock > 0; });
   if (available.length === 0) { alert('还没有设置奖品，请先到设置页添加奖品'); return; }
 
@@ -971,6 +1001,9 @@ function drawReward() {
   btn.disabled = true;
   knob.disabled = true;
   btn.textContent = '扭蛋中...';
+
+  // Save name
+  saveName(name);
 
   var machine = document.getElementById('gachaMachine');
   machine.classList.add('shaking', 'turning');
@@ -989,7 +1022,6 @@ function drawReward() {
     machine.classList.remove('shaking', 'turning');
     machine.classList.add('has-turned');
 
-    // Show dropped ball
     var dropBall = document.getElementById('droppedBall');
     var ballSrc = BALL_IMAGES[selected.ballIdx % BALL_IMAGES.length];
     dropBall.innerHTML = '<img src="' + ballSrc + '" alt="">';
@@ -998,22 +1030,18 @@ function drawReward() {
     setTimeout(function() {
       dropBall.classList.remove('dropping');
       dropBall.classList.add('ready');
-
-      // Tap ball to reveal
       dropBall.style.cursor = 'pointer';
       dropBall.onclick = function() {
-        showReward(selected);
+        showReward(selected, name);
         decrementStock(selected);
-        addHistory(selected);
+        addHistory(selected, name);
         resetMachine();
       };
-
-      // Auto-reveal after 1.5s
       setTimeout(function() {
         if (isDrawing) {
-          showReward(selected);
+          showReward(selected, name);
           decrementStock(selected);
-          addHistory(selected);
+          addHistory(selected, name);
           resetMachine();
         }
       }, 2000);
@@ -1026,7 +1054,6 @@ function resetMachine() {
   var dropBall = document.getElementById('droppedBall');
   var btn = document.getElementById('drawBtn');
   var knob = document.getElementById('turnKnob');
-
   machine.classList.remove('has-turned');
   dropBall.classList.remove('ready', 'dropping');
   dropBall.style.cursor = '';
@@ -1038,10 +1065,11 @@ function resetMachine() {
   btn.textContent = '扭一下';
 }
 
-function showReward(reward) {
+function showReward(reward, personName) {
   var overlay = document.getElementById('rewardOverlay');
   var ballImg = document.getElementById('rewardBallImg');
   ballImg.src = BALL_IMAGES[reward.ballIdx % BALL_IMAGES.length];
+  document.getElementById('rewardPerson').textContent = personName + ' 抽到了';
   document.getElementById('rewardName').textContent = reward.name;
   document.getElementById('rewardDesc').textContent = reward.desc || '恭喜你！';
   overlay.classList.add('show');
@@ -1060,16 +1088,16 @@ function decrementStock(reward) {
   }
 }
 
-function addHistory(reward) {
+function addHistory(reward, personName) {
   var hist = loadHistory();
-  hist.unshift({ name: reward.name, ballIdx: reward.ballIdx, time: new Date().toISOString() });
-  if (hist.length > 50) hist = hist.slice(0, 50);
+  hist.unshift({ person: personName, reward: reward.name, ballIdx: reward.ballIdx, time: new Date().toISOString() });
+  if (hist.length > 200) hist = hist.slice(0, 200);
   saveHistory(hist);
   renderHistory();
   updateTodayCount();
 }
 
-// ====== History ======
+// ====== History (grouped by date) ======
 function renderHistory() {
   var hist = loadHistory();
   var list = document.getElementById('historyList');
@@ -1077,18 +1105,55 @@ function renderHistory() {
     list.innerHTML = '<div class="empty-state">还没有扭过蛋，扭一个试试吧 🎰</div>';
     return;
   }
-  list.innerHTML = '';
+
+  // Group by date
+  var groups = {};
   hist.forEach(function(item) {
-    var div = document.createElement('div');
-    div.className = 'history-card';
-    var time = new Date(item.time);
-    var timeStr = (time.getMonth()+1) + '/' + time.getDate() + ' ' +
-      String(time.getHours()).padStart(2,'0') + ':' + String(time.getMinutes()).padStart(2,'0');
-    div.innerHTML =
-      '<img class="history-ball" src="' + BALL_IMAGES[item.ballIdx % BALL_IMAGES.length] + '" alt="">' +
-      '<div class="history-name">' + escapeHtml(item.name) + '</div>' +
-      '<div class="history-time">' + timeStr + '</div>';
-    list.appendChild(div);
+    var d = new Date(item.time);
+    var dateKey = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    if (!groups[dateKey]) groups[dateKey] = [];
+    groups[dateKey].push(item);
+  });
+
+  // Sort dates descending
+  var sortedKeys = Object.keys(groups).sort(function(a,b) { return b.localeCompare(a); });
+
+  list.innerHTML = '';
+  sortedKeys.forEach(function(dateKey) {
+    var items = groups[dateKey];
+    // Format date label
+    var d = new Date(dateKey + 'T00:00:00');
+    var today = new Date();
+    var yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+    var label;
+    if (d.toDateString() === today.toDateString()) {
+      label = '今天';
+    } else if (d.toDateString() === yesterday.toDateString()) {
+      label = '昨天';
+    } else {
+      label = (d.getMonth()+1) + '月' + d.getDate() + '日';
+    }
+
+    var header = document.createElement('div');
+    header.className = 'date-group-header';
+    header.innerHTML = label + '<span class="date-count">' + items.length + '次</span>';
+    list.appendChild(header);
+
+    items.forEach(function(item) {
+      var div = document.createElement('div');
+      div.className = 'history-card';
+      var time = new Date(item.time);
+      var timeStr = String(time.getHours()).padStart(2,'0') + ':' + String(time.getMinutes()).padStart(2,'0');
+      div.innerHTML =
+        '<img class="history-ball" src="' + BALL_IMAGES[item.ballIdx % BALL_IMAGES.length] + '" alt="">' +
+        '<div class="history-info">' +
+          '<div class="history-person">' + escapeHtml(item.person || '匿名') + '</div>' +
+          '<div class="history-reward">' + escapeHtml(item.reward || item.name || '—') + '</div>' +
+        '</div>' +
+        '<div class="history-time">' + timeStr + '</div>';
+      list.appendChild(div);
+    });
   });
 }
 
@@ -1278,6 +1343,13 @@ initBallWindow();
 renderRewardList();
 renderHistory();
 updateTodayCount();
+
+// Restore last used name
+var lastN = getLastName();
+if (lastN) {
+  document.getElementById('playerName').value = lastN;
+}
+renderNameSuggestions();
 </script>
 </body>
 </html>
