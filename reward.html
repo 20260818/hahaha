@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="扭蛋奖励">
+<title>扭蛋奖励 · 深圳男子乙组</title>
+<style>
+  :root {
+    --color-primary: #C85C3A;
+    --color-primary-hover: #B34E2F;
+    --color-primary-text: #ffffff;
+    --color-dark: #2D2520;
+    --color-accent: #3DBFA0;
+    --color-accent-bg: #EFF9F5;
+    --color-accent-border: #BAE8D8;
+    --color-bg-page: #FBF9F5;
+    --color-bg-card: #ffffff;
+    --color-border: #E8E3DC;
+    --color-text-primary: #2D2520;
+    --color-text-secondary: #7A6E65;
+    --color-text-muted: #AAA09A;
+    --red: #ef5b53;
+    --teal: #3DBFA0;
+    --blue: #4d7fd6;
+    --green: #3DBFA0;
+    --yellow: #f3b43f;
+    --pink: #d95f92;
+    --shadow: 0 20px 60px rgba(45, 40, 31, .14);
+    --font: Inter, -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: var(--font);
+    background: linear-gradient(135deg, rgba(31,156,149,.14), transparent 34%),
+                linear-gradient(315deg, rgba(239,91,83,.14), transparent 38%),
+                var(--color-bg-page);
+    color: var(--color-text-primary);
+    line-height: 1.5;
+    min-height: 100vh;
+    padding-bottom: 100px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* === Header === */
+  .app-header {
+    padding: 56px 20px 10px;
+    text-align: center;
+  }
+  .eyebrow {
+    color: var(--red);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .app-header h1 {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--color-dark);
+    letter-spacing: -0.02em;
+    margin-top: 4px;
+  }
+  .app-header .subtitle {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  /* === Pages === */
+  .page {
+    display: none;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 8px 20px;
+    animation: slideUp 0.3s ease;
+  }
+  .page.active { display: block; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* === Gacha Machine (using image assets) === */
+  .machine-stage {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: #fffdf8c7;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: clamp(22px, 4vw, 36px);
+    overflow: hidden;
+  }
+
+  .stage-copy {
+    text-align: center;
+  }
+  .stage-copy h2 {
+    font-size: clamp(26px, 5vw, 40px);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--color-dark);
+  }
+  .stage-copy p {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin-top: 4px;
+  }
+
+  .gacha-wrap {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: min(340px, 76vw);
+    margin: -6px auto 0;
+  }
+  .gacha-machine {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+  }
+
+  /* Machine body image */
+  .machine-art {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Sticker on machine */
+  .machine-sticker {
+    position: absolute;
+    top: 34%;
+    left: 50%;
+    z-index: 3;
+    width: 34%;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 5px rgba(91,55,42,.12));
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Ball window inside dome */
+  .machine-ball-window {
+    position: absolute;
+    top: 15%;
+    left: 13%;
+    z-index: 1;
+    width: 74%;
+    height: 40%;
+    overflow: hidden;
+    border-radius: 49% 49% 43% 43%;
+  }
+  .mini-ball {
+    position: absolute;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 3px rgba(37,86,78,.14));
+    transform: rotate(var(--base-rotate));
+  }
+  .gacha-machine.turning .mini-ball {
+    animation: ball-tumble 0.62s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -55ms);
+  }
+  @keyframes ball-tumble {
+    0%, 100% { transform: rotate(var(--base-rotate)) translateY(0); }
+    50% { transform: rotate(calc(var(--base-rotate) + 180deg)) translateY(-8px); }
+  }
+
+  /* Turn knob */
+  .turn-knob {
+    position: absolute;
+    top: 68.5%;
+    left: 50%;
+    z-index: 4;
+    width: 28%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    filter: drop-shadow(0 5px 5px rgba(27,99,86,.22));
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .turn-knob:active { transform: translate(-50%, -50%) scale(0.92); }
+  .turn-knob img {
+    display: block;
+    width: 100%;
+    transform: rotate(0);
+    transition: transform 0.18s ease;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .gacha-machine.has-turned .turn-knob img { transform: rotate(180deg); }
+  .gacha-machine.turning .turn-knob img {
+    animation: knob-turn 0.62s cubic-bezier(.24,.82,.28,1) forwards;
+  }
+  @keyframes knob-turn {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Dropped ball */
+  .dropped-task-ball {
+    position: absolute;
+    top: 73%;
+    left: 50%;
+    z-index: 5;
+    width: 22%;
+    aspect-ratio: 1;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    filter: drop-shadow(0 12px 12px rgba(36,85,76,.28));
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  .dropped-task-ball img {
+    display: block;
+    width: 100%;
+    border-radius: 50%;
+  }
+  .dropped-task-ball.dropping {
+    animation: task-ball-drop 0.76s cubic-bezier(.2,.82,.28,1) forwards;
+  }
+  .dropped-task-ball.ready {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    animation: task-ball-ready 1.25s ease-in-out infinite;
+  }
+  @keyframes task-ball-drop {
+    0% { transform: translate(-50%, -80%) scale(0.3); opacity: 0; }
+    30% { opacity: 1; }
+    50% { transform: translate(-50%, -60%) scale(0.8); }
+    70% { transform: translate(-50%, -73%) scale(1); }
+    85% { transform: translate(-50%, -68%) scale(1.05); }
+    100% { transform: translate(-50%, -73%) scale(1); opacity: 1; }
+  }
+  @keyframes task-ball-ready {
+    0%, 100% { transform: translate(-50%, -73%) scale(1); }
+    50% { transform: translate(-50%, -76%) scale(1.03); }
+  }
+
+  /* Machine shake */
+  .gacha-machine.shaking {
+    animation: machineShake 0.5s ease-in-out;
+  }
+  @keyframes machineShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    50% { transform: translateX(3px); }
+    75% { transform: translateX(-2px); }
+  }
+
+  /* === Draw Button === */
+  .primary-action {
+    min-height: 56px;
+    border: none;
+    border-radius: 10px;
+    background: var(--color-primary);
+    color: var(--color-primary-text);
+    font-size: 20px;
+    font-weight: 900;
+    padding: 0 34px;
+    box-shadow: 0 14px 28px rgba(32,33,36,.16);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    letter-spacing: 0.03em;
+  }
+  .primary-action:active {
+    transform: scale(0.96);
+    box-shadow: 0 8px 18px rgba(32,33,36,.12);
+  }
+  .primary-action:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .draw-info {
+    text-align: center;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .draw-info span { color: var(--red); font-weight: 800; }
+
+  /* === Reward Modal === */
+  .reward-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 46%, rgba(255,253,248,.94), rgba(255,253,248,.34) 32%, transparent 60%), rgba(32,33,36,.62);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 24px;
+  }
+  .reward-overlay.show {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .reward-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 340px;
+    padding: 36px 28px 28px;
+    text-align: center;
+    position: relative;
+    box-shadow: var(--shadow);
+    animation: rewardPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes rewardPop {
+    0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  .reward-ball-img {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 16px;
+    display: block;
+    filter: drop-shadow(0 6px 12px rgba(36,85,76,.22));
+    animation: ballBounce 0.6s ease-out 0.3s both;
+  }
+  @keyframes ballBounce {
+    0% { transform: translateY(-30px) scale(0.5); opacity: 0; }
+    60% { transform: translateY(8px) scale(1.1); opacity: 1; }
+    100% { transform: translateY(0) scale(1); }
+  }
+  .reward-label {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+  .reward-name {
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--color-dark);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .reward-desc {
+    font-size: 15px;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+  .reward-close-btn {
+    width: 100%;
+    height: 48px;
+    border: none;
+    border-radius: 10px;
+    background: var(--color-dark);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .reward-close-btn:active { opacity: 0.7; }
+
+  /* === History === */
+  .section-label {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--color-text-secondary);
+    margin: 24px 0 10px;
+    letter-spacing: 0.02em;
+  }
+  .history-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(45,40,31,.06);
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: fadeInUp 0.4s ease-out both;
+  }
+  .history-ball {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+  .history-name {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--color-dark);
+    flex: 1;
+  }
+  .history-time {
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+  .empty-state {
+    text-align: center;
+    padding: 32px 20px;
+    color: var(--color-text-muted);
+    font-size: 14px;
+  }
+
+  /* === Settings Page === */
+  .setting-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(45,40,31,.06);
+    margin-bottom: 10px;
+    overflow: hidden;
+    animation: fadeInUp 0.4s ease-out both;
+  }
+  .reward-row {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    gap: 12px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .reward-row:last-child { border-bottom: none; }
+  .reward-ball-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+  .reward-info { flex: 1; min-width: 0; }
+  .reward-info-name {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--color-dark);
+  }
+  .reward-info-meta {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+  }
+  .reward-info-meta .prob { color: var(--red); font-weight: 700; }
+  .reward-actions { display: flex; gap: 6px; }
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-bg-page);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+  }
+  .icon-btn:active { background: var(--color-border); }
+
+  .add-btn {
+    width: 100%;
+    height: 48px;
+    border: 1.5px dashed var(--color-text-muted);
+    border-radius: 10px;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+    margin-bottom: 12px;
+  }
+  .add-btn:active { border-color: var(--color-primary); color: var(--color-primary); }
+
+  /* Probability bar */
+  .prob-bar {
+    height: 8px;
+    border-radius: 999px;
+    background: var(--color-border);
+    overflow: hidden;
+    margin: 4px 0 8px;
+  }
+  .prob-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+  .prob-summary {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .prob-summary.ok { color: var(--green); }
+  .prob-summary.warn { color: var(--red); }
+
+  /* Template chips */
+  .template-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .template-chip {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-dark);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .template-chip:active {
+    background: var(--color-accent-bg);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  /* === Edit Sheet === */
+  .edit-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(32,33,36,.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 200;
+  }
+  .edit-overlay.show { display: flex; animation: fadeIn 0.25s ease; }
+  .edit-sheet {
+    background: var(--color-bg-card);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 480px;
+    padding: 8px 20px calc(24px + env(safe-area-inset-bottom, 0));
+    animation: sheetUp 0.3s ease;
+  }
+  @keyframes sheetUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  .sheet-handle {
+    width: 36px;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--color-text-muted);
+    margin: 0 auto 20px;
+  }
+  .sheet-title { font-size: 20px; font-weight: 900; margin-bottom: 20px; color: var(--color-dark); }
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--color-text-secondary);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .form-input {
+    width: 100%;
+    height: 44px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 10px;
+    padding: 0 14px;
+    font-size: 16px;
+    font-family: var(--font);
+    background: var(--color-bg-page);
+    color: var(--color-dark);
+    transition: border-color 0.15s;
+  }
+  .form-input:focus { outline: none; border-color: var(--color-primary); background: var(--color-bg-card); }
+  .form-textarea {
+    width: 100%;
+    min-height: 60px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 15px;
+    font-family: var(--font);
+    background: var(--color-bg-page);
+    color: var(--color-dark);
+    resize: none;
+    transition: border-color 0.15s;
+  }
+  .form-textarea:focus { outline: none; border-color: var(--color-primary); background: var(--color-bg-card); }
+  .ball-picker { display: flex; gap: 10px; flex-wrap: wrap; }
+  .ball-option {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    transition: border-color 0.15s;
+    padding: 0;
+    background: transparent;
+  }
+  .ball-option.selected { border-color: var(--color-dark); }
+  .ball-option img { width: 100%; height: 100%; }
+  .form-row { display: flex; gap: 12px; }
+  .form-row .form-group { flex: 1; }
+  .sheet-btns { display: flex; gap: 10px; margin-top: 24px; }
+  .sheet-btn {
+    flex: 1;
+    height: 48px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .sheet-btn.cancel { background: var(--color-bg-page); color: var(--color-dark); border: 1px solid var(--color-border); }
+  .sheet-btn.save { background: var(--color-primary); color: #fff; }
+  .sheet-btn:active { opacity: 0.7; }
+
+  /* === Password Lock === */
+  .lock-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--color-bg-page);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 300;
+    padding: 40px;
+  }
+  .lock-overlay.hide { display: none; }
+  .lock-icon { font-size: 48px; margin-bottom: 16px; }
+  .lock-title { font-size: 18px; font-weight: 900; color: var(--color-dark); margin-bottom: 4px; }
+  .lock-hint { font-size: 14px; color: var(--color-text-secondary); margin-bottom: 24px; }
+  .lock-input {
+    width: 200px;
+    height: 52px;
+    border: 2px solid var(--color-border);
+    border-radius: 14px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    background: var(--color-bg-card);
+    color: var(--color-dark);
+    -webkit-text-security: disc;
+  }
+  .lock-input:focus { outline: none; border-color: var(--color-primary); }
+  .lock-error { color: var(--red); font-size: 14px; margin-top: 12px; height: 20px; }
+
+  /* Inventory badge */
+  .inv-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    background: var(--color-accent-bg);
+    color: var(--color-accent);
+    margin-left: 6px;
+  }
+  .inv-badge.zero { background: #FFE8E8; color: #B03030; }
+
+  /* === Bottom Tab Bar === */
+  .tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    background: rgba(255,253,248,.92);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-top: 1px solid var(--color-border);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    z-index: 100;
+  }
+  .tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0 8px;
+    cursor: pointer;
+  }
+  .tab-icon { font-size: 24px; line-height: 1; margin-bottom: 2px; }
+  .tab-label { font-size: 11px; font-weight: 800; color: var(--color-text-muted); }
+  .tab-item.active .tab-label { color: var(--color-primary); }
+  .tab-item.active .tab-icon { animation: tabPop 0.3s ease; }
+  @keyframes tabPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="app-header">
+  <div class="eyebrow">GACHA REWARD</div>
+  <h1>扭蛋奖励</h1>
+  <div class="subtitle">深圳男子乙组 · 扭出好态度，抽到好奖励</div>
+</div>
+
+<!-- ====== Page 1: Gacha Draw ====== -->
+<div id="page-draw" class="page active">
+  <div class="machine-stage">
+    <div class="stage-copy">
+      <h2>扭出今天的奖励</h2>
+      <p>扭一下旋钮，让奖励自己出现</p>
+    </div>
+
+    <div class="gacha-wrap">
+      <div class="gacha-machine" id="gachaMachine">
+        <!-- Ball window (behind machine image) -->
+        <div class="machine-ball-window" id="ballWindow"></div>
+        <!-- Machine body image -->
+        <img class="machine-art" src="https://gacha.lanlanplus.dev/assets/gacha-machine.png" alt="" draggable="false">
+        <!-- Sticker -->
+        <img class="machine-sticker" src="https://gacha.lanlanplus.dev/assets/gacha-sticker.png" alt="" draggable="false">
+        <!-- Turn knob -->
+        <button class="turn-knob" id="turnKnob" onclick="drawReward()">
+          <img src="https://gacha.lanlanplus.dev/assets/gacha-knob.png" alt="扭蛋旋钮" draggable="false">
+        </button>
+        <!-- Dropped ball -->
+        <div class="dropped-task-ball" id="droppedBall"></div>
+      </div>
+    </div>
+
+    <button class="primary-action" id="drawBtn" onclick="drawReward()">扭一下</button>
+    <div class="draw-info">今日已扭 <span id="todayCount">0</span> 次</div>
+  </div>
+
+  <div class="section-label">扭蛋记录</div>
+  <div id="historyList">
+    <div class="empty-state">还没有扭过蛋，扭一个试试吧 🎰</div>
+  </div>
+</div>
+
+<!-- ====== Page 2: Settings ====== -->
+<div id="page-settings" class="page">
+  <div class="lock-overlay hide" id="lockOverlay">
+    <div class="lock-icon">🔒</div>
+    <div class="lock-title">教练专属</div>
+    <div class="lock-hint">请输入密码查看奖励设置</div>
+    <input type="text" class="lock-input" id="lockInput" maxlength="4" placeholder="••••" inputmode="numeric" onkeyup="checkLock(event)">
+    <div class="lock-error" id="lockError"></div>
+  </div>
+
+  <div class="section-label">概率总览</div>
+  <div class="prob-summary" id="probSummary">
+    <span>总概率：<strong id="totalProb">0%</strong></span>
+    <span id="probStatus">—</span>
+  </div>
+  <div class="prob-bar">
+    <div class="prob-bar-fill" id="probBarFill" style="width:0%;background:var(--red);"></div>
+  </div>
+
+  <div class="section-label">快捷模板</div>
+  <div class="template-chips" style="margin-bottom:16px;">
+    <div class="template-chip" onclick="applyTemplate('basketball')">🏀 篮球训练模板</div>
+    <div class="template-chip" onclick="applyTemplate('study')">📖 学习奖励模板</div>
+    <div class="template-chip" onclick="applyTemplate('daily')">⭐ 日常小奖励</div>
+  </div>
+
+  <div class="section-label">奖品列表</div>
+  <div id="rewardList"></div>
+  <button class="add-btn" onclick="openEditSheet()">+ 添加奖品</button>
+
+  <div class="section-label">设置</div>
+  <div class="setting-card" style="padding:14px 16px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <span style="font-size:15px;font-weight:700;">修改密码</span>
+      <button class="icon-btn" onclick="changePassword()">🔑</button>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:15px;font-weight:700;">清空扭蛋记录</span>
+      <button class="icon-btn" onclick="clearHistory()">🗑️</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== Reward Result Modal ====== -->
+<div class="reward-overlay" id="rewardOverlay" onclick="closeReward(event)">
+  <div class="reward-card" id="rewardCard">
+    <img class="reward-ball-img" id="rewardBallImg" src="https://gacha.lanlanplus.dev/assets/task-ball-blue.png" alt="">
+    <div class="reward-label">恭喜抽中</div>
+    <div class="reward-name" id="rewardName">—</div>
+    <div class="reward-desc" id="rewardDesc">—</div>
+    <button class="reward-close-btn" onclick="closeRewardBtn()">收下奖励</button>
+  </div>
+</div>
+
+<!-- ====== Edit Sheet ====== -->
+<div class="edit-overlay" id="editOverlay" onclick="closeEditSheet(event)">
+  <div class="edit-sheet" id="editSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="editTitle">添加奖品</div>
+    <div class="form-group">
+      <label class="form-label">奖品名称</label>
+      <input type="text" class="form-input" id="editName" placeholder="如：免跑圈一次" maxlength="20">
+    </div>
+    <div class="form-group">
+      <label class="form-label">奖品描述（给孩子的鼓励语）</label>
+      <textarea class="form-textarea" id="editDesc" placeholder="如：训练刻苦，奖励休息一圈！" maxlength="80"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">概率权重</label>
+        <input type="number" class="form-input" id="editProb" placeholder="如：15" min="0.1" max="100" step="0.1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">库存数量</label>
+        <input type="number" class="form-input" id="editStock" placeholder="0=无限" min="0" max="9999">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">扭蛋颜色</label>
+      <div class="ball-picker" id="ballPicker"></div>
+    </div>
+    <div class="sheet-btns">
+      <button class="sheet-btn cancel" onclick="closeEditSheetBtn()">取消</button>
+      <button class="sheet-btn save" onclick="saveReward()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== Bottom Tab Bar ====== -->
+<nav class="tab-bar">
+  <div class="tab-item active" onclick="showPage('draw', this)">
+    <div class="tab-icon">🎰</div>
+    <div class="tab-label">扭蛋</div>
+  </div>
+  <div class="tab-item" onclick="showPage('settings', this)">
+    <div class="tab-icon">⚙️</div>
+    <div class="tab-label">设置</div>
+  </div>
+</nav>
+
+<script>
+// ====== Ball images ======
+var BALL_IMAGES = [
+  'https://gacha.lanlanplus.dev/assets/task-ball-blue.png',
+  'https://gacha.lanlanplus.dev/assets/task-ball-mint.png',
+  'https://gacha.lanlanplus.dev/assets/task-ball-yellow.png',
+  'https://gacha.lanlanplus.dev/assets/task-ball-purple.png',
+  'https://gacha.lanlanplus.dev/assets/task-ball-pink.png',
+];
+
+// ====== Constants ======
+var STORAGE_KEY = 'gacha_rewards_v2';
+var HISTORY_KEY = 'gacha_history_v2';
+var PASSWORD_KEY = 'gacha_password_v2';
+var DEFAULT_PASSWORD = '1234';
+
+var TEMPLATES = {
+  basketball: [
+    { name: '免跑圈一次', desc: '训练刻苦，奖励少跑一圈折返跑！', prob: 15, stock: 0, ballIdx: 0 },
+    { name: '队长袖标一天', desc: '表现优秀，明天训练戴队长袖标！', prob: 5, stock: 0, ballIdx: 3 },
+    { name: '运动饮料一瓶', desc: '流汗最多，奖励一瓶运动饮料！', prob: 20, stock: 0, ballIdx: 1 },
+    { name: '投篮挑战权', desc: '可以挑战教练投篮，赢了有额外奖励！', prob: 10, stock: 0, ballIdx: 4 },
+    { name: '全队鼓掌一次', desc: '今天最拼的人，全队为你鼓掌！', prob: 15, stock: 0, ballIdx: 2 },
+    { name: '休息多1分钟', desc: '训练间隙多休息一分钟！', prob: 15, stock: 0, ballIdx: 0 },
+    { name: '神秘大奖', desc: '教练准备的惊喜奖励！', prob: 5, stock: 0, ballIdx: 4 },
+    { name: '再来一次', desc: '免费再扭一次扭蛋！', prob: 15, stock: 0, ballIdx: 1 },
+  ],
+  study: [
+    { name: '免写作业一次', desc: '学习认真，今天作业减半！', prob: 15, stock: 0, ballIdx: 0 },
+    { name: '选座优先权', desc: '下次可以优先选座位！', prob: 10, stock: 0, ballIdx: 3 },
+    { name: '小零食一份', desc: '奖励一份小零食！', prob: 25, stock: 0, ballIdx: 2 },
+    { name: '看书时间15分钟', desc: '可以自由看15分钟课外书！', prob: 20, stock: 0, ballIdx: 1 },
+    { name: '当一天领读', desc: '明天早读你来领读！', prob: 5, stock: 0, ballIdx: 4 },
+    { name: '再来一次', desc: '免费再扭一次！', prob: 25, stock: 0, ballIdx: 0 },
+  ],
+  daily: [
+    { name: '选一首歌听', desc: '可以点一首歌大家一起听！', prob: 20, stock: 0, ballIdx: 0 },
+    { name: '免一次值日', desc: '今天值日可以免除！', prob: 10, stock: 0, ballIdx: 1 },
+    { name: '小贴纸一张', desc: '奖励一张精美贴纸！', prob: 30, stock: 0, ballIdx: 2 },
+    { name: '当一天组长', desc: '明天可以当一天小组长！', prob: 5, stock: 0, ballIdx: 3 },
+    { name: '加餐一份', desc: '额外加餐一份水果或零食！', prob: 15, stock: 0, ballIdx: 4 },
+    { name: '再来一次', desc: '免费再扭一次！', prob: 20, stock: 0, ballIdx: 0 },
+  ],
+};
+
+// ====== State ======
+var rewards = [];
+var editingId = null;
+var selectedBallIdx = 0;
+var isDrawing = false;
+var settingsUnlocked = false;
+
+// ====== Storage ======
+function loadRewards() {
+  try {
+    var data = localStorage.getItem(STORAGE_KEY);
+    if (data) { rewards = JSON.parse(data); return; }
+  } catch(e) {}
+  rewards = TEMPLATES.basketball.map(function(r, i) {
+    return Object.assign({ id: 'r' + Date.now() + '_' + i }, r);
+  });
+  saveRewards();
+}
+function saveRewards() { localStorage.setItem(STORAGE_KEY, JSON.stringify(rewards)); }
+function loadHistory() {
+  try { var d = localStorage.getItem(HISTORY_KEY); if (d) return JSON.parse(d); } catch(e) {}
+  return [];
+}
+function saveHistory(h) { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); }
+function getPassword() { return localStorage.getItem(PASSWORD_KEY) || DEFAULT_PASSWORD; }
+
+// ====== Init ball window ======
+function initBallWindow() {
+  var win = document.getElementById('ballWindow');
+  win.innerHTML = '';
+  var positions = [
+    { top: '10%', left: '15%', w: '30%', rot: '-15deg' },
+    { top: '5%', left: '48%', w: '28%', rot: '20deg' },
+    { top: '35%', left: '8%', w: '26%', rot: '-30deg' },
+    { top: '30%', left: '55%', w: '30%', rot: '10deg' },
+    { top: '55%', left: '25%', w: '28%', rot: '-20deg' },
+    { top: '50%', left: '50%', w: '24%', rot: '35deg' },
+  ];
+  positions.forEach(function(pos, i) {
+    var img = document.createElement('img');
+    img.className = 'mini-ball';
+    img.src = BALL_IMAGES[i % BALL_IMAGES.length];
+    img.style.top = pos.top;
+    img.style.left = pos.left;
+    img.style.width = pos.w;
+    img.style.setProperty('--base-rotate', pos.rot);
+    img.style.setProperty('--i', i);
+    win.appendChild(img);
+  });
+}
+
+// ====== Draw Logic ======
+function drawReward() {
+  if (isDrawing) return;
+  var available = rewards.filter(function(r) { return r.stock === 0 || r.stock > 0; });
+  if (available.length === 0) { alert('还没有设置奖品，请先到设置页添加奖品'); return; }
+
+  isDrawing = true;
+  var btn = document.getElementById('drawBtn');
+  var knob = document.getElementById('turnKnob');
+  btn.disabled = true;
+  knob.disabled = true;
+  btn.textContent = '扭蛋中...';
+
+  var machine = document.getElementById('gachaMachine');
+  machine.classList.add('shaking', 'turning');
+
+  // Pick reward by weight
+  var totalWeight = available.reduce(function(s, r) { return s + r.prob; }, 0);
+  var rand = Math.random() * totalWeight;
+  var cumulative = 0;
+  var selected = available[0];
+  for (var i = 0; i < available.length; i++) {
+    cumulative += available[i].prob;
+    if (rand < cumulative) { selected = available[i]; break; }
+  }
+
+  setTimeout(function() {
+    machine.classList.remove('shaking', 'turning');
+    machine.classList.add('has-turned');
+
+    // Show dropped ball
+    var dropBall = document.getElementById('droppedBall');
+    var ballSrc = BALL_IMAGES[selected.ballIdx % BALL_IMAGES.length];
+    dropBall.innerHTML = '<img src="' + ballSrc + '" alt="">';
+    dropBall.classList.add('dropping');
+
+    setTimeout(function() {
+      dropBall.classList.remove('dropping');
+      dropBall.classList.add('ready');
+
+      // Tap ball to reveal
+      dropBall.style.cursor = 'pointer';
+      dropBall.onclick = function() {
+        showReward(selected);
+        decrementStock(selected);
+        addHistory(selected);
+        resetMachine();
+      };
+
+      // Auto-reveal after 1.5s
+      setTimeout(function() {
+        if (isDrawing) {
+          showReward(selected);
+          decrementStock(selected);
+          addHistory(selected);
+          resetMachine();
+        }
+      }, 2000);
+    }, 760);
+  }, 620);
+}
+
+function resetMachine() {
+  var machine = document.getElementById('gachaMachine');
+  var dropBall = document.getElementById('droppedBall');
+  var btn = document.getElementById('drawBtn');
+  var knob = document.getElementById('turnKnob');
+
+  machine.classList.remove('has-turned');
+  dropBall.classList.remove('ready', 'dropping');
+  dropBall.style.cursor = '';
+  dropBall.onclick = null;
+  dropBall.innerHTML = '';
+  isDrawing = false;
+  btn.disabled = false;
+  knob.disabled = false;
+  btn.textContent = '扭一下';
+}
+
+function showReward(reward) {
+  var overlay = document.getElementById('rewardOverlay');
+  var ballImg = document.getElementById('rewardBallImg');
+  ballImg.src = BALL_IMAGES[reward.ballIdx % BALL_IMAGES.length];
+  document.getElementById('rewardName').textContent = reward.name;
+  document.getElementById('rewardDesc').textContent = reward.desc || '恭喜你！';
+  overlay.classList.add('show');
+}
+
+function closeReward(e) {
+  if (e.target === e.currentTarget) document.getElementById('rewardOverlay').classList.remove('show');
+}
+function closeRewardBtn() { document.getElementById('rewardOverlay').classList.remove('show'); }
+
+function decrementStock(reward) {
+  if (reward.stock > 0) {
+    reward.stock--;
+    saveRewards();
+    renderRewardList();
+  }
+}
+
+function addHistory(reward) {
+  var hist = loadHistory();
+  hist.unshift({ name: reward.name, ballIdx: reward.ballIdx, time: new Date().toISOString() });
+  if (hist.length > 50) hist = hist.slice(0, 50);
+  saveHistory(hist);
+  renderHistory();
+  updateTodayCount();
+}
+
+// ====== History ======
+function renderHistory() {
+  var hist = loadHistory();
+  var list = document.getElementById('historyList');
+  if (hist.length === 0) {
+    list.innerHTML = '<div class="empty-state">还没有扭过蛋，扭一个试试吧 🎰</div>';
+    return;
+  }
+  list.innerHTML = '';
+  hist.forEach(function(item) {
+    var div = document.createElement('div');
+    div.className = 'history-card';
+    var time = new Date(item.time);
+    var timeStr = (time.getMonth()+1) + '/' + time.getDate() + ' ' +
+      String(time.getHours()).padStart(2,'0') + ':' + String(time.getMinutes()).padStart(2,'0');
+    div.innerHTML =
+      '<img class="history-ball" src="' + BALL_IMAGES[item.ballIdx % BALL_IMAGES.length] + '" alt="">' +
+      '<div class="history-name">' + escapeHtml(item.name) + '</div>' +
+      '<div class="history-time">' + timeStr + '</div>';
+    list.appendChild(div);
+  });
+}
+
+function updateTodayCount() {
+  var hist = loadHistory();
+  var today = new Date();
+  var count = hist.filter(function(item) {
+    return new Date(item.time).toDateString() === today.toDateString();
+  }).length;
+  document.getElementById('todayCount').textContent = count;
+}
+
+function clearHistory() {
+  if (confirm('确定清空所有扭蛋记录吗？')) {
+    localStorage.removeItem(HISTORY_KEY);
+    renderHistory();
+    updateTodayCount();
+  }
+}
+
+// ====== Settings: Reward List ======
+function renderRewardList() {
+  var list = document.getElementById('rewardList');
+  list.innerHTML = '';
+  if (rewards.length === 0) {
+    list.innerHTML = '<div class="empty-state">还没有奖品，点击下方添加</div>';
+  }
+  rewards.forEach(function(r) {
+    var card = document.createElement('div');
+    card.className = 'setting-card';
+    var stockHtml = r.stock === 0
+      ? '<span class="inv-badge">无限</span>'
+      : '<span class="inv-badge' + (r.stock <= 2 ? ' zero' : '') + '">库存' + r.stock + '</span>';
+    var row = document.createElement('div');
+    row.className = 'reward-row';
+    row.innerHTML =
+      '<img class="reward-ball-icon" src="' + BALL_IMAGES[r.ballIdx % BALL_IMAGES.length] + '" alt="">' +
+      '<div class="reward-info">' +
+        '<div class="reward-info-name">' + escapeHtml(r.name) + stockHtml + '</div>' +
+        '<div class="reward-info-meta"><span class="prob">' + r.prob + '%</span> · ' + (r.desc ? escapeHtml(r.desc.slice(0,20)) + '...' : '无描述') + '</div>' +
+      '</div>' +
+      '<div class="reward-actions">' +
+        '<button class="icon-btn" onclick="openEditSheet(\'' + r.id + '\')">✏️</button>' +
+        '<button class="icon-btn" onclick="deleteReward(\'' + r.id + '\')">🗑️</button>' +
+      '</div>';
+    card.appendChild(row);
+    list.appendChild(card);
+  });
+  updateProbSummary();
+}
+
+function updateProbSummary() {
+  var total = rewards.reduce(function(s, r) { return s + r.prob; }, 0);
+  document.getElementById('totalProb').textContent = total.toFixed(1) + '%';
+  var bar = document.getElementById('probBarFill');
+  var status = document.getElementById('probStatus');
+  var summary = document.getElementById('probSummary');
+  bar.style.width = Math.min(total, 100) + '%';
+  if (total === 0) {
+    status.textContent = '请添加奖品'; summary.className = 'prob-summary'; bar.style.background = 'var(--color-text-muted)';
+  } else if (Math.abs(total - 100) < 0.1) {
+    status.textContent = '✅ 概率完美'; summary.className = 'prob-summary ok'; bar.style.background = 'var(--green)';
+  } else if (total > 100) {
+    status.textContent = '⚠️ 超过100%'; summary.className = 'prob-summary warn'; bar.style.background = 'var(--red)';
+  } else {
+    status.textContent = '剩余 ' + (100 - total).toFixed(1) + '%'; summary.className = 'prob-summary'; bar.style.background = 'var(--red)';
+  }
+}
+
+// ====== Edit Sheet ======
+function openEditSheet(id) {
+  editingId = id || null;
+  document.getElementById('editTitle').textContent = id ? '编辑奖品' : '添加奖品';
+  if (id) {
+    var r = rewards.find(function(x) { return x.id === id; });
+    if (!r) return;
+    document.getElementById('editName').value = r.name;
+    document.getElementById('editDesc').value = r.desc || '';
+    document.getElementById('editProb').value = r.prob;
+    document.getElementById('editStock').value = r.stock;
+    selectedBallIdx = r.ballIdx;
+  } else {
+    document.getElementById('editName').value = '';
+    document.getElementById('editDesc').value = '';
+    document.getElementById('editProb').value = '';
+    document.getElementById('editStock').value = '0';
+    selectedBallIdx = 0;
+  }
+  renderBallPicker();
+  document.getElementById('editOverlay').classList.add('show');
+}
+function closeEditSheet(e) { if (e.target === e.currentTarget) document.getElementById('editOverlay').classList.remove('show'); }
+function closeEditSheetBtn() { document.getElementById('editOverlay').classList.remove('show'); }
+
+function renderBallPicker() {
+  var picker = document.getElementById('ballPicker');
+  picker.innerHTML = '';
+  BALL_IMAGES.forEach(function(src, idx) {
+    var btn = document.createElement('button');
+    btn.className = 'ball-option' + (idx === selectedBallIdx ? ' selected' : '');
+    btn.innerHTML = '<img src="' + src + '" alt="">';
+    btn.onclick = function() { selectedBallIdx = idx; renderBallPicker(); };
+    picker.appendChild(btn);
+  });
+}
+
+function saveReward() {
+  var name = document.getElementById('editName').value.trim();
+  var desc = document.getElementById('editDesc').value.trim();
+  var prob = parseFloat(document.getElementById('editProb').value);
+  var stock = parseInt(document.getElementById('editStock').value) || 0;
+  if (!name) { alert('请输入奖品名称'); return; }
+  if (!prob || prob <= 0) { alert('请输入有效的概率'); return; }
+  if (editingId) {
+    var r = rewards.find(function(x) { return x.id === editingId; });
+    if (r) { r.name = name; r.desc = desc; r.prob = prob; r.stock = stock; r.ballIdx = selectedBallIdx; }
+  } else {
+    rewards.push({ id: 'r' + Date.now() + '_' + Math.random().toString(36).slice(2,7), name: name, desc: desc, prob: prob, stock: stock, ballIdx: selectedBallIdx });
+  }
+  saveRewards(); renderRewardList();
+  document.getElementById('editOverlay').classList.remove('show');
+}
+
+function deleteReward(id) {
+  if (confirm('确定删除这个奖品吗？')) {
+    rewards = rewards.filter(function(r) { return r.id !== id; });
+    saveRewards(); renderRewardList();
+  }
+}
+
+// ====== Templates ======
+function applyTemplate(name) {
+  var tpl = TEMPLATES[name];
+  if (!tpl) return;
+  if (rewards.length > 0 && !confirm('应用模板会替换当前所有奖品，确定吗？')) return;
+  rewards = tpl.map(function(r, i) { return Object.assign({ id: 'r' + Date.now() + '_' + i }, r); });
+  saveRewards(); renderRewardList();
+}
+
+// ====== Password ======
+function checkLock(e) {
+  if (e.key === 'Enter' || e.target.value.length === 4) {
+    var val = document.getElementById('lockInput').value;
+    if (val === getPassword()) {
+      document.getElementById('lockOverlay').classList.add('hide');
+      document.getElementById('lockError').textContent = '';
+      settingsUnlocked = true;
+    } else {
+      document.getElementById('lockError').textContent = '密码错误，请重试';
+      document.getElementById('lockInput').value = '';
+    }
+  }
+}
+function changePassword() {
+  var old = prompt('请输入当前密码：');
+  if (old !== getPassword()) { alert('密码错误'); return; }
+  var newPwd = prompt('请输入新密码（4位数字）：');
+  if (newPwd && newPwd.length === 4 && /^\d{4}$/.test(newPwd)) {
+    localStorage.setItem(PASSWORD_KEY, newPwd);
+    alert('密码已修改');
+  } else { alert('密码必须是4位数字'); }
+}
+
+// ====== Page Navigation ======
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-item').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('page-' + id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo(0, 0);
+  if (id === 'settings' && !settingsUnlocked) {
+    document.getElementById('lockOverlay').classList.remove('hide');
+    document.getElementById('lockInput').value = '';
+    document.getElementById('lockInput').focus();
+  }
+}
+
+// ====== Utils ======
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ====== Init ======
+loadRewards();
+initBallWindow();
+renderRewardList();
+renderHistory();
+updateTodayCount();
+</script>
+</body>
+</html>
