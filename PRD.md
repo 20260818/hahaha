@@ -53,15 +53,19 @@ Opponents and Tasks are removed from navigation, markup, state, and event handli
 ### Energy
 
 - Put the pre-game energy-card experience first.
-- Draw one card from a curated 12-card deck.
-- Present a theme, confidence cue, and concrete action without predicting winning or losing.
-- Use upright cards only and persist the selected card for the selected match/day.
-- Explain the five MVP rules in the page: choose a match and question, one card per match/day, 12 upright cards, no outcome/score/injury prediction, and action-oriented interpretation of reminder cards.
+- Let the coach hold a question privately; the product must not require camera, microphone, motion-sensor, or text input access.
+- Show a contained horizontal deck of 78 face-down cards. The coach swipes the deck to shuffle/cut it, then draws the card closest to the center marker.
+- Require at least one deliberate swipe before enabling the draw action.
+- Draw from the full 78-card deck with an even chance of upright or reversed orientation.
+- Present the card face, orientation, energy theme, confidence cue, team phrase, and concrete action without predicting winning or losing.
+- Treat reversed cards as adjustment prompts rather than bad outcomes.
+- Persist one card and orientation for each selected match. The coach may review it but cannot redraw for the same match.
+- Explain the short interaction flow and keep full rules available without overwhelming the draw stage.
 - Do not include secondary coaching stories or generic pre-game leadership content.
 
 ## Non-Goals
 
-- Accounts, cloud sync, analytics, AI-generated readings, full 78-card deck, reversed cards, three-card spreads, minute-level substitutions, video tagging, or remote APIs.
+- Accounts, cloud sync, analytics, AI-generated readings, three-card spreads, camera-based recognition, shake-to-shuffle sensors, minute-level substitutions, video tagging, or remote APIs.
 
 ## Acceptance Criteria
 
@@ -71,7 +75,11 @@ Opponents and Tasks are removed from navigation, markup, state, and event handli
 - Tactical records survive a page refresh and can be removed.
 - Offensive and defensive tactics accept custom text, and the lineup strip scrolls without causing page-level horizontal overflow.
 - Unstarted group matches do not show score inputs or affect standings.
-- The energy card survives refresh for the same match/day and never displays negative fortune language.
+- The energy card survives refresh for the same match and never displays negative fortune language.
+- The energy deck scrolls independently without causing page-level horizontal overflow.
+- Entering the Energy page downloads only the shared card back; no face image loads until a card is drawn or restored.
+- Drawing one card loads only that card face, records upright/reversed orientation, and survives refresh for the same match.
+- Reduced-motion users receive an immediate state change without a flip animation.
 - Inline scripts parse without syntax errors.
 - No retired Opponents or Tasks state/entry points remain.
 - Desktop and mobile layouts show no horizontal overflow or blocked primary actions.

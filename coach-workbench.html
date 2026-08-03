@@ -313,50 +313,112 @@
   .roster-card { display: flex; align-items: center; gap: 12px; padding: 14px; }
   .roster-card.year-2012 { border-color: #91bffd; }
   .energy-layout { display: grid; gap: 16px; }
-  .energy-panel { padding: 18px; }
-  .energy-disclaimer { margin: 8px 0 18px; color: var(--muted); font-size: 13px; }
-  .tarot-stage { display: grid; place-items: center; min-height: 440px; padding: 18px; border-radius: 16px; background: radial-gradient(circle at 50% 20%, #314574 0%, var(--navy) 58%, #10162b 100%); }
-  .tarot-button {
+  .energy-layout > * { min-width: 0; }
+  .energy-panel { min-width: 0; padding: 18px; }
+  .energy-disclaimer { margin: 8px 0 14px; color: var(--muted); font-size: 13px; }
+  .energy-question {
+    margin: 14px 0;
+    padding: 13px 14px;
+    border-radius: 13px;
+    background: var(--accent-soft);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .tarot-stage {
     position: relative;
-    width: min(250px, 74vw);
-    aspect-ratio: 2 / 3;
     overflow: hidden;
-    padding: 0;
-    border: 1px solid rgba(255, 198, 125, 0.72);
-    border-radius: 18px;
-    background: var(--navy);
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
-    color: #fff;
-    cursor: pointer;
+    min-height: 244px;
+    padding: 26px 0 16px;
+    border-radius: 16px;
+    background: radial-gradient(circle at 50% 24%, #314574 0%, var(--navy) 58%, #10162b 100%);
   }
-  .tarot-button img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .tarot-cover {
+  .tarot-deck {
+    display: flex;
+    width: 100%;
+    min-height: 184px;
+    align-items: center;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: calc(50% - 56px);
+    padding: 6px calc(50% - 56px) 14px;
+    scrollbar-width: none;
+    touch-action: pan-x;
+  }
+  .tarot-deck::-webkit-scrollbar { display: none; }
+  .deck-card {
+    width: 112px;
+    height: 168px;
+    flex: 0 0 112px;
+    margin-right: -58px;
+    border: 1px solid rgba(255, 198, 125, 0.62);
+    border-radius: 11px;
+    background: #10162b url("assets/tarot/card-back.webp") center / cover no-repeat;
+    box-shadow: 0 7px 18px rgba(0, 0, 0, 0.28);
+    scroll-snap-align: center;
+    transition: transform 180ms ease-out, box-shadow 180ms ease-out, border-color 180ms ease-out;
+  }
+  .deck-card:last-child { margin-right: 0; }
+  .deck-card.centered {
+    z-index: 2;
+    border-color: #f6d19c;
+    box-shadow: 0 13px 26px rgba(0, 0, 0, 0.42), 0 0 0 2px rgba(246, 209, 156, 0.18);
+    transform: translateY(-6px);
+  }
+  .deck-marker {
     position: absolute;
-    inset: 0;
+    top: 8px;
+    left: 50%;
+    z-index: 5;
     display: grid;
-    place-items: center;
-    padding: 24px;
-    background: linear-gradient(160deg, rgba(13, 21, 45, 0.36), rgba(13, 21, 45, 0.9));
-    text-align: center;
-    transition: opacity 320ms ease, transform 320ms ease;
+    width: 112px;
+    height: 208px;
+    place-items: end center;
+    transform: translateX(-50%);
+    border-inline: 1px solid rgba(246, 209, 156, 0.44);
+    pointer-events: none;
   }
-  .tarot-cover strong { font-size: 22px; }
-  .tarot-cover span { display: block; margin-top: 7px; color: #f2c494; font-size: 13px; }
-  .tarot-button.revealed .tarot-cover { opacity: 0; transform: rotateY(90deg); pointer-events: none; }
-  .tarot-button.drawing { animation: draw-card 600ms ease-in-out; }
-  @keyframes draw-card { 0%, 100% { transform: translateY(0) rotate(0); } 45% { transform: translateY(-12px) rotate(-2deg); } 70% { transform: translateY(-5px) rotate(1deg); } }
+  .deck-marker span { padding: 3px 8px; border-radius: 999px; background: rgba(16, 22, 43, 0.88); color: #f6d19c; font-size: 11px; font-weight: 800; }
+  .shuffle-status { min-height: 22px; margin-top: 10px; color: var(--muted); font-size: 13px; text-align: center; }
+  .energy-draw-button { width: 100%; margin-top: 9px; }
+  .tarot-stage.drawing .centered { animation: selected-card-pulse 260ms ease-out; }
+  @keyframes selected-card-pulse { 50% { transform: translateY(-12px) scale(1.03); } }
   .energy-result { display: none; padding: 20px; }
   .energy-result.visible { display: block; }
+  .energy-result-layout { display: grid; gap: 18px; }
+  .energy-face-shell {
+    width: min(220px, 62vw);
+    justify-self: center;
+    aspect-ratio: 420 / 774;
+    overflow: hidden;
+    border-radius: 13px;
+    background: var(--navy);
+    box-shadow: 0 14px 30px rgba(23, 33, 63, 0.22);
+    perspective: 1000px;
+  }
+  .energy-face-shell.revealing { animation: reveal-card 300ms ease-out; }
+  @keyframes reveal-card { from { opacity: 0; transform: rotateY(78deg) scale(0.96); } to { opacity: 1; transform: none; } }
+  .energy-card-image { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 240ms ease-out; }
+  .energy-card-image.reversed { transform: rotate(180deg); }
+  .energy-result-copy { min-width: 0; }
   .energy-kicker { color: var(--accent-strong); font-size: 12px; font-weight: 850; letter-spacing: 0.08em; }
-  .energy-result h3 { margin: 6px 0 3px; font-size: 25px; }
+  .energy-title-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 5px; }
+  .energy-result h3 { margin: 0; font-size: 25px; }
+  .orientation-tag { padding: 4px 8px; border-radius: 999px; background: var(--green-soft); color: var(--green); font-size: 12px; font-weight: 800; }
+  .orientation-tag.reversed { background: var(--purple-soft); color: var(--purple); }
   .energy-theme { color: var(--muted); font-weight: 700; }
-  .energy-message { margin-top: 18px; padding: 15px; border-radius: 13px; background: var(--accent-soft); font-size: 16px; font-weight: 700; }
+  .energy-message { margin-top: 14px; padding: 15px; border-radius: 13px; background: var(--accent-soft); font-size: 16px; font-weight: 700; }
+  .energy-team-phrase { margin-top: 12px; padding-left: 12px; border-left: 3px solid var(--accent); color: var(--ink); font-size: 14px; }
+  .energy-team-phrase strong { display: block; margin-bottom: 3px; }
   .energy-action { margin-top: 12px; color: var(--muted); }
   .energy-action strong { color: var(--ink); }
-  .tarot-rules { margin-top: 12px; padding: 18px; }
-  .tarot-rules h3 { margin: 0 0 10px; font-size: 17px; }
-  .tarot-rules ol { margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px; }
+  .energy-drawn-at { margin-top: 12px; color: var(--muted); font-size: 12px; }
+  .tarot-rules { margin-top: 12px; }
+  .tarot-rules ol { margin: 0; padding-left: 20px; }
   .tarot-rules li + li { margin-top: 8px; }
+  .tarot-credit { margin: 12px 0 0; color: var(--muted); font-size: 12px; text-align: center; }
+  .tarot-credit a { color: inherit; }
 
   .tab-bar {
     position: fixed;
@@ -400,6 +462,8 @@
     .confidence-card, .next-match { min-height: 280px; display: flex; flex-direction: column; justify-content: center; }
     .tactics-layout { grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr); align-items: start; }
     .energy-layout { grid-template-columns: minmax(340px, 0.9fr) minmax(320px, 1.1fr); align-items: start; }
+    .energy-result-layout { grid-template-columns: minmax(150px, 210px) minmax(0, 1fr); align-items: start; }
+    .energy-face-shell { width: 100%; }
     .path-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .roster-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   }
@@ -554,35 +618,56 @@
           <label for="energy-match">为哪场比赛抽牌</label>
           <select id="energy-match"></select>
         </div>
-        <p class="energy-disclaimer">用于赛前自我暗示和行动提醒，不预测比赛输赢。同一比赛当天保持同一张牌。</p>
-        <div class="tarot-stage">
-          <button id="draw-energy" class="tarot-button" type="button" aria-describedby="energy-disclaimer-text">
-            <img src="assets/energy-card-basketball.png" alt="">
-            <span class="tarot-cover"><span><strong>抽取赛前能量牌</strong><span>安静呼吸一次，然后点击</span></span></span>
-          </button>
+        <p class="energy-disclaimer">用于赛前自我暗示和行动提醒，不预测比赛输赢。每场比赛只能抽取一张。</p>
+
+        <div id="energy-draw-flow">
+          <p class="energy-question">在心中想一个关于本场比赛的问题，不需要输入。安静呼吸一次，然后左右滑动牌组。</p>
+          <div id="tarot-stage" class="tarot-stage">
+            <div class="deck-marker" aria-hidden="true"><span>中间牌</span></div>
+            <div id="energy-deck" class="tarot-deck" role="group" aria-label="塔罗牌组，左右滑动洗牌" tabindex="0"></div>
+          </div>
+          <div id="shuffle-status" class="shuffle-status" role="status" aria-live="polite">左右滑动牌组开始洗牌</div>
+          <button id="draw-energy" class="primary-button energy-draw-button" type="button" disabled aria-describedby="energy-disclaimer-text">抽取中间这张牌</button>
         </div>
-        <span id="energy-disclaimer-text" class="small muted">牌面只提供支持性提醒，不评价好坏。</span>
+
+        <p id="energy-disclaimer-text" class="small muted">正位和逆位都有支持性提醒；逆位不是坏牌，而是调整方向。</p>
+        <p class="tarot-credit">牌面来源：<a href="https://github.com/highlig/ricky-wahite-tarot" target="_blank" rel="noreferrer">Ricky-Wahité Tarot</a></p>
       </div>
 
       <div>
-        <article id="energy-result" class="card energy-result" aria-live="polite">
-          <div class="energy-kicker">本场能量牌</div>
-          <h3 id="energy-card-name"></h3>
-          <div id="energy-card-theme" class="energy-theme"></div>
-          <div id="energy-card-message" class="energy-message"></div>
-          <p id="energy-card-action" class="energy-action"></p>
+        <article id="energy-result" class="card energy-result" aria-labelledby="energy-card-name" aria-live="polite" tabindex="-1">
+          <div class="energy-result-layout">
+            <div id="energy-face-shell" class="energy-face-shell">
+              <img id="energy-card-image" class="energy-card-image" alt="">
+            </div>
+            <div class="energy-result-copy">
+              <div class="energy-kicker">本场能量牌</div>
+              <div class="energy-title-line">
+                <h3 id="energy-card-name"></h3>
+                <span id="energy-card-orientation" class="orientation-tag"></span>
+              </div>
+              <div id="energy-card-theme" class="energy-theme"></div>
+              <div id="energy-card-message" class="energy-message"></div>
+              <div id="energy-card-team-phrase" class="energy-team-phrase"></div>
+              <p id="energy-card-action" class="energy-action"></p>
+              <div id="energy-card-drawn-at" class="energy-drawn-at"></div>
+            </div>
+          </div>
         </article>
 
-        <article class="card tarot-rules" aria-labelledby="tarot-rules-heading">
-          <h3 id="tarot-rules-heading">抽牌规则</h3>
-          <ol>
-            <li>先选择比赛，再带着一个清晰问题抽牌，例如“今天我们要守住什么？”</li>
-            <li>同一场比赛在同一天只能抽取一张；刷新页面不会更换牌面。</li>
-            <li>MVP仅使用12张正位牌，每张牌只提供能量主题、心理暗示和一项可执行建议。</li>
-            <li>牌面不预测胜负、比分或伤病，也不区分“好牌”和“坏牌”。</li>
-            <li>遇到提醒型牌面时，系统会把含义转成下一回合可以执行的动作。</li>
-          </ol>
-        </article>
+        <details class="card details-card tarot-rules">
+          <summary>完整抽牌规则</summary>
+          <div class="details-body">
+            <ol>
+              <li>选择比赛后，在心中想一个问题，不需要输入或授权摄像头。</li>
+              <li>至少左右滑动一次完成洗牌，再抽取中间位置的牌。</li>
+              <li>完整牌组包含78张牌，每张牌都有正位和逆位。</li>
+              <li>同一场比赛只保留一张牌；刷新或隔天打开都不会更换。</li>
+              <li>逆位表示需要调整能量的使用方式，不代表坏结果。</li>
+              <li>牌面不预测胜负、比分或伤病，只提供信心暗示和下一步行动。</li>
+            </ol>
+          </div>
+        </details>
       </div>
     </div>
   </section>
@@ -602,7 +687,7 @@
   var TEAM_NAME = '深圳';
   var SCORE_STORAGE_KEY = 'coach_scores';
   var TACTICS_STORAGE_KEY = 'coach_tactics_v1';
-  var ENERGY_STORAGE_KEY = 'coach_energy_v1';
+  var ENERGY_STORAGE_KEY = 'coach_energy_v2';
 
   var GROUP_MATCHES = [
     { id: 'g1', scoreIndex: 0, date: '2026-08-04T10:00:00+08:00', teamA: '深圳', teamB: '江门', time: '10:00', venue: '庙街体育馆', stage: '小组赛第一轮' },
@@ -641,20 +726,89 @@
     { id: '19', number: 19, name: '周坤逸', year: 2011 }
   ];
 
-  var ENERGY_CARDS = [
-    { id: 'strength', name: '力量', theme: '冷静掌控', message: '今天的优势不是蛮力，而是稳定和控制。', action: '第一节先把防守强度立住，用清晰口令稳住每次轮转。' },
-    { id: 'chariot', name: '战车', theme: '主动推进', message: '你们已经准备好把比赛带进自己的节奏。', action: '开场前两个进攻回合执行最熟悉的战术，不犹豫。' },
-    { id: 'star', name: '星星', theme: '信任彼此', message: '每一次传球都在告诉队友：我相信你。', action: '赛前让每名首发对身边队友说一句明确的支持。' },
-    { id: 'sun', name: '太阳', theme: '释放能量', message: '今天的身体会更快热起来，场上的回应也会更积极。', action: '热身最后两分钟提高沟通音量，把能量带进开场。' },
-    { id: 'temperance', name: '节制', theme: '稳定节奏', message: '不需要一次解决整场比赛，只需要把下一球做好。', action: '遇到连续失误时，先降速完成一次高质量进攻。' },
-    { id: 'justice', name: '正义', theme: '纪律执行', message: '清晰的规则会让你们在压力下更自由。', action: '赛前再确认一次上半场对位与A/B组轮换。' },
-    { id: 'magician', name: '魔术师', theme: '主动创造', message: '你们手里的准备已经足够，关键是果断使用。', action: '第一机会出现时坚决执行，不因为一次不进改变判断。' },
-    { id: 'priestess', name: '女祭司', theme: '观察与判断', message: '先看清对方的第一步，再做最简单的回应。', action: '开场三分钟重点记录对方主要持球点和掩护方向。' },
-    { id: 'tower', name: '高塔', theme: '变化中的秩序', message: '变化不会打乱你们，它只是在提醒你们重新统一。', action: '暂停后先统一一个防守口令，从下一回合重新建立秩序。' },
-    { id: 'moon', name: '月亮', theme: '确认信息', message: '信息可能还不够清晰，清楚沟通会让全队迅速稳定。', action: '每次死球都确认站位和对位，不带着疑问进入下一回合。' },
-    { id: 'hermit', name: '隐者', theme: '回到基本功', message: '复杂的时候，最可靠的答案往往是最熟悉的动作。', action: '比分胶着时回到防守、篮板和安全传球三件事。' },
-    { id: 'world', name: '世界', theme: '团队完整', message: '每个人都在自己的位置上，全队就会成为一个整体。', action: '赛前明确每名球员今天最重要的一项职责。' }
+  var MAJOR_ARCANA = [
+    { id: 'the-fool', file: '00-the-fool', name: '愚者', upright: { theme: '勇敢开始', message: '你们不需要等到毫无紧张才出发，准备已经足够支撑第一步。', teamPhrase: '带着好奇上场，第一球就全力回应。', action: '开场先执行最熟悉的一套进攻，用一次果断跑位进入比赛。' }, reversed: { theme: '先确认方向', message: '勇气仍在，只需要把冲动变成清楚的选择。', teamPhrase: '先看一眼队友，再一起向前。', action: '发球前确认站位和第一传，不抢快一拍。' } },
+    { id: 'the-magician', file: '01-the-magician', name: '魔术师', upright: { theme: '主动创造', message: '你们手里的准备已经足够，关键是果断使用。', teamPhrase: '我们有办法，也有能力把它做出来。', action: '第一机会出现时坚决执行，不因一次不进改变判断。' }, reversed: { theme: '集中资源', message: '能力没有消失，只是需要把注意力从太多选择收回到一个目标。', teamPhrase: '把一件事做清楚，比赛就会跟上来。', action: '暂停时只布置一个进攻重点和一个防守口令。' } },
+    { id: 'the-high-priestess', file: '02-the-high-priestess', name: '女祭司', upright: { theme: '观察与判断', message: '先看清对方的第一步，再做最简单的回应。', teamPhrase: '安静观察，清楚出手。', action: '开场三分钟重点识别对方主要持球点和掩护方向。' }, reversed: { theme: '说出观察', message: '直觉已经给出信号，现在要用沟通把它变成全队的信息。', teamPhrase: '看见就说，听见就回应。', action: '每次死球让最近的球员报出对位和掩护方向。' } },
+    { id: 'the-empress', file: '03-the-empress', name: '皇后', upright: { theme: '支持成长', message: '稳定的鼓励会让每名球员更敢于做正确的动作。', teamPhrase: '我们接住彼此，也让彼此更强。', action: '赛前让每名球员收到一句具体肯定。' }, reversed: { theme: '补充能量', message: '照顾全队之前，也要给自己留出一次呼吸和恢复。', teamPhrase: '稳住自己，才能继续托住团队。', action: '暂停布置前先用十秒调整呼吸，再给出指令。' } },
+    { id: 'the-emperor', file: '04-the-emperor', name: '皇帝', upright: { theme: '建立秩序', message: '明确的边界和职责会让全队在压力下更自由。', teamPhrase: '位置清楚，责任清楚，行动就会坚定。', action: '赛前再确认首发对位、轮换顺序和暂停口令。' }, reversed: { theme: '保持弹性', message: '规则是为了帮助执行，不必让固守计划压住临场判断。', teamPhrase: '原则不变，方法可以调整。', action: '预先确定一套落后时可切换的防守方案。' } },
+    { id: 'the-hierophant', file: '05-the-hierophant', name: '教皇', upright: { theme: '相信体系', message: '反复练习的基本原则会在紧张时替你们做决定。', teamPhrase: '相信训练，相信我们共同的语言。', action: '赛前快速复述三条最重要的团队原则。' }, reversed: { theme: '找到自己的解法', message: '熟悉的方法仍有价值，但今天可以根据球员特点做一次小调整。', teamPhrase: '守住原则，也允许聪明变化。', action: '保留核心战术，只调整一个落位或终结选择。' } },
+    { id: 'the-lovers', file: '06-the-lovers', name: '恋人', upright: { theme: '彼此选择', message: '团队信任来自每一次愿意为队友多跑一步的决定。', teamPhrase: '这一球，我们选择相信身边的人。', action: '热身结束前让五名场上球员互相确认防守协作。' }, reversed: { theme: '重新对齐', message: '分歧不是坏事，它提醒全队把目标和选择重新说清楚。', teamPhrase: '先统一目标，再一起行动。', action: '遇到连续失误时，用一句话重申当下唯一目标。' } },
+    { id: 'the-chariot', file: '07-the-chariot', name: '战车', upright: { theme: '主动推进', message: '你们已经准备好把比赛带进自己的节奏。', teamPhrase: '方向一致，我们就能把节奏握在手里。', action: '开场前两个进攻回合执行最熟悉的战术，不犹豫。' }, reversed: { theme: '校准节奏', message: '力量仍然充足，先让速度和方向重新一致。', teamPhrase: '不是更快，而是一起更准。', action: '出现抢节奏时完成一次安全传导，再寻找进攻点。' } },
+    { id: 'strength', file: '08-strength', name: '力量', upright: { theme: '冷静掌控', message: '今天的优势不是蛮力，而是稳定和控制。', teamPhrase: '越有压力，我们越能稳稳回应。', action: '第一节先把防守强度立住，用清晰口令稳住轮转。' }, reversed: { theme: '温柔坚定', message: '紧张不等于软弱，它只是提醒你把力量用在可控的事情上。', teamPhrase: '允许紧张，但下一球仍然坚定。', action: '连续失误后先做一次深呼吸，再给出简短明确的任务。' } },
+    { id: 'the-hermit', file: '09-the-hermit', name: '隐者', upright: { theme: '回到基本功', message: '复杂的时候，最可靠的答案往往是最熟悉的动作。', teamPhrase: '把简单的事连续做好，优势就会出现。', action: '比分胶着时回到防守、篮板和安全传球三件事。' }, reversed: { theme: '重新连接', message: '独立思考已经足够，现在要让答案回到团队沟通里。', teamPhrase: '别一个人扛，把信息交给全队。', action: '暂停时先请一名球员说出场上最需要解决的问题。' } },
+    { id: 'wheel-of-fortune', file: '10-wheel-of-fortune', name: '命运之轮', upright: { theme: '把握变化', message: '比赛一定会有起伏，你们有能力在变化里抓住下一次机会。', teamPhrase: '比分会动，我们的回应始终主动。', action: '提前约定对方连续得分后的第一个稳节奏战术。' }, reversed: { theme: '专注可控', message: '当局面暂时不顺，把注意力收回到下一回合能完成的动作。', teamPhrase: '不追问运气，只回应下一球。', action: '只给全队一个当回合目标：防住、抢板或完成一次好出手。' } },
+    { id: 'justice', file: '11-justice', name: '正义', upright: { theme: '纪律执行', message: '清晰的规则会让你们在压力下做出一致选择。', teamPhrase: '标准一致，信任就会更稳。', action: '赛前再确认一次上半场对位与A/B组轮换。' }, reversed: { theme: '修正偏差', message: '不需要责怪任何人，及时看见偏差并修正就已经在向前。', teamPhrase: '看清事实，马上调整。', action: '复盘最近两个回合，只指出一个可改变的动作。' } },
+    { id: 'the-hanged', file: '12-the-hanged', name: '倒吊人', upright: { theme: '换个角度', message: '暂时停一下，会让你们看见原来忽略的空间和选择。', teamPhrase: '停一拍看清，下一步会更有力量。', action: '暂停时从弱侧空间重新观察进攻落位。' }, reversed: { theme: '结束停滞', message: '思考已经足够，现在选择一个方向并用行动验证。', teamPhrase: '不用等完美答案，先共同迈一步。', action: '从两个备选方案中明确一个，连续执行两个回合。' } },
+    { id: 'death', file: '13-death', name: '死神', upright: { theme: '更新打法', message: '结束已经无效的选择，能为更适合今天的打法腾出空间。', teamPhrase: '放下上一球，带着新选择回来。', action: '明确停止一种低效进攻，换回成功率更高的落位。' }, reversed: { theme: '允许改变', message: '熟悉感让人安心，但一次小改变可能正是突破停滞的入口。', teamPhrase: '改变不是否定，而是让我们继续前进。', action: '只调整一个轮换或战术入口，观察两个回合。' } },
+    { id: 'temperance', file: '14-temperance', name: '节制', upright: { theme: '稳定节奏', message: '不需要一次解决整场比赛，只需要把下一球做好。', teamPhrase: '稳住一回合，比赛就会重新展开。', action: '遇到连续失误时，先降速完成一次高质量进攻。' }, reversed: { theme: '重新配平', message: '强度和耐心暂时不在同一节奏，调回平衡就能继续前进。', teamPhrase: '该快时一起快，该稳时一起稳。', action: '明确下一回合是提速还是控节奏，并让全队听见。' } },
+    { id: 'the-devil', file: '15-the-devil', name: '恶魔', upright: { theme: '看清束缚', message: '真正影响发挥的也许不是对手，而是对失误的反复担心。', teamPhrase: '我们不被上一球定义。', action: '约定失误后的统一动作：回防、沟通、站好位置。' }, reversed: { theme: '夺回选择', message: '你们已经看见限制自己的模式，现在可以主动松开它。', teamPhrase: '旧习惯到此为止，下一球由我们选择。', action: '说出一个今天不再重复的反应，并替换为具体动作。' } },
+    { id: 'the-tower', file: '16-the-tower', name: '高塔', upright: { theme: '变化中重建', message: '突然变化不会击垮你们，它会让真正可靠的秩序更清楚。', teamPhrase: '局面变了，我们仍能一起重建。', action: '暂停后先统一一个防守口令，从下一回合恢复秩序。' }, reversed: { theme: '提前释放压力', message: '不必等问题变大，现在做一次小修正就能减少冲击。', teamPhrase: '现在调整，比硬撑更有力量。', action: '立即处理最明显的一处漏位或沟通缺口。' } },
+    { id: 'the-star', file: '17-the-star', name: '星星', upright: { theme: '信任彼此', message: '每一次传球都在告诉队友：我相信你。', teamPhrase: '把球和信任一起传出去。', action: '赛前让每名首发对身边队友说一句具体支持。' }, reversed: { theme: '找回信心', message: '希望没有离开，只是需要一个小小的成功把它重新点亮。', teamPhrase: '先做好一球，信心就会回来。', action: '为全队设定一个容易确认的开场目标，如一次成功协防。' } },
+    { id: 'the-moon', file: '18-the-moon', name: '月亮', upright: { theme: '确认信息', message: '信息可能还不够清晰，沟通会让全队迅速稳定。', teamPhrase: '有疑问就确认，有信息就分享。', action: '每次死球都确认站位和对位，不带疑问进入下一回合。' }, reversed: { theme: '让局面变清楚', message: '模糊正在散开，用事实而不是担心做下一次判断。', teamPhrase: '看见真实场面，再做简单决定。', action: '只复盘刚发生的两个回合，确认对手实际使用的变化。' } },
+    { id: 'the-sun', file: '19-the-sun', name: '太阳', upright: { theme: '释放能量', message: '今天的身体会更快热起来，场上的回应也会更积极。', teamPhrase: '把声音、速度和笑容带进比赛。', action: '热身最后两分钟提高沟通音量，把能量带进开场。' }, reversed: { theme: '找回亮度', message: '能量仍在，只需要把注意力从结果拉回到享受配合。', teamPhrase: '先享受一次好防守、一次好传球。', action: '指定一项值得全队立即庆祝的团队动作。' } },
+    { id: 'judgement', file: '20-judgement', name: '审判', upright: { theme: '回应召唤', message: '过去的经验已经变成判断力，今天可以更清楚地行动。', teamPhrase: '我们记得学到的，也准备好做出回应。', action: '赛前回顾上一场最有价值的一条经验并转成口令。' }, reversed: { theme: '放下自我怀疑', message: '不必用过去评判现在，经验的价值是帮助下一次选择。', teamPhrase: '不审判自己，只负责下一步。', action: '把一句责备式提醒改写成可执行的动作指令。' } },
+    { id: 'the-world', file: '21-the-world', name: '世界', upright: { theme: '团队完整', message: '每个人都在自己的位置上，全队就会成为一个整体。', teamPhrase: '每个角色都重要，我们共同完成比赛。', action: '赛前明确每名球员今天最重要的一项职责。' }, reversed: { theme: '完成最后连接', message: '整体已经接近成形，只差把一个没有说清的角色补完整。', teamPhrase: '补上最后一环，我们就是完整团队。', action: '确认替补球员、暂停后首回合和关键球的具体职责。' } }
   ];
+
+  var MINOR_SUITS = [
+    { id: 'cups', name: '圣杯', theme: '信任与沟通', upright: '情绪会成为连接队友的力量。', reversed: '先照顾情绪，再把感受说成清楚的信息。', phrase: '我们听见彼此，也相信彼此。', action: '用一次明确回应或击掌完成队友间的连接。' },
+    { id: 'swords', name: '宝剑', theme: '判断与清晰', upright: '清楚的信息会让决定更快、更坚定。', reversed: '别让想得太多拖慢判断，先确认最重要的事实。', phrase: '看清局面，果断做简单选择。', action: '死球时只确认对位、空间和下一项任务。' },
+    { id: 'wands', name: '权杖', theme: '行动与能量', upright: '主动迈出的第一步会带动全队节奏。', reversed: '能量需要对准方向，而不是一味加速。', phrase: '一起启动，把主动权带回场上。', action: '用一次全队同时启动的跑位或回防建立强度。' },
+    { id: 'pentacles', name: '星币', theme: '执行与基础', upright: '可靠的小动作会累积成看得见的优势。', reversed: '先补牢一个基础环节，效率就会回来。', phrase: '把每个基本动作做扎实。', action: '下一回合专注卡位、传球角度或落位中的一项。' }
+  ];
+
+  var MINOR_RANKS = [
+    { id: 'ace', name: '王牌', uprightTheme: '新的起点', reversedTheme: '把起点变清楚', upright: '一个新的机会正在出现，先用行动接住它。', reversed: '机会仍在，先缩小目标再启动。', action: '确定开场第一个共同目标。' },
+    { id: 'two', name: '二', uprightTheme: '建立配合', reversedTheme: '重新对齐', upright: '两个人的同步会打开更多空间。', reversed: '配合只差一次更明确的确认。', action: '让两名关键球员说清彼此的第一选择。' },
+    { id: 'three', name: '三', uprightTheme: '共同扩展', reversedTheme: '邀请更多连接', upright: '个人选择正在变成团队的连续行动。', reversed: '别让少数人承担全部任务，把更多队友带进来。', action: '设计一次至少三人参与的回合。' },
+    { id: 'four', name: '四', uprightTheme: '稳住结构', reversedTheme: '松开僵化', upright: '稳定结构能保护节奏和信心。', reversed: '稳定不等于停住，给计划留一点调整空间。', action: '保留一个原则，同时允许一个临场变化。' },
+    { id: 'five', name: '五', uprightTheme: '穿过挑战', reversedTheme: '减少内耗', upright: '挑战会暴露真正需要协作的地方。', reversed: '不把力气花在责怪上，马上寻找共同解法。', action: '把问题改写成一个全队能执行的任务。' },
+    { id: 'six', name: '六', uprightTheme: '带着经验前进', reversedTheme: '放下比较', upright: '已有经验会帮助你们认出正确节奏。', reversed: '不用复制过去的结果，只提取真正有用的经验。', action: '调用上一场已经验证过的一项有效做法。' },
+    { id: 'seven', name: '七', uprightTheme: '坚定选择', reversedTheme: '减少分散', upright: '选择明确后，行动会变得更有力量。', reversed: '选项太多会消耗信心，先排除不必要的变化。', action: '从备选方案中只保留当下最可靠的一项。' },
+    { id: 'eight', name: '八', uprightTheme: '持续推进', reversedTheme: '解除停滞', upright: '连续而清楚的动作会带来突破。', reversed: '停滞不代表失败，先解除一个最小阻碍。', action: '找出卡住节奏的一步并立刻简化。' },
+    { id: 'nine', name: '九', uprightTheme: '保持韧性', reversedTheme: '先补充再坚持', upright: '你们已经走了很远，稳定能让优势继续累积。', reversed: '真正的坚持也包括及时恢复和求助。', action: '确认最疲劳的位置并准备一次主动轮换。' },
+    { id: 'ten', name: '十', uprightTheme: '完成共同目标', reversedTheme: '重新分担', upright: '每个人完成自己的部分，团队就能抵达目标。', reversed: '责任需要重新分配，不必让一个人扛住全部。', action: '把当前任务明确分给场上五个人。' },
+    { id: 'page', name: '侍从', uprightTheme: '保持学习', reversedTheme: '允许不熟练', upright: '好奇和开放会让新信息很快转化为进步。', reversed: '不熟练只是过程，用一次尝试换取真实反馈。', action: '鼓励一名球员执行训练中刚学会的正确选择。' },
+    { id: 'knight', name: '骑士', uprightTheme: '勇敢执行', reversedTheme: '校准冲劲', upright: '果断行动能把准备转化成场上优势。', reversed: '冲劲很宝贵，先确认方向再全力推进。', action: '为一次主动攻击设定清楚的停止或转移条件。' },
+    { id: 'queen', name: '王后', uprightTheme: '稳定影响', reversedTheme: '照顾内在节奏', upright: '沉着的影响力会让身边的人更敢发挥。', reversed: '先把自己的情绪和节奏安顿好，再带动全队。', action: '由场上最稳定的球员发出第一句团队口令。' },
+    { id: 'king', name: '国王', uprightTheme: '成熟掌控', reversedTheme: '放下过度控制', upright: '经验让你们能在压力下守住原则并做出决定。', reversed: '领导不是包办，给队友空间会释放更多能力。', action: '明确目标后，让场上球员完成一次自主判断。' }
+  ];
+
+  function createMinorArcana() {
+    var cards = [];
+    MINOR_SUITS.forEach(function (suit, suitIndex) {
+      MINOR_RANKS.forEach(function (rank, rankIndex) {
+        var cardNumber = 22 + suitIndex * 14 + rankIndex;
+        var fileNumber = String(cardNumber).padStart(2, '0');
+        cards.push({
+          id: rank.id + '-of-' + suit.id,
+          file: fileNumber + '-' + rank.id + '-of-' + suit.id,
+          name: suit.name + rank.name,
+          upright: {
+            theme: rank.uprightTheme + ' · ' + suit.theme,
+            message: rank.upright + suit.upright,
+            teamPhrase: suit.phrase,
+            action: rank.action + suit.action
+          },
+          reversed: {
+            theme: rank.reversedTheme + ' · 调整提示',
+            message: rank.reversed + suit.reversed,
+            teamPhrase: suit.phrase,
+            action: rank.action + suit.action
+          }
+        });
+      });
+    });
+    return cards;
+  }
+
+  var ENERGY_CARDS = MAJOR_ARCANA.concat(createMinorArcana());
+  var ENERGY_CARD_STEP = 54;
+  var energyDeckOrder = [];
+  var energyCenteredIndex = 0;
+  var energyHasShuffled = false;
+  var energyPointerStart = null;
 
   var selectedPeriod = 1;
   var selectedSegment = 'A';
@@ -1024,65 +1178,173 @@
     });
   }
 
-  function localDateKey() {
-    var date = new Date();
-    return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
-  }
-
   function loadEnergySelections() {
     var parsed = safeJsonParse(localStorage.getItem(ENERGY_STORAGE_KEY), {});
     return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
   }
 
-  function energySelectionKey() { return document.getElementById('energy-match').value + ':' + localDateKey(); }
+  function energySelectionKey() { return document.getElementById('energy-match').value; }
 
-  function renderEnergyCard(card) {
-    var result = document.getElementById('energy-result');
-    var drawButton = document.getElementById('draw-energy');
-    if (!card) {
-      result.classList.remove('visible');
-      drawButton.classList.remove('revealed');
-      drawButton.disabled = false;
-      drawButton.setAttribute('aria-label', '抽取赛前能量牌');
-      return;
+  function secureRandomUnit() {
+    if (window.crypto && window.crypto.getRandomValues) {
+      var randomValues = new Uint32Array(1);
+      window.crypto.getRandomValues(randomValues);
+      return randomValues[0] / 4294967296;
     }
+    return Math.random();
+  }
+
+  function shuffledEnergyCards() {
+    var cards = ENERGY_CARDS.slice();
+    for (var index = cards.length - 1; index > 0; index -= 1) {
+      var swapIndex = Math.floor(secureRandomUnit() * (index + 1));
+      var current = cards[index];
+      cards[index] = cards[swapIndex];
+      cards[swapIndex] = current;
+    }
+    return cards;
+  }
+
+  function setCenteredEnergyCard(index) {
+    var safeIndex = Math.max(0, Math.min(energyDeckOrder.length - 1, index));
+    if (safeIndex === energyCenteredIndex && document.querySelector('.deck-card.centered')) return;
+    var previous = document.querySelector('.deck-card.centered');
+    if (previous) previous.classList.remove('centered');
+    var next = document.querySelector('[data-energy-card-index="' + safeIndex + '"]');
+    if (next) next.classList.add('centered');
+    energyCenteredIndex = safeIndex;
+  }
+
+  function updateCenteredEnergyCard() {
+    var deck = document.getElementById('energy-deck');
+    setCenteredEnergyCard(Math.round(deck.scrollLeft / ENERGY_CARD_STEP));
+  }
+
+  function markEnergyShuffled() {
+    if (energyHasShuffled) return;
+    energyHasShuffled = true;
+    var drawButton = document.getElementById('draw-energy');
+    drawButton.disabled = false;
+    drawButton.setAttribute('aria-label', '抽取中间这张牌');
+    document.getElementById('shuffle-status').textContent = '洗牌完成，停在有感觉的位置，抽取中间这张牌';
+  }
+
+  function prepareEnergyDeck() {
+    energyDeckOrder = shuffledEnergyCards();
+    energyCenteredIndex = 0;
+    energyHasShuffled = false;
+    energyPointerStart = null;
+    var deck = document.getElementById('energy-deck');
+    deck.innerHTML = energyDeckOrder.map(function (_, index) {
+      return '<div class="deck-card' + (index === 0 ? ' centered' : '') + '" data-energy-card-index="' + index + '" aria-hidden="true"></div>';
+    }).join('');
+    deck.scrollLeft = 0;
+    document.getElementById('shuffle-status').textContent = '左右滑动牌组开始洗牌';
+    document.getElementById('draw-energy').disabled = true;
+    document.getElementById('draw-energy').setAttribute('aria-label', '抽取中间这张牌，需先左右滑动洗牌');
+    document.getElementById('energy-draw-flow').hidden = false;
+    document.getElementById('energy-result').classList.remove('visible');
+    var resultImage = document.getElementById('energy-card-image');
+    resultImage.removeAttribute('src');
+    resultImage.alt = '';
+    resultImage.classList.remove('reversed');
+  }
+
+  function formatEnergyDrawnAt(value) {
+    var date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    return '抽取时间：' + new Intl.DateTimeFormat('zh-CN', {
+      month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false
+    }).format(date);
+  }
+
+  function renderEnergySelection(card, selection, animate) {
+    var result = document.getElementById('energy-result');
+    var reversed = selection.orientation === 'reversed';
+    var reading = reversed ? card.reversed : card.upright;
+    var image = document.getElementById('energy-card-image');
+    var shell = document.getElementById('energy-face-shell');
+    document.getElementById('energy-draw-flow').hidden = true;
+    image.src = 'assets/tarot/' + card.file + '.webp';
+    image.alt = card.name + '，' + (reversed ? '逆位' : '正位');
+    image.classList.toggle('reversed', reversed);
     document.getElementById('energy-card-name').textContent = card.name;
-    document.getElementById('energy-card-theme').textContent = card.theme;
-    document.getElementById('energy-card-message').textContent = card.message;
-    document.getElementById('energy-card-action').innerHTML = '<strong>本场行动：</strong>' + escapeHtml(card.action);
+    var orientation = document.getElementById('energy-card-orientation');
+    orientation.textContent = reversed ? '逆位 · 调整提示' : '正位';
+    orientation.classList.toggle('reversed', reversed);
+    document.getElementById('energy-card-theme').textContent = reading.theme;
+    document.getElementById('energy-card-message').textContent = reading.message;
+    document.getElementById('energy-card-team-phrase').innerHTML = '<strong>给球队的一句话</strong>' + escapeHtml(reading.teamPhrase);
+    document.getElementById('energy-card-action').innerHTML = '<strong>本场行动：</strong>' + escapeHtml(reading.action);
+    document.getElementById('energy-card-drawn-at').textContent = formatEnergyDrawnAt(selection.drawnAt);
     result.classList.add('visible');
-    drawButton.classList.add('revealed');
-    drawButton.disabled = true;
-    drawButton.setAttribute('aria-label', '已抽取能量牌：' + card.name);
+    shell.classList.remove('revealing');
+    if (animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      window.requestAnimationFrame(function () { shell.classList.add('revealing'); });
+    }
   }
 
   function loadCurrentEnergyCard() {
     var selections = loadEnergySelections();
-    var cardId = selections[energySelectionKey()];
-    var card = ENERGY_CARDS.find(function (item) { return item.id === cardId; }) || null;
-    renderEnergyCard(card);
+    var selection = selections[energySelectionKey()];
+    var validSelection = selection && typeof selection === 'object' &&
+      (selection.orientation === 'upright' || selection.orientation === 'reversed');
+    var card = validSelection ? ENERGY_CARDS.find(function (item) { return item.id === selection.cardId; }) : null;
+    if (card) {
+      renderEnergySelection(card, selection, false);
+      return;
+    }
+    prepareEnergyDeck();
   }
 
   function drawEnergyCard() {
-    var selections = loadEnergySelections();
-    var key = energySelectionKey();
-    var existing = ENERGY_CARDS.find(function (item) { return item.id === selections[key]; });
-    if (existing) {
-      renderEnergyCard(existing);
+    if (!energyHasShuffled) {
+      document.getElementById('shuffle-status').textContent = '请先左右滑动牌组，再抽取中间这张牌';
       return;
     }
-    var randomIndex = Math.floor(Math.random() * ENERGY_CARDS.length);
-    var selectedCard = ENERGY_CARDS[randomIndex];
-    selections[key] = selectedCard.id;
+    var selections = loadEnergySelections();
+    var key = energySelectionKey();
+    var existingSelection = selections[key];
+    var existing = existingSelection && ENERGY_CARDS.find(function (item) { return item.id === existingSelection.cardId; });
+    if (existing && (existingSelection.orientation === 'upright' || existingSelection.orientation === 'reversed')) {
+      renderEnergySelection(existing, existingSelection, false);
+      return;
+    }
+    var selectedCard = energyDeckOrder[energyCenteredIndex];
+    var selection = {
+      cardId: selectedCard.id,
+      orientation: secureRandomUnit() < 0.5 ? 'upright' : 'reversed',
+      drawnAt: new Date().toISOString()
+    };
+    selections[key] = selection;
     localStorage.setItem(ENERGY_STORAGE_KEY, JSON.stringify(selections));
     var drawButton = document.getElementById('draw-energy');
+    drawButton.disabled = true;
     drawButton.classList.add('drawing');
+    document.getElementById('tarot-stage').classList.add('drawing');
+    document.getElementById('shuffle-status').textContent = '正在揭牌…';
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    window.setTimeout(function () {
+    var imageReady = new Promise(function (resolve) {
+      var preload = new Image();
+      preload.onload = function () {
+        if (typeof preload.decode === 'function') {
+          preload.decode().catch(function () {}).then(resolve);
+        } else {
+          resolve();
+        }
+      };
+      preload.onerror = resolve;
+      preload.src = 'assets/tarot/' + selectedCard.file + '.webp';
+    });
+    var animationReady = new Promise(function (resolve) { window.setTimeout(resolve, reduceMotion ? 0 : 260); });
+    Promise.all([imageReady, animationReady]).then(function () {
       drawButton.classList.remove('drawing');
-      renderEnergyCard(selectedCard);
-      document.getElementById('energy-result').scrollIntoView({ block: 'nearest' });
-    }, reduceMotion ? 0 : 520);
+      document.getElementById('tarot-stage').classList.remove('drawing');
+      renderEnergySelection(selectedCard, selection, true);
+      var result = document.getElementById('energy-result');
+      result.focus({ preventScroll: true });
+      result.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
   }
 
   function activatePage(pageId, updateHash) {
@@ -1183,6 +1445,23 @@
 
     document.getElementById('draw-energy').addEventListener('click', drawEnergyCard);
     document.getElementById('energy-match').addEventListener('change', loadCurrentEnergyCard);
+    var energyDeck = document.getElementById('energy-deck');
+    energyDeck.addEventListener('pointerdown', function () { energyPointerStart = energyDeck.scrollLeft; });
+    energyDeck.addEventListener('pointerup', function () { energyPointerStart = null; });
+    energyDeck.addEventListener('pointercancel', function () { energyPointerStart = null; });
+    energyDeck.addEventListener('scroll', function () {
+      updateCenteredEnergyCard();
+      if (Math.abs(energyDeck.scrollLeft) >= 24 || (energyPointerStart !== null && Math.abs(energyDeck.scrollLeft - energyPointerStart) >= 24)) {
+        markEnergyShuffled();
+      }
+    }, { passive: true });
+    energyDeck.addEventListener('keydown', function (event) {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      energyDeck.scrollBy({ left: event.key === 'ArrowRight' ? ENERGY_CARD_STEP * 2 : -ENERGY_CARD_STEP * 2, behavior: reduceMotion ? 'auto' : 'smooth' });
+      markEnergyShuffled();
+    });
   }
 
   function initializeApp() {

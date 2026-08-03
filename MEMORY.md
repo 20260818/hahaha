@@ -14,7 +14,8 @@ Provide coaches with a compact match-day workbench for confidence building, sche
 - Unstarted matches do not expose score inputs or contribute stored/external scores to standings.
 - Tactics switch only between live records and the roster; tactic names are free text and lineup choices use a horizontal scroll strip.
 - The Energy page includes a one-card pre-game tarot-inspired MVP that gives supportive action advice and never predicts winning or losing.
-- The tarot MVP uses 12 upright cards, one persisted card per match/day, no good/bad classification, and action-oriented interpretations; generic coaching-story sections are excluded.
+- The user confirmed authorization to use the `highlig/ricky-wahite-tarot` image set. The MVP uses the full 78-card deck, horizontal swipe-to-shuffle, a center-card draw, and equal upright/reversed orientation probability.
+- Reversed cards are framed as adjustment prompts rather than bad outcomes. Each match keeps one card and orientation permanently in the current browser; generic coaching-story sections and camera/motion-sensor shuffling are excluded.
 - MVP persistence uses browser localStorage.
 
 ## Implementation Constraints
@@ -26,11 +27,11 @@ Provide coaches with a compact match-day workbench for confidence building, sche
 ## Implemented Architecture
 
 - `coach-workbench.html` is the single static application entry point.
-- Shared arrays provide the single source of truth for group matches, Shenzhen matches, players, and 12 curated energy cards.
+- Shared arrays provide the single source of truth for group matches, Shenzhen matches, players, 22 individually curated Major Arcana cards, and 56 Minor Arcana cards composed from curated suit/rank guidance.
 - Score data remains compatible with the existing `coach_scores` localStorage key and `scores.json` crawler output.
-- Tactical records use `coach_tactics_v1`; energy selections use `coach_energy_v1` keyed by match and local date.
+- Tactical records use `coach_tactics_v1`; energy selections use `coach_energy_v2` keyed only by match ID.
 - The original opponent chart dependency and all opponent/task page state were removed.
-- The original energy-card artwork is stored at `assets/energy-card-basketball.png`.
+- Tarot assets are 78 locally hosted 420px-wide WebP faces plus one shared WebP card back under `assets/tarot/`; runtime does not hotlink GitHub or ship the source PNG files.
 
 ## Validation Snapshot
 
@@ -38,7 +39,11 @@ Provide coaches with a compact match-day workbench for confidence building, sche
 - Desktop and 390px mobile browser checks showed no horizontal overflow; the lineup strip scrolls independently at both widths.
 - Browser-tested flows: four-page navigation, one-second countdown updates, pre-start score gating with stale scores excluded from standings, free-text tactic entry, tactical validation/persistence, refined five-rule energy-card guidance, energy-card persistence, and August 9/10 schedule visibility.
 - Browser console warnings/errors: none during the final local run.
+- Tarot browser checks covered an empty 78-card deck, disabled pre-shuffle draw, keyboard and horizontal-scroll shuffling, center-card draw, upright/reversed result rendering, focus transfer, refresh persistence, match-specific locking, and one-face-image DOM loading.
+- Responsive tarot checks at 1280px, 390px, 375px, and 844x390 showed no document-level horizontal overflow; the fixed bottom navigation retains 100px clearance after the rules card.
+- The optimized tarot directory contains 79 WebP files at about 6.1 MB total; every individual face is below 150 KB and the shared back is about 25 KB.
 
 ## External Source
 
 - Current production page: https://20260818.github.io/hahaha/coach-workbench.html
+- User-authorized tarot source: https://github.com/highlig/ricky-wahite-tarot
