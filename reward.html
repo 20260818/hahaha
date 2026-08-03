@@ -446,6 +446,133 @@
   }
   .history-time { font-size: 12px; color: var(--color-text-muted); flex-shrink: 0; }
   .empty-state { text-align: center; padding: 32px 20px; color: var(--color-text-muted); font-size: 14px; }
+  .history-card.redeemed { opacity: 0.55; }
+  .history-card.redeemed .history-person { text-decoration: line-through; }
+  .redeem-badge {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .redeem-badge.pending { background: #FFF3E0; color: #E65100; }
+  .redeem-badge.done { background: var(--color-accent-bg); color: var(--color-accent); }
+  .record-del-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    font-size: 15px;
+    cursor: pointer;
+    flex-shrink: 0;
+    opacity: 0.5;
+    transition: opacity 0.15s;
+  }
+  .record-del-btn:active { opacity: 1; }
+
+  /* === Redeem Page === */
+  .redeem-item {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(45,40,31,.06);
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: fadeInUp 0.4s ease-out both;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .redeem-item.selected { border-color: var(--color-primary); background: #FFF5F0; }
+  .redeem-item.redeemed { opacity: 0.5; }
+  .redeem-checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--color-border);
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: transparent;
+    transition: all 0.15s;
+  }
+  .redeem-item.selected .redeem-checkbox {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: #fff;
+  }
+  .redeem-info { flex: 1; min-width: 0; }
+  .redeem-person { font-size: 15px; font-weight: 800; color: var(--color-dark); }
+  .redeem-reward { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; }
+  .redeem-meta { font-size: 11px; color: var(--color-text-muted); margin-top: 2px; }
+  .redeem-status-tag {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .redeem-status-tag.pending { background: #FFF3E0; color: #E65100; }
+  .redeem-status-tag.done { background: var(--color-accent-bg); color: var(--color-accent); }
+  .redeem-toolbar {
+    position: sticky;
+    top: 0;
+    background: var(--color-bg-page);
+    padding: 10px 0;
+    margin-bottom: 8px;
+    z-index: 10;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .redeem-toolbar .select-info {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+  }
+  .redeem-toolbar .select-info span { color: var(--red); }
+  .redeem-action-btn {
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+    padding: 0 16px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .redeem-action-btn:active { opacity: 0.7; }
+  .redeem-action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .redeem-filter {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .filter-chip {
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-chip.active {
+    background: var(--color-dark);
+    color: #fff;
+    border-color: var(--color-dark);
+  }
 
   /* === Settings Page === */
   .setting-card {
@@ -739,7 +866,33 @@
   </div>
 </div>
 
-<!-- ====== Page 3: Settings ====== -->
+<!-- ====== Page 3: Redeem ====== -->
+<div id="page-redeem" class="page">
+  <div class="lock-overlay hide" id="redeemLockOverlay">
+    <div class="lock-icon">🎁</div>
+    <div class="lock-title">兑换管理</div>
+    <div class="lock-hint">请输入密码进行兑换操作</div>
+    <input type="text" class="lock-input" id="redeemLockInput" maxlength="4" placeholder="••••" inputmode="numeric" onkeyup="checkRedeemLock(event)">
+    <div class="lock-error" id="redeemLockError"></div>
+  </div>
+
+  <div class="redeem-filter">
+    <div class="filter-chip active" id="filterPending" onclick="setRedeemFilter('pending')">待兑换</div>
+    <div class="filter-chip" id="filterDone" onclick="setRedeemFilter('done')">已兑换</div>
+    <div class="filter-chip" id="filterAll" onclick="setRedeemFilter('all')">全部</div>
+  </div>
+
+  <div class="redeem-toolbar" id="redeemToolbar">
+    <div class="select-info">已选 <span id="selectedCount">0</span> 项</div>
+    <button class="redeem-action-btn" id="batchRedeemBtn" onclick="batchRedeem()" disabled>批量兑换</button>
+  </div>
+
+  <div id="redeemList">
+    <div class="empty-state">暂无记录</div>
+  </div>
+</div>
+
+<!-- ====== Page 4: Settings ====== -->
 <div id="page-settings" class="page">
   <div class="lock-overlay hide" id="lockOverlay">
     <div class="lock-icon">🔒</div>
@@ -837,6 +990,10 @@
   <div class="tab-item" onclick="showPage('records', this)">
     <div class="tab-icon">📋</div>
     <div class="tab-label">记录</div>
+  </div>
+  <div class="tab-item" onclick="showPage('redeem', this)">
+    <div class="tab-icon">🎁</div>
+    <div class="tab-label">兑换</div>
   </div>
   <div class="tab-item" onclick="showPage('settings', this)">
     <div class="tab-icon">⚙️</div>
@@ -1090,11 +1247,12 @@ function decrementStock(reward) {
 
 function addHistory(reward, personName) {
   var hist = loadHistory();
-  hist.unshift({ person: personName, reward: reward.name, ballIdx: reward.ballIdx, time: new Date().toISOString() });
+  hist.unshift({ id: 'h' + Date.now() + '_' + Math.random().toString(36).slice(2,7), person: personName, reward: reward.name, ballIdx: reward.ballIdx, time: new Date().toISOString(), redeemed: false });
   if (hist.length > 200) hist = hist.slice(0, 200);
   saveHistory(hist);
   renderHistory();
   updateTodayCount();
+  renderRedeemList();
 }
 
 // ====== History (grouped by date) ======
@@ -1142,16 +1300,20 @@ function renderHistory() {
 
     items.forEach(function(item) {
       var div = document.createElement('div');
-      div.className = 'history-card';
+      div.className = 'history-card' + (item.redeemed ? ' redeemed' : '');
       var time = new Date(item.time);
       var timeStr = String(time.getHours()).padStart(2,'0') + ':' + String(time.getMinutes()).padStart(2,'0');
+      var badge = item.redeemed
+        ? '<span class="redeem-badge done">已兑换</span>'
+        : '<span class="redeem-badge pending">待兑换</span>';
       div.innerHTML =
         '<img class="history-ball" src="' + BALL_IMAGES[item.ballIdx % BALL_IMAGES.length] + '" alt="">' +
         '<div class="history-info">' +
-          '<div class="history-person">' + escapeHtml(item.person || '匿名') + '</div>' +
+          '<div class="history-person">' + escapeHtml(item.person || '匿名') + badge + '</div>' +
           '<div class="history-reward">' + escapeHtml(item.reward || item.name || '—') + '</div>' +
         '</div>' +
-        '<div class="history-time">' + timeStr + '</div>';
+        '<div class="history-time">' + timeStr + '</div>' +
+        '<button class="record-del-btn" onclick="deleteRecord(\'' + (item.id || '') + '\')">🗑️</button>';
       list.appendChild(div);
     });
   });
@@ -1171,7 +1333,171 @@ function clearHistory() {
     localStorage.removeItem(HISTORY_KEY);
     renderHistory();
     updateTodayCount();
+    renderRedeemList();
   }
+}
+
+function deleteRecord(id) {
+  if (!id) return;
+  var hist = loadHistory();
+  hist = hist.filter(function(item) { return item.id !== id; });
+  saveHistory(hist);
+  renderHistory();
+  updateTodayCount();
+  renderRedeemList();
+}
+
+// ====== Redeem ======
+var redeemUnlocked = false;
+var redeemFilter = 'pending';
+var redeemSelected = {};
+
+function checkRedeemLock(e) {
+  if (e.key === 'Enter' || e.target.value.length === 4) {
+    var val = document.getElementById('redeemLockInput').value;
+    if (val === getPassword()) {
+      document.getElementById('redeemLockOverlay').classList.add('hide');
+      document.getElementById('redeemLockError').textContent = '';
+      redeemUnlocked = true;
+    } else {
+      document.getElementById('redeemLockError').textContent = '密码错误，请重试';
+      document.getElementById('redeemLockInput').value = '';
+    }
+  }
+}
+
+function setRedeemFilter(f) {
+  redeemFilter = f;
+  document.getElementById('filterPending').classList.toggle('active', f === 'pending');
+  document.getElementById('filterDone').classList.toggle('active', f === 'done');
+  document.getElementById('filterAll').classList.toggle('active', f === 'all');
+  redeemSelected = {};
+  renderRedeemList();
+}
+
+function renderRedeemList() {
+  var hist = loadHistory();
+  var list = document.getElementById('redeemList');
+  if (hist.length === 0) {
+    list.innerHTML = '<div class="empty-state">暂无记录</div>';
+    updateRedeemToolbar();
+    return;
+  }
+
+  var filtered = hist;
+  if (redeemFilter === 'pending') {
+    filtered = hist.filter(function(item) { return !item.redeemed; });
+  } else if (redeemFilter === 'done') {
+    filtered = hist.filter(function(item) { return item.redeemed; });
+  }
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state">' +
+      (redeemFilter === 'pending' ? '没有待兑换的记录 🎉' :
+       redeemFilter === 'done' ? '还没有已兑换的记录' : '暂无记录') +
+      '</div>';
+    updateRedeemToolbar();
+    return;
+  }
+
+  // Group by date
+  var groups = {};
+  filtered.forEach(function(item) {
+    var d = new Date(item.time);
+    var dateKey = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    if (!groups[dateKey]) groups[dateKey] = [];
+    groups[dateKey].push(item);
+  });
+
+  var sortedKeys = Object.keys(groups).sort(function(a,b) { return b.localeCompare(a); });
+
+  list.innerHTML = '';
+  sortedKeys.forEach(function(dateKey) {
+    var items = groups[dateKey];
+    var d = new Date(dateKey + 'T00:00:00');
+    var today = new Date();
+    var yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+    var label;
+    if (d.toDateString() === today.toDateString()) {
+      label = '今天';
+    } else if (d.toDateString() === yesterday.toDateString()) {
+      label = '昨天';
+    } else {
+      label = (d.getMonth()+1) + '月' + d.getDate() + '日';
+    }
+
+    var header = document.createElement('div');
+    header.className = 'date-group-header';
+    header.innerHTML = label + '<span class="date-count">' + items.length + '条</span>';
+    list.appendChild(header);
+
+    items.forEach(function(item) {
+      var div = document.createElement('div');
+      var isSel = redeemSelected[item.id];
+      div.className = 'redeem-item' + (item.redeemed ? ' redeemed' : '') + (isSel ? ' selected' : '');
+      var time = new Date(item.time);
+      var timeStr = String(time.getHours()).padStart(2,'0') + ':' + String(time.getMinutes()).padStart(2,'0');
+      var statusTag = item.redeemed
+        ? '<span class="redeem-status-tag done">已兑换</span>'
+        : '<span class="redeem-status-tag pending">待兑换</span>';
+      var metaText = item.redeemed && item.redeemedTime
+        ? '兑换于 ' + formatDateShort(item.redeemedTime)
+        : '抽奖 ' + timeStr;
+      div.innerHTML =
+        '<div class="redeem-checkbox">' + (isSel ? '✓' : '') + '</div>' +
+        '<div class="redeem-info">' +
+          '<div class="redeem-person">' + escapeHtml(item.person || '匿名') + '</div>' +
+          '<div class="redeem-reward">' + escapeHtml(item.reward || item.name || '—') + '</div>' +
+          '<div class="redeem-meta">' + metaText + '</div>' +
+        '</div>' +
+        statusTag;
+      if (!item.redeemed) {
+        div.onclick = function() { toggleRedeemSelect(item.id); };
+      }
+      list.appendChild(div);
+    });
+  });
+
+  updateRedeemToolbar();
+}
+
+function toggleRedeemSelect(id) {
+  if (redeemSelected[id]) {
+    delete redeemSelected[id];
+  } else {
+    redeemSelected[id] = true;
+  }
+  renderRedeemList();
+}
+
+function updateRedeemToolbar() {
+  var count = Object.keys(redeemSelected).length;
+  document.getElementById('selectedCount').textContent = count;
+  document.getElementById('batchRedeemBtn').disabled = count === 0;
+}
+
+function batchRedeem() {
+  var ids = Object.keys(redeemSelected);
+  if (ids.length === 0) return;
+  var hist = loadHistory();
+  var now = new Date().toISOString();
+  hist.forEach(function(item) {
+    if (redeemSelected[item.id] && !item.redeemed) {
+      item.redeemed = true;
+      item.redeemedTime = now;
+    }
+  });
+  saveHistory(hist);
+  redeemSelected = {};
+  renderRedeemList();
+  renderHistory();
+}
+
+function formatDateShort(iso) {
+  var d = new Date(iso);
+  return (d.getMonth()+1) + '/' + d.getDate() + ' ' +
+    String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
 }
 
 // ====== Settings: Reward List ======
@@ -1329,6 +1655,11 @@ function showPage(id, el) {
     document.getElementById('lockInput').value = '';
     document.getElementById('lockInput').focus();
   }
+  if (id === 'redeem' && !redeemUnlocked) {
+    document.getElementById('redeemLockOverlay').classList.remove('hide');
+    document.getElementById('redeemLockInput').value = '';
+    document.getElementById('redeemLockInput').focus();
+  }
 }
 
 // ====== Utils ======
@@ -1342,6 +1673,7 @@ loadRewards();
 initBallWindow();
 renderRewardList();
 renderHistory();
+renderRedeemList();
 updateTodayCount();
 
 // Restore last used name
