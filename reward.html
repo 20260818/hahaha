@@ -227,8 +227,8 @@
     transform: rotate(var(--base-rotate));
   }
   .gacha-machine.turning .mini-ball {
-    animation: ball-tumble 0.62s ease-in-out infinite;
-    animation-delay: calc(var(--i) * -55ms);
+    animation: ball-tumble 0.3s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -30ms);
   }
   @keyframes ball-tumble {
     0%, 100% { transform: rotate(var(--base-rotate)) translateY(0); }
@@ -259,7 +259,7 @@
   }
   .gacha-machine.has-turned .turn-knob img { transform: rotate(180deg); }
   .gacha-machine.turning .turn-knob img {
-    animation: knob-turn 0.62s cubic-bezier(.24,.82,.28,1) forwards;
+    animation: knob-turn 0.3s cubic-bezier(.24,.82,.28,1) forwards;
   }
   @keyframes knob-turn {
     0% { transform: rotate(0); }
@@ -282,7 +282,7 @@
   }
   .dropped-task-ball img { display: block; width: 100%; border-radius: 50%; }
   .dropped-task-ball.dropping {
-    animation: task-ball-drop 0.76s cubic-bezier(.2,.82,.28,1) forwards;
+    animation: task-ball-drop 0.4s cubic-bezier(.2,.82,.28,1) forwards;
   }
   .dropped-task-ball.ready {
     opacity: 1;
@@ -301,7 +301,7 @@
     0%, 100% { transform: translate(-50%, -73%) scale(1); }
     50% { transform: translate(-50%, -76%) scale(1.03); }
   }
-  .gacha-machine.shaking { animation: machineShake 0.5s ease-in-out; }
+  .gacha-machine.shaking { animation: machineShake 0.3s ease-in-out; }
   @keyframes machineShake {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-3px); }
@@ -1044,9 +1044,9 @@ function drawReward() {
           addHistory(selected, name);
           resetMachine();
         }
-      }, 2000);
-    }, 760);
-  }, 620);
+      }, 300);
+    }, 400);
+  }, 300);
 }
 
 function resetMachine() {
