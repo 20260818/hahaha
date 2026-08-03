@@ -1,0 +1,1924 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f4f3ee">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<title>教练工作台 · 深圳男子丙组</title>
+<script defer src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --paper: #ebdfc8;
+    --card: rgba(250, 246, 238, 0.97);
+    --tile: #f2ece1;
+    --line: #241d18;
+    --now: rgba(252, 240, 224, 0.97);
+
+    --ink: #33241e;
+    --ink-mid: #58544f;
+    --ink-soft: #5a564f;
+
+    --accent: #96602f;
+    --accent-deep: #7d4f26;
+    --accent-soft: #f6efe6;
+
+    --team: #4a7288;
+    --team-soft: #eef2f4;
+    --leaf: #4f7355;
+    --leaf-soft: #eef3ee;
+    --danger: #a25546;
+    --danger-soft: #f8eeeb;
+
+    --r-lg: 0px;
+    --r-md: 0px;
+    --r-sm: 13px;
+    --r-pill: 999px;
+
+    --shadow: none;
+    --shadow-lift: none;
+    --court: url("floor.webp");
+
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+
+    --font: "PingFang SC", "Noto Sans SC", "HarmonyOS Sans SC", "Source Han Sans SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
+
+    --ease-drop: cubic-bezier(0.2, 1.1, 0.4, 1);
+    --ease-out: cubic-bezier(0.22, 0.68, 0.32, 1);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
+    background-color: var(--paper);
+    background-image: var(--grain), var(--court);
+    background-repeat: repeat, repeat-y;
+    background-size: auto, 100% auto;
+    background-attachment: scroll, scroll;
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.75;
+    letter-spacing: 0.015em;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, select, textarea { font: inherit; font-family: var(--font); }
+  button, select, input[type="checkbox"] { touch-action: manipulation; }
+  button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  button:disabled { cursor: not-allowed; opacity: 0.42; }
+
+  .skip-link {
+    position: fixed;
+    left: 16px;
+    top: -60px;
+    z-index: 1000;
+    padding: 10px 16px;
+    border-radius: var(--r-sm);
+    background: var(--ink);
+    color: var(--card);
+  }
+  .skip-link:focus { top: 12px; }
+
+  .app-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: var(--line);
+  }
+  .header-inner {
+    width: min(100%, 1000px);
+    margin: 0 auto;
+    padding: 16px 22px 14px;
+    text-align: center;
+  }
+  .app-header h1 {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(21px, 2.8vw, 26px);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0.16em;
+    text-indent: 0.16em;
+  }
+  .subtitle {
+    margin-top: 3px;
+    color: #bdb5a8;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-indent: 0.18em;
+  }
+
+  main { width: 100%; }
+  .page {
+    display: none;
+    width: min(100%, 1000px);
+    margin: 0 auto;
+    padding: 14px 18px 30px;
+  }
+  .page.active { display: block; }
+  .page.active > * { animation: drop-in 440ms var(--ease-drop) both; }
+  .page.active > *:nth-child(1) { animation-delay: 20ms; }
+  .page.active > *:nth-child(2) { animation-delay: 85ms; }
+  .page.active > *:nth-child(3) { animation-delay: 150ms; }
+  .page.active > *:nth-child(4) { animation-delay: 215ms; }
+  .page.active > *:nth-child(5) { animation-delay: 280ms; }
+  .page.active > *:nth-child(6) { animation-delay: 345ms; }
+
+  @keyframes drop-in {
+    0% { opacity: 0; transform: translateY(-20px) scale(0.975); }
+    58% { opacity: 1; transform: translateY(4px) scale(1.004); }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes rise-in {
+    0% { opacity: 0; transform: translateY(12px); }
+    100% { opacity: 1; transform: none; }
+  }
+
+  .page-heading {
+    margin: 6px 0 6px;
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-align: center;
+  }
+  .page-intro {
+    margin: 0 0 22px;
+    color: var(--ink-soft);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .section-heading { margin: 30px 0 12px; font-size: 15px; font-weight: 500; letter-spacing: 0.1em; }
+  .section-heading:first-child { margin-top: 0; }
+  .muted { color: var(--ink-soft); }
+  .small { font-size: 13px; }
+
+  .card {
+    position: relative;
+    border: 3px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--card);
+  }
+  .card-pad { padding: 22px; }
+  .stack { display: grid; gap: 14px; }
+  .home-stack { display: grid; gap: 12px; }
+
+  .confidence-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+    padding: 17px 18px 16px;
+    border: 3px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--card);
+    color: var(--ink);
+  }
+  .confidence-icon {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    place-items: center;
+    border-radius: var(--r-pill);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .confidence-icon svg { width: 22px; height: 22px; stroke-width: 1.6; }
+  .confidence-copy { max-width: 720px; margin: 0; font-size: clamp(16px, 2.6vw, 19px); font-weight: 700; line-height: 1.55; }
+  .confidence-action { margin-top: 8px; color: var(--ink-mid); font-size: 14px; }
+
+  .home-match-grid { display: grid; gap: 12px; }
+  .home-match-card {
+    position: relative;
+    min-width: 0;
+    padding: 18px 18px 16px;
+    border: 3px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--card);
+    color: var(--ink);
+  }
+  /* 全屏唯一的彩底 + 唯一的彩色边框：不靠明暗，靠色相和边框粗细拉开 */
+  .home-match-current {
+    border: 5px solid var(--accent);
+    background: var(--now);
+    overflow: hidden;
+  }
+  .home-match-current::before,
+  .home-match-current::after {
+    content: "";
+    position: absolute;
+    right: -78px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    opacity: 0.16;
+    pointer-events: none;
+  }
+  .home-match-current::before { top: -46px; width: 214px; height: 214px; }
+  .home-match-current::after { top: -96px; width: 314px; height: 314px; opacity: 0.09; }
+  .home-match-current > * { position: relative; }
+  .home-match-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px; font-weight: 500; }
+  .home-match-label { color: var(--accent); font-weight: 500; letter-spacing: 0.16em; }
+  .home-match-following .home-match-label { color: var(--team); }
+  .countdown, .match-status {
+    padding: 4px 12px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .match-status.live { background: var(--leaf-soft); color: var(--leaf); }
+  .match-status.finished { background: var(--tile); color: var(--ink-soft); }
+  .home-match-current .countdown,
+  .home-match-current .match-status { background: var(--accent); color: #fff; }
+  .home-match-current .match-status.live { background: var(--leaf); color: #fff; }
+  .home-match-current .versus { background: #fff; border: 2px solid var(--accent); color: var(--accent); }
+  .home-match-teams {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    margin: 18px 0 13px;
+    text-align: center;
+  }
+  .home-match-team { overflow-wrap: anywhere; font-size: clamp(21px, 4.2vw, 27px); font-weight: 700; letter-spacing: 0.08em; }
+  .versus {
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    border-radius: var(--r-pill);
+    background: var(--tile);
+    color: var(--ink-soft);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .home-match-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 14px;
+    color: var(--ink-mid);
+    font-size: 13px;
+    letter-spacing: 0.03em;
+  }
+  .inline-button {
+    display: inline-flex;
+    min-height: 46px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 14px;
+    padding: 9px 18px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: var(--accent);
+    color: #fff;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: transform 150ms var(--ease-out), background 150ms var(--ease-out);
+  }
+  .inline-button:hover { background: var(--accent-deep); }
+  .inline-button:active { transform: scale(0.97); }
+
+  .schedule-list { display: grid; gap: 9px; }
+  .schedule-list > * { animation: rise-in 340ms var(--ease-out) both; }
+  .schedule-list > *:nth-child(1) { animation-delay: 30ms; }
+  .schedule-list > *:nth-child(2) { animation-delay: 85ms; }
+  .schedule-list > *:nth-child(3) { animation-delay: 140ms; }
+  .schedule-list > *:nth-child(4) { animation-delay: 195ms; }
+  .schedule-list > *:nth-child(5) { animation-delay: 250ms; }
+  .schedule-list > *:nth-child(6) { animation-delay: 305ms; }
+  .schedule-row {
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 13px;
+    min-height: 72px;
+    padding: 12px 15px;
+    border: 3px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--card);
+  }
+
+  .date-block {
+    display: grid;
+    gap: 1px;
+    padding: 6px 3px;
+    border: 0;
+    border-radius: var(--r-sm);
+    background: var(--tile);
+    text-align: center;
+  }
+
+  .date-day { color: var(--ink-soft); font-size: 11px; line-height: 1.3; letter-spacing: 0.08em; }
+  .date-number { font-size: 21px; font-weight: 700; line-height: 1.15; }
+
+  .match-title { overflow-wrap: anywhere; font-weight: 500; line-height: 1.45; letter-spacing: 0.05em; }
+  .match-meta { display: flex; flex-wrap: wrap; gap: 0 12px; margin-top: 1px; color: var(--ink-soft); font-size: 12px; line-height: 1.5; letter-spacing: 0.03em; }
+  .status-tag {
+    padding: 4px 12px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: var(--team-soft);
+    color: var(--team);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+  .status-tag.pending { background: var(--tile); color: var(--ink-soft); }
+  .status-tag.next { background: var(--accent-soft); color: var(--accent-deep); }
+
+  .details-card { margin-top: 16px; overflow: hidden; }
+  .details-card summary { min-height: 54px; padding: 16px 22px; cursor: pointer; font-weight: 500; letter-spacing: 0.08em; }
+  .details-body { padding: 0 22px 20px; color: var(--ink-mid); font-size: 14px; }
+  .info-grid { display: grid; gap: 0; }
+  .info-row { display: flex; justify-content: space-between; gap: 18px; padding: 12px 0; border-bottom: 1px solid var(--tile); }
+  .info-row:last-child { border-bottom: 0; }
+  .info-row span { color: var(--ink-soft); }
+  .info-row strong { color: var(--ink); font-weight: 500; text-align: right; }
+
+  .segmented-control {
+    display: grid;
+    grid-template-columns: repeat(var(--segments, 3), minmax(0, 1fr));
+    gap: 4px;
+    margin: 18px 0;
+    padding: 5px;
+    border: 2px solid var(--line);
+    border-radius: var(--r-pill);
+    background: var(--tile);
+  }
+  .segment-button {
+    min-height: 44px;
+    padding: 8px 10px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: transparent;
+    color: var(--ink-mid);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background 200ms var(--ease-out), color 200ms var(--ease-out), transform 160ms var(--ease-out);
+  }
+  .segment-button:active { transform: scale(0.96); }
+  .segment-button.active { background: var(--card); color: var(--ink); }
+
+  .match-details { overflow: hidden; }
+  .match-details summary { list-style: none; cursor: pointer; }
+  .match-details summary::-webkit-details-marker { display: none; }
+  .match-details .schedule-row { border: 0; border-radius: 0; }
+  .pending-match { overflow: hidden; }
+  .pending-match .schedule-row { border: 0; border-radius: 0; }
+  .pending-score-note { padding: 0 20px 16px 98px; color: var(--ink-soft); font-size: 12px; }
+  .score-panel { padding: 0 20px 20px; }
+  .score-form { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 12px; padding-top: 8px; }
+  .field { display: grid; gap: 8px; }
+  .field label, .field-label { color: var(--ink-mid); font-size: 12px; font-weight: 500; letter-spacing: 0.08em; }
+  input[type="number"], input[type="text"], select, textarea {
+    width: 100%;
+    min-height: 48px;
+    border: 2px solid var(--line);
+    border-radius: var(--r-sm);
+    background: var(--card);
+    color: var(--ink);
+  }
+  input[type="number"] { font-size: 22px; font-weight: 700; text-align: center; }
+  input[type="number"], input[type="text"], select { padding: 10px 14px; }
+  textarea { min-height: 108px; padding: 13px 14px; resize: vertical; line-height: 1.8; }
+  input::placeholder, textarea::placeholder { color: var(--ink-soft); }
+  .score-separator { padding-bottom: 13px; color: var(--ink-soft); font-weight: 700; }
+  .button-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .primary-button, .secondary-button, .danger-button {
+    min-height: 46px;
+    padding: 10px 22px;
+    border: 0;
+    border-radius: var(--r-pill);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: transform 150ms var(--ease-out), background 150ms var(--ease-out);
+  }
+  .primary-button:active, .secondary-button:active, .danger-button:active { transform: scale(0.97); }
+  .primary-button { background: var(--accent); color: #fff; }
+  .primary-button:hover:not(:disabled) { background: var(--accent-deep); }
+  .secondary-button { background: var(--tile); color: var(--ink-mid); }
+  .secondary-button:hover { color: var(--ink); }
+  .danger-button { background: var(--danger-soft); color: var(--danger); }
+  .form-status { min-height: 22px; margin-top: 12px; color: var(--ink-soft); font-size: 13px; }
+  .form-status.error { color: var(--danger); }
+  .form-status.success { color: var(--leaf); }
+
+  .standings-wrap { overflow-x: auto; }
+  .standings-table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 14px; }
+  .standings-table th, .standings-table td { padding: 13px 8px; border-bottom: 1px solid var(--tile); text-align: center; }
+  .standings-table th { color: var(--ink-soft); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; }
+  .standings-table tr { position: relative; }
+  .standings-table tr.highlight { background: var(--accent-soft); font-weight: 500; }
+  .standings-table tr.highlight td:first-child { color: var(--accent-deep); }
+  .standings-table tr:last-child td { border-bottom: 0; }
+
+  .path-grid { display: grid; gap: 14px; }
+  .path-card { position: relative; padding: 22px; }
+  .path-date { color: var(--accent); font-size: 12px; font-weight: 500; letter-spacing: 0.12em; }
+  .path-title { margin: 7px 0; font-size: 19px; font-weight: 700; letter-spacing: 0.05em; }
+  .path-rule { color: var(--ink-mid); font-size: 14px; }
+
+  .tactics-layout { display: grid; gap: 16px; }
+  .tactics-layout > * { min-width: 0; }
+  .form-card { min-width: 0; padding: 22px; }
+  .form-grid { display: grid; gap: 16px; }
+  .period-switch { --segments: 4; margin: 0; }
+  .subsegment-switch { --segments: 2; margin: 0; }
+  #tactics-form { padding: 20px; }
+  #tactics-form .form-grid { gap: 14px; }
+  #tactics-form .segmented-control { padding: 4px; }
+  #tactics-form .segment-button { min-height: 44px; padding: 6px 4px; font-size: 13px; letter-spacing: 0; }
+  #tactics-form select { min-height: 46px; padding-block: 8px; }
+  #tactics-form fieldset { min-width: 0; }
+  .player-grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(148px, 170px);
+    gap: 10px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    padding: 2px 2px 12px;
+    scrollbar-width: thin;
+  }
+  .player-option { position: relative; scroll-snap-align: start; }
+  .player-option input { position: absolute; opacity: 0; pointer-events: none; }
+  .player-option label {
+    display: flex;
+    min-height: 62px;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 13px;
+    border: 0;
+    border-radius: var(--r-md);
+    background: var(--tile);
+    cursor: pointer;
+    transition: transform 180ms var(--ease-drop), background 180ms var(--ease-out);
+  }
+  .player-option input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .player-option input:checked + label { background: var(--accent-soft); transform: scale(1.03); }
+  .jersey {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    place-items: center;
+    border-radius: var(--r-pill);
+    background: var(--card);
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .player-option input:checked + label .jersey { color: var(--accent-deep); }
+  .player-name { min-width: 0; font-size: 14px; font-weight: 500; }
+  .player-year { color: var(--ink-soft); font-size: 11px; }
+  .rule-note {
+    padding: 14px 16px;
+    border: 0;
+    border-radius: var(--r-md);
+    background: var(--team-soft);
+    color: #365a6d;
+    font-size: 13px;
+  }
+  .review-list { display: grid; gap: 12px; }
+  .review-card { padding: 18px; }
+  .review-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .review-title { font-weight: 500; letter-spacing: 0.05em; }
+  .review-meta { margin-top: 8px; color: var(--ink-soft); font-size: 12px; }
+  .review-notes { margin-top: 10px; white-space: pre-wrap; font-size: 14px; }
+  .empty-state { padding: 34px 18px; text-align: center; color: var(--ink-soft); font-size: 14px; }
+  .roster-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+  .roster-card { display: flex; align-items: center; gap: 12px; padding: 16px; }
+  .roster-card.year-2014 { background: var(--team-soft); }
+  .roster-card.year-2014 .jersey { color: var(--team); }
+
+  .energy-layout { display: grid; gap: 16px; }
+  .energy-layout > * { min-width: 0; }
+  .energy-panel { min-width: 0; padding: 22px; }
+  .energy-disclaimer { margin: 10px 0 16px; color: var(--ink-soft); font-size: 12px; }
+  .energy-question {
+    margin: 16px 0;
+    padding: 16px 18px;
+    border: 0;
+    border-radius: var(--r-md);
+    background: var(--tile);
+    color: var(--ink-mid);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.8;
+  }
+  .tarot-stage {
+    position: relative;
+    overflow: hidden;
+    min-height: 248px;
+    padding: 28px 0 18px;
+    border: 0;
+    border: 3px solid var(--line);
+    border-radius: var(--r-md);
+    background: #f2ece1;
+  }
+  .tarot-deck {
+    display: flex;
+    width: 100%;
+    min-height: 184px;
+    align-items: center;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: calc(50% - 56px);
+    padding: 6px calc(50% - 56px) 14px;
+    scrollbar-width: none;
+    touch-action: pan-x;
+  }
+  .tarot-deck::-webkit-scrollbar { display: none; }
+  .tarot-deck.positioning { scroll-snap-type: none; }
+  .tarot-deck.initializing { opacity: 0; }
+  .deck-card {
+    width: 112px;
+    height: 168px;
+    flex: 0 0 112px;
+    margin-right: -58px;
+    border: 0;
+    border-radius: var(--r-sm);
+    background: #e2ddd2 url("assets/tarot/card-back.webp") center / cover no-repeat;
+    box-shadow: 0 2px 8px rgba(51, 36, 30, 0.1);
+    scroll-snap-align: center;
+    transition: transform 240ms var(--ease-drop), box-shadow 240ms var(--ease-out);
+  }
+  .deck-card:last-child { margin-right: 0; }
+  .deck-card.centered {
+    z-index: 2;
+    box-shadow: 0 8px 20px rgba(51, 36, 30, 0.18);
+    transform: translateY(-9px);
+  }
+  .deck-marker {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    z-index: 5;
+    display: grid;
+    width: 124px;
+    height: 208px;
+    place-items: end center;
+    transform: translateX(-50%);
+    border-radius: var(--r-md);
+    background: rgba(180, 117, 60, 0.07);
+    pointer-events: none;
+  }
+  .deck-marker span {
+    margin-bottom: 4px;
+    padding: 3px 12px;
+    border-radius: var(--r-pill);
+    background: var(--card);
+    color: var(--accent-deep);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+  }
+  .shuffle-status { min-height: 22px; margin-top: 14px; color: var(--ink-soft); font-size: 12px; letter-spacing: 0.05em; text-align: center; }
+  .energy-draw-button { width: 100%; margin-top: 10px; }
+  .tarot-stage.drawing .centered { animation: selected-card-pulse 340ms var(--ease-drop); }
+  @keyframes selected-card-pulse {
+    50% { transform: translateY(-18px) scale(1.05); }
+  }
+
+  .energy-result { display: none; padding: 24px; }
+  .energy-result.visible { display: block; }
+  .energy-result-layout { display: grid; gap: 22px; }
+  .energy-face-shell {
+    position: relative;
+    width: min(214px, 60vw);
+    justify-self: center;
+    aspect-ratio: 420 / 774;
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--r-md);
+    border: 3px solid var(--line);
+    background: var(--tile);
+    perspective: 1100px;
+  }
+  .energy-face-shell.revealing { animation: reveal-card 620ms var(--ease-drop); }
+  @keyframes reveal-card {
+    0% { opacity: 0.25; transform: rotateY(-90deg) scale(0.92); }
+    60% { opacity: 1; transform: rotateY(8deg) scale(1.02); }
+    100% { opacity: 1; transform: none; }
+  }
+  .energy-card-image { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 300ms var(--ease-drop); }
+  .energy-card-image.reversed { transform: rotate(180deg); }
+  .energy-result-copy { min-width: 0; }
+  .energy-kicker { color: var(--accent); font-size: 11px; font-weight: 500; letter-spacing: 0.2em; }
+  .energy-title-line { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 8px; }
+  .energy-result h3 { margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 0.1em; }
+  .orientation-tag {
+    padding: 4px 12px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: var(--leaf-soft);
+    color: var(--leaf);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+  }
+  .orientation-tag.reversed { background: var(--team-soft); color: var(--team); }
+  .energy-theme { margin-top: 6px; color: var(--ink-soft); font-size: 13px; letter-spacing: 0.06em; }
+  .energy-message {
+    margin-top: 18px;
+    padding: 18px;
+    border: 0;
+    border-radius: var(--r-md);
+    background: var(--accent-soft);
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.8;
+  }
+  .energy-team-phrase {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: var(--r-md);
+    background: var(--tile);
+    color: var(--ink-mid);
+    font-size: 14px;
+  }
+  .energy-team-phrase strong { display: block; margin-bottom: 4px; color: var(--ink); }
+  .energy-action { margin-top: 16px; color: var(--ink-mid); font-size: 14px; }
+  .energy-action strong { color: var(--ink); }
+  .energy-drawn-at { margin-top: 16px; color: var(--ink-soft); font-size: 11px; letter-spacing: 0.06em; }
+  .tarot-rules { margin-top: 14px; }
+  .tarot-rules ol { margin: 0; padding-left: 20px; }
+  .tarot-rules li + li { margin-top: 10px; }
+  .tarot-credit { margin: 16px 0 0; color: var(--ink-soft); font-size: 11px; text-align: center; }
+  .tarot-credit a { color: inherit; }
+
+  .tab-bar {
+    position: fixed;
+    left: 50%;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    z-index: 100;
+    display: grid;
+    width: min(calc(100% - 36px), 460px);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    transform: translateX(-50%);
+    border: 0;
+    border-radius: var(--r-pill);
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid var(--line);
+    box-shadow: 0 3px 14px rgba(60, 44, 20, 0.12);
+    backdrop-filter: blur(18px);
+    padding: 7px;
+  }
+  .nav-button {
+    display: grid;
+    min-height: 54px;
+    place-items: center;
+    align-content: center;
+    gap: 3px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: transparent;
+    color: var(--ink-soft);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: transform 220ms var(--ease-drop), background 220ms var(--ease-out), color 220ms var(--ease-out);
+  }
+  .nav-button svg { width: 21px; height: 21px; stroke-width: 1.7; transition: transform 300ms var(--ease-drop); }
+  .nav-button:active { transform: scale(0.92); }
+  .nav-button.active { background: var(--accent-soft); color: var(--accent-deep); }
+  .nav-button.active svg { transform: scale(1.14); }
+
+  /* 图一边框内侧的切口标记；置于末尾以压过各卡片的 background 简写 */
+  .card, .confidence-card, .home-match-card, .schedule-row {
+    background-image:
+      linear-gradient(var(--line), var(--line)),
+      linear-gradient(var(--line), var(--line)),
+      linear-gradient(var(--line), var(--line)),
+      linear-gradient(var(--line), var(--line));
+    background-repeat: no-repeat;
+    background-size: 13px 3px;
+    background-position: left 20px, right 20px, left calc(100% - 20px), right calc(100% - 20px);
+  }
+  .home-match-current {
+    background-image:
+      linear-gradient(var(--accent), var(--accent)),
+      linear-gradient(var(--accent), var(--accent)),
+      linear-gradient(var(--accent), var(--accent)),
+      linear-gradient(var(--accent), var(--accent));
+  }
+  .match-details .schedule-row, .pending-match .schedule-row { background-image: none; }
+
+  [hidden] { display: none !important; }
+
+  @media (min-width: 760px) {
+    .page { padding: 10px 24px 40px; }
+    .home-match-grid { grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr); align-items: stretch; }
+    .home-match-card { display: flex; min-height: 268px; flex-direction: column; justify-content: center; }
+    .tactics-layout { grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr); align-items: start; }
+    .energy-layout { grid-template-columns: minmax(340px, 0.9fr) minmax(320px, 1.1fr); align-items: start; }
+    .energy-result-layout { grid-template-columns: minmax(150px, 206px) minmax(0, 1fr); align-items: start; }
+    .energy-face-shell { width: 100%; }
+    .path-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .roster-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  @media (max-width: 520px) {
+    .header-inner { padding: 18px 16px 12px; }
+    .page { padding: 8px 24px 26px; }
+    .card-pad { padding: 15px; }
+    .card { border-width: 2px; }
+    .confidence-card { grid-template-columns: 1fr; padding: 13px 14px 12px; border-width: 2px; }
+    .home-match-card { padding: 13px 14px 12px; border-width: 2px; }
+    .home-match-current { border-width: 3px; }
+    .home-stack { gap: 9px; }
+    .stack { gap: 10px; }
+    .schedule-row { grid-template-columns: 46px minmax(0, 1fr) auto; gap: 10px; padding: 8px 10px; min-height: 0; border-width: 2px; }
+    .schedule-row .status-tag { padding: 3px 8px; font-size: 10px; }
+    .pending-score-note { padding-left: 64px; }
+    .score-form { grid-template-columns: 1fr auto 1fr; gap: 8px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳到主要内容</a>
+
+<header class="app-header">
+  <div class="header-inner">
+    <h1>教练工作台</h1>
+    <div class="subtitle">深圳男子丙组 · 省运会篮球</div>
+  </div>
+</header>
+
+<main id="main-content">
+  <section id="page-home" class="page active" aria-labelledby="home-heading">
+    <h2 id="home-heading" class="sr-only">首页</h2>
+
+    <div class="home-stack">
+      <article class="confidence-card" aria-labelledby="confidence-title">
+        <span class="confidence-icon" aria-hidden="true"><i data-lucide="sparkles"></i></span>
+        <div>
+          <p id="confidence-title" class="confidence-copy">你们今天会比平时更快进入比赛状态。</p>
+          <div class="confidence-action">开场先守住三个回合，比赛会按照你们熟悉的节奏展开。</div>
+        </div>
+      </article>
+      <div class="home-match-grid">
+        <article class="home-match-card home-match-current" id="current-match-card" aria-labelledby="current-match-title"></article>
+        <article class="home-match-card home-match-following" id="following-match-card" aria-labelledby="following-match-title"></article>
+      </div>
+    </div>
+
+    <details class="card details-card">
+      <summary>赛事信息</summary>
+      <div class="details-body info-grid">
+        <div class="info-row"><span>比赛地点</span><strong>茂名市</strong></div>
+        <div class="info-row"><span>比赛方式</span><strong>4×10分钟</strong></div>
+        <div class="info-row"><span>特殊规则</span><strong>一二节分A/B组</strong></div>
+        <div class="info-row"><span>防守要求</span><strong>上半场全场人盯人</strong></div>
+        <div class="info-row"><span>本地数据</span><strong>仅保存在当前浏览器</strong></div>
+      </div>
+    </details>
+  </section>
+
+  <section id="page-schedule" class="page">
+
+    <div class="segmented-control" role="tablist" aria-label="赛程视图">
+      <button class="segment-button active" type="button" role="tab" aria-selected="true" data-schedule-view="team">本队赛程</button>
+      <button class="segment-button" type="button" role="tab" aria-selected="false" data-schedule-view="group">全部赛程</button>
+      <button class="segment-button" type="button" role="tab" aria-selected="false" data-schedule-view="path">晋级路径</button>
+    </div>
+    <div id="schedule-content"></div>
+  </section>
+
+  <section id="page-tactics" class="page">
+
+    <div class="segmented-control" role="tablist" aria-label="战术视图" style="--segments:2;">
+      <button class="segment-button active" type="button" role="tab" aria-selected="true" data-tactics-view="record">临场记录</button>
+      <button class="segment-button" type="button" role="tab" aria-selected="false" data-tactics-view="roster">球员名单</button>
+    </div>
+
+    <div id="tactics-record-view" class="tactics-view">
+      <div class="tactics-layout">
+        <form id="tactics-form" class="card form-card" novalidate>
+          <div class="form-grid">
+            <div class="field">
+              <label for="tactics-match">比赛</label>
+              <select id="tactics-match"></select>
+            </div>
+
+            <div class="field">
+              <span class="field-label">节次</span>
+              <div class="segmented-control period-switch" role="group" aria-label="比赛节次">
+                <button class="segment-button active" type="button" data-period="1">第一节</button>
+                <button class="segment-button" type="button" data-period="2">第二节</button>
+                <button class="segment-button" type="button" data-period="3">第三节</button>
+                <button class="segment-button" type="button" data-period="4">第四节</button>
+              </div>
+            </div>
+
+            <div id="segment-field" class="field">
+              <span class="field-label">上半场分组</span>
+              <div class="segmented-control subsegment-switch" role="group" aria-label="A/B分组">
+                <button class="segment-button active" type="button" data-game-segment="A" aria-pressed="true">A组 · 前5分钟</button>
+                <button class="segment-button" type="button" data-game-segment="B" aria-pressed="false">B组 · 后5分钟</button>
+              </div>
+            </div>
+
+            <fieldset style="border:0;padding:0;margin:0;">
+              <legend class="field-label" style="margin-bottom:8px;">上场阵容 <span id="lineup-count" class="muted">0/5</span></legend>
+              <div id="player-options" class="player-grid"></div>
+            </fieldset>
+
+            <div class="field">
+              <label for="offense-tactic">进攻战术</label>
+              <input id="offense-tactic" type="text" maxlength="80" placeholder="例如：五外拉开、高位挡拆">
+            </div>
+
+            <div class="field">
+              <label for="defense-tactic">防守战术</label>
+              <input id="defense-tactic" type="text" maxlength="80" placeholder="例如：全场人盯人、2-3联防">
+            </div>
+
+            <div class="field">
+              <label for="review-notes">有效点、问题与下一步调整</label>
+              <textarea id="review-notes" maxlength="500" placeholder="例如：挡拆后弱侧轮转慢；下一节明确底角补位口令。"></textarea>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button class="primary-button" type="submit">保存本节记录</button>
+            <button id="clear-tactics-form" class="secondary-button" type="button">清空当前输入</button>
+          </div>
+          <div id="tactics-status" class="form-status" role="status" aria-live="polite"></div>
+        </form>
+
+        <aside class="card form-card" aria-labelledby="review-heading">
+          <h3 id="review-heading" style="margin:0 0 12px;">本场复盘</h3>
+          <div id="review-list" class="review-list"></div>
+        </aside>
+      </div>
+    </div>
+
+    <div id="tactics-roster-view" class="tactics-view" hidden>
+      <div class="rule-note" style="margin-bottom:12px;">2012年球员以蓝色边框标识，每节至少上场1人。</div>
+      <div id="roster-grid" class="roster-grid"></div>
+    </div>
+
+  </section>
+
+  <section id="page-energy" class="page">
+
+    <div class="energy-layout">
+      <div class="card energy-panel">
+        <div class="field">
+          <label for="energy-match">为哪场比赛抽牌</label>
+          <select id="energy-match"></select>
+        </div>
+
+        <div id="energy-draw-flow">
+          <p class="energy-question">在心中想一个关于本场比赛的问题，不需要输入。安静呼吸一次，然后左右滑动牌组。</p>
+          <div id="tarot-stage" class="tarot-stage">
+            <div class="deck-marker" aria-hidden="true"><span>中间牌</span></div>
+            <div id="energy-deck" class="tarot-deck" role="group" aria-label="塔罗牌组，左右滑动洗牌" tabindex="0"></div>
+          </div>
+          <div id="shuffle-status" class="shuffle-status" role="status" aria-live="polite">左右滑动牌组开始洗牌</div>
+          <button id="draw-energy" class="primary-button energy-draw-button" type="button" disabled aria-describedby="energy-disclaimer-text">抽取中间这张牌</button>
+        </div>
+
+        <p id="energy-disclaimer-text" class="small muted">正位和逆位都有支持性提醒；逆位不是坏牌，而是调整方向。</p>
+        <p class="tarot-credit">牌面来源：<a href="https://github.com/highlig/ricky-wahite-tarot" target="_blank" rel="noreferrer">Ricky-Wahité Tarot</a></p>
+      </div>
+
+      <div>
+        <article id="energy-result" class="card energy-result" aria-labelledby="energy-card-name" aria-live="polite" tabindex="-1">
+          <span class="tape right" aria-hidden="true"></span>
+          <div class="energy-result-layout">
+            <div id="energy-face-shell" class="energy-face-shell">
+              <img id="energy-card-image" class="energy-card-image" alt="">
+            </div>
+            <div class="energy-result-copy">
+              <div class="energy-kicker">本场能量牌</div>
+              <div class="energy-title-line">
+                <h3 id="energy-card-name"></h3>
+                <span id="energy-card-orientation" class="orientation-tag"></span>
+              </div>
+              <div id="energy-card-theme" class="energy-theme"></div>
+              <div id="energy-card-message" class="energy-message"></div>
+              <div id="energy-card-team-phrase" class="energy-team-phrase"></div>
+              <p id="energy-card-action" class="energy-action"></p>
+              <div id="energy-card-drawn-at" class="energy-drawn-at"></div>
+            </div>
+          </div>
+        </article>
+
+        <details class="card details-card tarot-rules">
+          <summary>完整抽牌规则</summary>
+          <div class="details-body">
+            <ol>
+              <li>选择比赛后，在心中想一个问题，不需要输入或授权摄像头。</li>
+              <li>至少左右滑动一次完成洗牌，再抽取中间位置的牌。</li>
+              <li>完整牌组包含78张牌，每张牌都有正位和逆位。</li>
+              <li>同一场比赛只保留一张牌；刷新或隔天打开都不会更换。</li>
+              <li>逆位表示需要调整能量的使用方式，不代表坏结果。</li>
+              <li>牌面不预测胜负、比分或伤病，只提供信心暗示和下一步行动。</li>
+            </ol>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav class="tab-bar" aria-label="主要导航">
+  <button class="nav-button active" type="button" data-page="home" aria-current="page"><i data-lucide="home" aria-hidden="true"></i><span>首页</span></button>
+  <button class="nav-button" type="button" data-page="schedule"><i data-lucide="calendar-days" aria-hidden="true"></i><span>赛程</span></button>
+  <button class="nav-button" type="button" data-page="tactics"><i data-lucide="clipboard-pen-line" aria-hidden="true"></i><span>战术</span></button>
+  <button class="nav-button" type="button" data-page="energy"><i data-lucide="sparkles" aria-hidden="true"></i><span>能量</span></button>
+</nav>
+
+<script>
+(function () {
+  'use strict';
+
+  var TEAM_NAME = '深圳';
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SCORE_STORAGE_KEY = 'coach_scores_c';
+  var TACTICS_STORAGE_KEY = 'coach_tactics_c';
+  var ENERGY_STORAGE_KEY = 'coach_energy_c';
+  var HOME_MATCH_DURATION_MS = 2 * 60 * 60 * 1000;
+
+  var GROUP_MATCHES = [
+    { id: 'g1', scoreIndex: 0, date: '2026-08-14T08:00:00+08:00', teamA: '深圳', teamB: '惠州', time: '08:00', venue: '奥体2号馆', stage: '小组赛第一轮' },
+    { id: 'g2', scoreIndex: 1, date: '2026-08-14T08:00:00+08:00', teamA: '茂名', teamB: '韶关', time: '08:00', venue: '庙街体育馆', stage: '小组赛第一轮' },
+    { id: 'g3', scoreIndex: 2, date: '2026-08-14T08:00:00+08:00', teamA: '珠海', teamB: '中山', time: '08:00', venue: '电白体育馆', stage: '小组赛第一轮' },
+    { id: 'g4', scoreIndex: 3, date: '2026-08-14T15:30:00+08:00', teamA: '肇庆', teamB: '深圳', time: '15:30', venue: '奥体2号馆', stage: '小组赛第二轮' },
+    { id: 'g5', scoreIndex: 4, date: '2026-08-14T15:30:00+08:00', teamA: '茂名', teamB: '珠海', time: '15:30', venue: '庙街体育馆', stage: '小组赛第二轮' },
+    { id: 'g6', scoreIndex: 5, date: '2026-08-14T15:30:00+08:00', teamA: '韶关', teamB: '中山', time: '15:30', venue: '电白体育馆', stage: '小组赛第二轮' },
+    { id: 'g7', scoreIndex: 6, date: '2026-08-14T15:30:00+08:00', teamA: '惠州', teamB: '肇庆', time: '15:30', venue: '奥体3号馆', stage: '小组赛第二轮' },
+    { id: 'g8', scoreIndex: 7, date: '2026-08-15T09:30:00+08:00', teamA: '深圳', teamB: '茂名', time: '09:30', venue: '庙街体育馆', stage: '小组赛第三轮' },
+    { id: 'g9', scoreIndex: 8, date: '2026-08-15T09:30:00+08:00', teamA: '韶关', teamB: '珠海', time: '09:30', venue: '电白体育馆', stage: '小组赛第三轮' },
+    { id: 'g10', scoreIndex: 9, date: '2026-08-15T09:30:00+08:00', teamA: '中山', teamB: '惠州', time: '09:30', venue: '奥体2号馆', stage: '小组赛第三轮' },
+    { id: 'g11', scoreIndex: 10, date: '2026-08-15T14:00:00+08:00', teamA: '肇庆', teamB: '茂名', time: '14:00', venue: '奥体3号馆', stage: '小组赛第四轮' },
+    { id: 'g12', scoreIndex: 11, date: '2026-08-15T14:00:00+08:00', teamA: '珠海', teamB: '惠州', time: '14:00', venue: '电白体育馆', stage: '小组赛第四轮' },
+    { id: 'g13', scoreIndex: 12, date: '2026-08-15T14:00:00+08:00', teamA: '中山', teamB: '韶关', time: '14:00', venue: '庙街体育馆', stage: '小组赛第四轮' },
+    { id: 'g14', scoreIndex: 13, date: '2026-08-16T14:00:00+08:00', teamA: '中山', teamB: '深圳', time: '14:00', venue: '庙街体育馆', stage: '小组赛第五轮' },
+    { id: 'g15', scoreIndex: 14, date: '2026-08-16T14:00:00+08:00', teamA: '茂名', teamB: '惠州', time: '14:00', venue: '奥体2号馆', stage: '小组赛第五轮' },
+    { id: 'g16', scoreIndex: 15, date: '2026-08-16T14:00:00+08:00', teamA: '珠海', teamB: '肇庆', time: '14:00', venue: '电白体育馆', stage: '小组赛第五轮' },
+    { id: 'g17', scoreIndex: 16, date: '2026-08-17T08:00:00+08:00', teamA: '深圳', teamB: '韶关', time: '08:00', venue: '电白体育馆', stage: '小组赛第六轮' },
+    { id: 'g18', scoreIndex: 17, date: '2026-08-17T08:00:00+08:00', teamA: '茂名', teamB: '中山', time: '08:00', venue: '庙街体育馆', stage: '小组赛第六轮' },
+    { id: 'g19', scoreIndex: 18, date: '2026-08-17T08:00:00+08:00', teamA: '惠州', teamB: '珠海', time: '08:00', venue: '奥体3号馆', stage: '小组赛第六轮' },
+    { id: 'g20', scoreIndex: 19, date: '2026-08-17T14:00:00+08:00', teamA: '珠海', teamB: '深圳', time: '14:00', venue: '奥体2号馆', stage: '小组赛第七轮' },
+    { id: 'g21', scoreIndex: 20, date: '2026-08-17T14:00:00+08:00', teamA: '肇庆', teamB: '中山', time: '14:00', venue: '电白体育馆', stage: '小组赛第七轮' },
+    { id: 'g22', scoreIndex: 21, date: '2026-08-17T14:00:00+08:00', teamA: '韶关', teamB: '惠州', time: '14:00', venue: '庙街体育馆', stage: '小组赛第七轮' }
+  ];
+
+  var TEAM_MATCHES = [
+    GROUP_MATCHES[0],
+    GROUP_MATCHES[3],
+    GROUP_MATCHES[7],
+    GROUP_MATCHES[13],
+    GROUP_MATCHES[16],
+    GROUP_MATCHES[19],
+    { id: 'qf', date: '2026-08-18T15:30:00+08:00', teamA: '深圳', teamB: '待定', time: '15:30', venue: '待定', stage: '8进4', conditional: true },
+    { id: 'sf', date: '2026-08-19T16:00:00+08:00', teamA: '深圳', teamB: '待定', time: '待定', venue: '待定', stage: '半决赛 / 5–8名排位', conditional: true },
+    { id: 'final', date: '2026-08-20T14:30:00+08:00', teamA: '深圳', teamB: '待定', time: '待定', venue: '待定', stage: '决赛 / 排位赛', conditional: true }
+  ];
+
+  var PLAYERS = [
+    { id: '4', number: 4, name: '钟锐腾', year: 2013 },
+    { id: '5', number: 5, name: '黄梓轩', year: 2013 },
+    { id: '6', number: 6, name: '邓子衿', year: 2014 },
+    { id: '7', number: 7, name: '袁帅', year: 2013 },
+    { id: '8', number: 8, name: '刘星然', year: 2013 },
+    { id: '9', number: 9, name: '肖铭宇', year: 2013 },
+    { id: '10', number: 10, name: '庞森瑀', year: 2014 },
+    { id: '11', number: 11, name: '麦凯量', year: 2013 },
+    { id: '12', number: 12, name: '叶湛池', year: 2013 },
+    { id: '13', number: 13, name: '李嘉彬', year: 2013 },
+    { id: '14', number: 14, name: '李观宇', year: 2013 },
+    { id: '15', number: 15, name: '李崇希', year: 2013 },
+    { id: '16', number: 16, name: '吉立阳', year: 2014 },
+    { id: '17', number: 17, name: '丁梓瀚', year: 2013 },
+    { id: '18', number: 18, name: '丁洺赫', year: 2014 },
+    { id: '19', number: 19, name: '袁翊科', year: 2013 }
+  ];
+
+  var MAJOR_ARCANA = [
+    { id: 'the-fool', file: '00-the-fool', name: '愚者', upright: { theme: '勇敢开始', message: '你们不需要等到毫无紧张才出发，准备已经足够支撑第一步。', teamPhrase: '带着好奇上场，第一球就全力回应。', action: '开场先执行最熟悉的一套进攻，用一次果断跑位进入比赛。' }, reversed: { theme: '先确认方向', message: '勇气仍在，只需要把冲动变成清楚的选择。', teamPhrase: '先看一眼队友，再一起向前。', action: '发球前确认站位和第一传，不抢快一拍。' } },
+    { id: 'the-magician', file: '01-the-magician', name: '魔术师', upright: { theme: '主动创造', message: '你们手里的准备已经足够，关键是果断使用。', teamPhrase: '我们有办法，也有能力把它做出来。', action: '第一机会出现时坚决执行，不因一次不进改变判断。' }, reversed: { theme: '集中资源', message: '能力没有消失，只是需要把注意力从太多选择收回到一个目标。', teamPhrase: '把一件事做清楚，比赛就会跟上来。', action: '暂停时只布置一个进攻重点和一个防守口令。' } },
+    { id: 'the-high-priestess', file: '02-the-high-priestess', name: '女祭司', upright: { theme: '观察与判断', message: '先看清对方的第一步，再做最简单的回应。', teamPhrase: '安静观察，清楚出手。', action: '开场三分钟重点识别对方主要持球点和掩护方向。' }, reversed: { theme: '说出观察', message: '直觉已经给出信号，现在要用沟通把它变成全队的信息。', teamPhrase: '看见就说，听见就回应。', action: '每次死球让最近的球员报出对位和掩护方向。' } },
+    { id: 'the-empress', file: '03-the-empress', name: '皇后', upright: { theme: '支持成长', message: '稳定的鼓励会让每名球员更敢于做正确的动作。', teamPhrase: '我们接住彼此，也让彼此更强。', action: '赛前让每名球员收到一句具体肯定。' }, reversed: { theme: '补充能量', message: '照顾全队之前，也要给自己留出一次呼吸和恢复。', teamPhrase: '稳住自己，才能继续托住团队。', action: '暂停布置前先用十秒调整呼吸，再给出指令。' } },
+    { id: 'the-emperor', file: '04-the-emperor', name: '皇帝', upright: { theme: '建立秩序', message: '明确的边界和职责会让全队在压力下更自由。', teamPhrase: '位置清楚，责任清楚，行动就会坚定。', action: '赛前再确认首发对位、轮换顺序和暂停口令。' }, reversed: { theme: '保持弹性', message: '规则是为了帮助执行，不必让固守计划压住临场判断。', teamPhrase: '原则不变，方法可以调整。', action: '预先确定一套落后时可切换的防守方案。' } },
+    { id: 'the-hierophant', file: '05-the-hierophant', name: '教皇', upright: { theme: '相信体系', message: '反复练习的基本原则会在紧张时替你们做决定。', teamPhrase: '相信训练，相信我们共同的语言。', action: '赛前快速复述三条最重要的团队原则。' }, reversed: { theme: '找到自己的解法', message: '熟悉的方法仍有价值，但今天可以根据球员特点做一次小调整。', teamPhrase: '守住原则，也允许聪明变化。', action: '保留核心战术，只调整一个落位或终结选择。' } },
+    { id: 'the-lovers', file: '06-the-lovers', name: '恋人', upright: { theme: '彼此选择', message: '团队信任来自每一次愿意为队友多跑一步的决定。', teamPhrase: '这一球，我们选择相信身边的人。', action: '热身结束前让五名场上球员互相确认防守协作。' }, reversed: { theme: '重新对齐', message: '分歧不是坏事，它提醒全队把目标和选择重新说清楚。', teamPhrase: '先统一目标，再一起行动。', action: '遇到连续失误时，用一句话重申当下唯一目标。' } },
+    { id: 'the-chariot', file: '07-the-chariot', name: '战车', upright: { theme: '主动推进', message: '你们已经准备好把比赛带进自己的节奏。', teamPhrase: '方向一致，我们就能把节奏握在手里。', action: '开场前两个进攻回合执行最熟悉的战术，不犹豫。' }, reversed: { theme: '校准节奏', message: '力量仍然充足，先让速度和方向重新一致。', teamPhrase: '不是更快，而是一起更准。', action: '出现抢节奏时完成一次安全传导，再寻找进攻点。' } },
+    { id: 'strength', file: '08-strength', name: '力量', upright: { theme: '冷静掌控', message: '今天的优势不是蛮力，而是稳定和控制。', teamPhrase: '越有压力，我们越能稳稳回应。', action: '第一节先把防守强度立住，用清晰口令稳住轮转。' }, reversed: { theme: '温柔坚定', message: '紧张不等于软弱，它只是提醒你把力量用在可控的事情上。', teamPhrase: '允许紧张，但下一球仍然坚定。', action: '连续失误后先做一次深呼吸，再给出简短明确的任务。' } },
+    { id: 'the-hermit', file: '09-the-hermit', name: '隐者', upright: { theme: '回到基本功', message: '复杂的时候，最可靠的答案往往是最熟悉的动作。', teamPhrase: '把简单的事连续做好，优势就会出现。', action: '比分胶着时回到防守、篮板和安全传球三件事。' }, reversed: { theme: '重新连接', message: '独立思考已经足够，现在要让答案回到团队沟通里。', teamPhrase: '别一个人扛，把信息交给全队。', action: '暂停时先请一名球员说出场上最需要解决的问题。' } },
+    { id: 'wheel-of-fortune', file: '10-wheel-of-fortune', name: '命运之轮', upright: { theme: '把握变化', message: '比赛一定会有起伏，你们有能力在变化里抓住下一次机会。', teamPhrase: '比分会动，我们的回应始终主动。', action: '提前约定对方连续得分后的第一个稳节奏战术。' }, reversed: { theme: '专注可控', message: '当局面暂时不顺，把注意力收回到下一回合能完成的动作。', teamPhrase: '不追问运气，只回应下一球。', action: '只给全队一个当回合目标：防住、抢板或完成一次好出手。' } },
+    { id: 'justice', file: '11-justice', name: '正义', upright: { theme: '纪律执行', message: '清晰的规则会让你们在压力下做出一致选择。', teamPhrase: '标准一致，信任就会更稳。', action: '赛前再确认一次上半场对位与A/B组轮换。' }, reversed: { theme: '修正偏差', message: '不需要责怪任何人，及时看见偏差并修正就已经在向前。', teamPhrase: '看清事实，马上调整。', action: '复盘最近两个回合，只指出一个可改变的动作。' } },
+    { id: 'the-hanged', file: '12-the-hanged', name: '倒吊人', upright: { theme: '换个角度', message: '暂时停一下，会让你们看见原来忽略的空间和选择。', teamPhrase: '停一拍看清，下一步会更有力量。', action: '暂停时从弱侧空间重新观察进攻落位。' }, reversed: { theme: '结束停滞', message: '思考已经足够，现在选择一个方向并用行动验证。', teamPhrase: '不用等完美答案，先共同迈一步。', action: '从两个备选方案中明确一个，连续执行两个回合。' } },
+    { id: 'death', file: '13-death', name: '死神', upright: { theme: '更新打法', message: '结束已经无效的选择，能为更适合今天的打法腾出空间。', teamPhrase: '放下上一球，带着新选择回来。', action: '明确停止一种低效进攻，换回成功率更高的落位。' }, reversed: { theme: '允许改变', message: '熟悉感让人安心，但一次小改变可能正是突破停滞的入口。', teamPhrase: '改变不是否定，而是让我们继续前进。', action: '只调整一个轮换或战术入口，观察两个回合。' } },
+    { id: 'temperance', file: '14-temperance', name: '节制', upright: { theme: '稳定节奏', message: '不需要一次解决整场比赛，只需要把下一球做好。', teamPhrase: '稳住一回合，比赛就会重新展开。', action: '遇到连续失误时，先降速完成一次高质量进攻。' }, reversed: { theme: '重新配平', message: '强度和耐心暂时不在同一节奏，调回平衡就能继续前进。', teamPhrase: '该快时一起快，该稳时一起稳。', action: '明确下一回合是提速还是控节奏，并让全队听见。' } },
+    { id: 'the-devil', file: '15-the-devil', name: '恶魔', upright: { theme: '看清束缚', message: '真正影响发挥的也许不是对手，而是对失误的反复担心。', teamPhrase: '我们不被上一球定义。', action: '约定失误后的统一动作：回防、沟通、站好位置。' }, reversed: { theme: '夺回选择', message: '你们已经看见限制自己的模式，现在可以主动松开它。', teamPhrase: '旧习惯到此为止，下一球由我们选择。', action: '说出一个今天不再重复的反应，并替换为具体动作。' } },
+    { id: 'the-tower', file: '16-the-tower', name: '高塔', upright: { theme: '变化中重建', message: '突然变化不会击垮你们，它会让真正可靠的秩序更清楚。', teamPhrase: '局面变了，我们仍能一起重建。', action: '暂停后先统一一个防守口令，从下一回合恢复秩序。' }, reversed: { theme: '提前释放压力', message: '不必等问题变大，现在做一次小修正就能减少冲击。', teamPhrase: '现在调整，比硬撑更有力量。', action: '立即处理最明显的一处漏位或沟通缺口。' } },
+    { id: 'the-star', file: '17-the-star', name: '星星', upright: { theme: '信任彼此', message: '每一次传球都在告诉队友：我相信你。', teamPhrase: '把球和信任一起传出去。', action: '赛前让每名首发对身边队友说一句具体支持。' }, reversed: { theme: '找回信心', message: '希望没有离开，只是需要一个小小的成功把它重新点亮。', teamPhrase: '先做好一球，信心就会回来。', action: '为全队设定一个容易确认的开场目标，如一次成功协防。' } },
+    { id: 'the-moon', file: '18-the-moon', name: '月亮', upright: { theme: '确认信息', message: '信息可能还不够清晰，沟通会让全队迅速稳定。', teamPhrase: '有疑问就确认，有信息就分享。', action: '每次死球都确认站位和对位，不带疑问进入下一回合。' }, reversed: { theme: '让局面变清楚', message: '模糊正在散开，用事实而不是担心做下一次判断。', teamPhrase: '看见真实场面，再做简单决定。', action: '只复盘刚发生的两个回合，确认对手实际使用的变化。' } },
+    { id: 'the-sun', file: '19-the-sun', name: '太阳', upright: { theme: '释放能量', message: '今天的身体会更快热起来，场上的回应也会更积极。', teamPhrase: '把声音、速度和笑容带进比赛。', action: '热身最后两分钟提高沟通音量，把能量带进开场。' }, reversed: { theme: '找回亮度', message: '能量仍在，只需要把注意力从结果拉回到享受配合。', teamPhrase: '先享受一次好防守、一次好传球。', action: '指定一项值得全队立即庆祝的团队动作。' } },
+    { id: 'judgement', file: '20-judgement', name: '审判', upright: { theme: '回应召唤', message: '过去的经验已经变成判断力，今天可以更清楚地行动。', teamPhrase: '我们记得学到的，也准备好做出回应。', action: '赛前回顾上一场最有价值的一条经验并转成口令。' }, reversed: { theme: '放下自我怀疑', message: '不必用过去评判现在，经验的价值是帮助下一次选择。', teamPhrase: '不审判自己，只负责下一步。', action: '把一句责备式提醒改写成可执行的动作指令。' } },
+    { id: 'the-world', file: '21-the-world', name: '世界', upright: { theme: '团队完整', message: '每个人都在自己的位置上，全队就会成为一个整体。', teamPhrase: '每个角色都重要，我们共同完成比赛。', action: '赛前明确每名球员今天最重要的一项职责。' }, reversed: { theme: '完成最后连接', message: '整体已经接近成形，只差把一个没有说清的角色补完整。', teamPhrase: '补上最后一环，我们就是完整团队。', action: '确认替补球员、暂停后首回合和关键球的具体职责。' } }
+  ];
+
+  var MINOR_SUITS = [
+    { id: 'cups', name: '圣杯', theme: '信任与沟通', upright: '情绪会成为连接队友的力量。', reversed: '先照顾情绪，再把感受说成清楚的信息。', phrase: '我们听见彼此，也相信彼此。', action: '用一次明确回应或击掌完成队友间的连接。' },
+    { id: 'swords', name: '宝剑', theme: '判断与清晰', upright: '清楚的信息会让决定更快、更坚定。', reversed: '别让想得太多拖慢判断，先确认最重要的事实。', phrase: '看清局面，果断做简单选择。', action: '死球时只确认对位、空间和下一项任务。' },
+    { id: 'wands', name: '权杖', theme: '行动与能量', upright: '主动迈出的第一步会带动全队节奏。', reversed: '能量需要对准方向，而不是一味加速。', phrase: '一起启动，把主动权带回场上。', action: '用一次全队同时启动的跑位或回防建立强度。' },
+    { id: 'pentacles', name: '星币', theme: '执行与基础', upright: '可靠的小动作会累积成看得见的优势。', reversed: '先补牢一个基础环节，效率就会回来。', phrase: '把每个基本动作做扎实。', action: '下一回合专注卡位、传球角度或落位中的一项。' }
+  ];
+
+  var MINOR_RANKS = [
+    { id: 'ace', name: '王牌', uprightTheme: '新的起点', reversedTheme: '把起点变清楚', upright: '一个新的机会正在出现，先用行动接住它。', reversed: '机会仍在，先缩小目标再启动。', action: '确定开场第一个共同目标。' },
+    { id: 'two', name: '二', uprightTheme: '建立配合', reversedTheme: '重新对齐', upright: '两个人的同步会打开更多空间。', reversed: '配合只差一次更明确的确认。', action: '让两名关键球员说清彼此的第一选择。' },
+    { id: 'three', name: '三', uprightTheme: '共同扩展', reversedTheme: '邀请更多连接', upright: '个人选择正在变成团队的连续行动。', reversed: '别让少数人承担全部任务，把更多队友带进来。', action: '设计一次至少三人参与的回合。' },
+    { id: 'four', name: '四', uprightTheme: '稳住结构', reversedTheme: '松开僵化', upright: '稳定结构能保护节奏和信心。', reversed: '稳定不等于停住，给计划留一点调整空间。', action: '保留一个原则，同时允许一个临场变化。' },
+    { id: 'five', name: '五', uprightTheme: '穿过挑战', reversedTheme: '减少内耗', upright: '挑战会暴露真正需要协作的地方。', reversed: '不把力气花在责怪上，马上寻找共同解法。', action: '把问题改写成一个全队能执行的任务。' },
+    { id: 'six', name: '六', uprightTheme: '带着经验前进', reversedTheme: '放下比较', upright: '已有经验会帮助你们认出正确节奏。', reversed: '不用复制过去的结果，只提取真正有用的经验。', action: '调用上一场已经验证过的一项有效做法。' },
+    { id: 'seven', name: '七', uprightTheme: '坚定选择', reversedTheme: '减少分散', upright: '选择明确后，行动会变得更有力量。', reversed: '选项太多会消耗信心，先排除不必要的变化。', action: '从备选方案中只保留当下最可靠的一项。' },
+    { id: 'eight', name: '八', uprightTheme: '持续推进', reversedTheme: '解除停滞', upright: '连续而清楚的动作会带来突破。', reversed: '停滞不代表失败，先解除一个最小阻碍。', action: '找出卡住节奏的一步并立刻简化。' },
+    { id: 'nine', name: '九', uprightTheme: '保持韧性', reversedTheme: '先补充再坚持', upright: '你们已经走了很远，稳定能让优势继续累积。', reversed: '真正的坚持也包括及时恢复和求助。', action: '确认最疲劳的位置并准备一次主动轮换。' },
+    { id: 'ten', name: '十', uprightTheme: '完成共同目标', reversedTheme: '重新分担', upright: '每个人完成自己的部分，团队就能抵达目标。', reversed: '责任需要重新分配，不必让一个人扛住全部。', action: '把当前任务明确分给场上五个人。' },
+    { id: 'page', name: '侍从', uprightTheme: '保持学习', reversedTheme: '允许不熟练', upright: '好奇和开放会让新信息很快转化为进步。', reversed: '不熟练只是过程，用一次尝试换取真实反馈。', action: '鼓励一名球员执行训练中刚学会的正确选择。' },
+    { id: 'knight', name: '骑士', uprightTheme: '勇敢执行', reversedTheme: '校准冲劲', upright: '果断行动能把准备转化成场上优势。', reversed: '冲劲很宝贵，先确认方向再全力推进。', action: '为一次主动攻击设定清楚的停止或转移条件。' },
+    { id: 'queen', name: '王后', uprightTheme: '稳定影响', reversedTheme: '照顾内在节奏', upright: '沉着的影响力会让身边的人更敢发挥。', reversed: '先把自己的情绪和节奏安顿好，再带动全队。', action: '由场上最稳定的球员发出第一句团队口令。' },
+    { id: 'king', name: '国王', uprightTheme: '成熟掌控', reversedTheme: '放下过度控制', upright: '经验让你们能在压力下守住原则并做出决定。', reversed: '领导不是包办，给队友空间会释放更多能力。', action: '明确目标后，让场上球员完成一次自主判断。' }
+  ];
+
+  function createMinorArcana() {
+    var cards = [];
+    MINOR_SUITS.forEach(function (suit, suitIndex) {
+      MINOR_RANKS.forEach(function (rank, rankIndex) {
+        var cardNumber = 22 + suitIndex * 14 + rankIndex;
+        var fileNumber = String(cardNumber).padStart(2, '0');
+        cards.push({
+          id: rank.id + '-of-' + suit.id,
+          file: fileNumber + '-' + rank.id + '-of-' + suit.id,
+          name: suit.name + rank.name,
+          upright: {
+            theme: rank.uprightTheme + ' · ' + suit.theme,
+            message: rank.upright + suit.upright,
+            teamPhrase: suit.phrase,
+            action: rank.action + suit.action
+          },
+          reversed: {
+            theme: rank.reversedTheme + ' · 调整提示',
+            message: rank.reversed + suit.reversed,
+            teamPhrase: suit.phrase,
+            action: rank.action + suit.action
+          }
+        });
+      });
+    });
+    return cards;
+  }
+
+  var ENERGY_CARDS = MAJOR_ARCANA.concat(createMinorArcana());
+  var ENERGY_CARD_STEP = 54;
+  var ENERGY_DECK_COPIES = 3;
+  var energyDeckOrder = [];
+  var energyCenteredIndex = 0;
+  var energyCenteredRenderedIndex = 0;
+  var energyDeckSpan = 0;
+  var energyShuffleOrigin = 0;
+  var energyHasShuffled = false;
+  var energyPointerStart = null;
+
+  var selectedPeriod = 1;
+  var selectedSegment = 'A';
+  var scheduleView = 'team';
+  var tacticsView = 'record';
+  var tacticalRecords = loadTacticalRecords();
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>'"]/g, function (character) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character];
+    });
+  }
+
+  function safeJsonParse(raw, fallback) {
+    try { return raw ? JSON.parse(raw) : fallback; } catch (error) { return fallback; }
+  }
+
+  function dateParts(match) {
+    var date = new Date(match.date);
+    return {
+      day: String(date.getDate()).padStart(2, '0'),
+      weekday: new Intl.DateTimeFormat('zh-CN', { weekday: 'short', timeZone: 'Asia/Shanghai' }).format(date),
+      label: new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric', weekday: 'short', timeZone: 'Asia/Shanghai' }).format(date)
+    };
+  }
+
+  function isUpcoming(match) { return new Date(match.date).getTime() > Date.now(); }
+  function hasMatchStarted(match) { return new Date(match.date).getTime() <= Date.now(); }
+
+  function getNextMatch() {
+    for (var index = 0; index < TEAM_MATCHES.length; index += 1) {
+      if (isUpcoming(TEAM_MATCHES[index])) return TEAM_MATCHES[index];
+    }
+    return null;
+  }
+
+  function getHomeMatchPair() {
+    var now = Date.now();
+    var currentIndex = TEAM_MATCHES.findIndex(function (match) {
+      var start = new Date(match.date).getTime();
+      return start <= now && now < start + HOME_MATCH_DURATION_MS;
+    });
+    if (currentIndex < 0) {
+      currentIndex = TEAM_MATCHES.findIndex(function (match) { return new Date(match.date).getTime() > now; });
+    }
+    if (currentIndex < 0 && TEAM_MATCHES.length) currentIndex = TEAM_MATCHES.length - 1;
+    return {
+      current: currentIndex >= 0 ? TEAM_MATCHES[currentIndex] : null,
+      following: currentIndex >= 0 && currentIndex + 1 < TEAM_MATCHES.length ? TEAM_MATCHES[currentIndex + 1] : null
+    };
+  }
+
+  function getMatchLabel(match) {
+    return match.teamA + ' 对 ' + match.teamB;
+  }
+
+  function renderScheduleRow(match, options) {
+    var settings = options || {};
+    var parts = dateParts(match);
+    var nextClass = settings.isNext ? ' next' : '';
+    var tagClass = match.conditional ? ' pending' : (settings.isNext ? ' next' : '');
+    var tagText = match.conditional ? '待定条件场次' : (settings.isNext ? '下一场' : '待赛');
+    return '<div class="schedule-row' + nextClass + '">' +
+      '<div class="date-block"><div class="date-day">' + escapeHtml(parts.weekday) + '</div><div class="date-number">' + parts.day + '</div><div class="date-day">8月</div></div>' +
+      '<div><div class="match-title">' + escapeHtml(getMatchLabel(match)) + '</div><div class="match-meta"><span>' + escapeHtml(match.time) + '</span><span>' + escapeHtml(match.venue) + '</span><span>' + escapeHtml(match.stage) + '</span></div></div>' +
+      '<span class="status-tag' + tagClass + '">' + escapeHtml(tagText) + '</span>' +
+      '</div>';
+  }
+
+  function countdownText(match) {
+    var difference = new Date(match.date).getTime() - Date.now();
+    if (difference <= 0) return '即将开始';
+    var days = Math.floor(difference / 86400000);
+    var hours = Math.floor((difference % 86400000) / 3600000);
+    var minutes = Math.floor((difference % 3600000) / 60000);
+    var seconds = Math.floor((difference % 60000) / 1000);
+    var clock = String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+    return days > 0 ? '还有 ' + days + '天 ' + clock : '还有 ' + clock;
+  }
+
+  function currentMatchStatus(match) {
+    var start = new Date(match.date).getTime();
+    var now = Date.now();
+    if (now < start) return { text: countdownText(match), className: 'countdown' };
+    if (now < start + HOME_MATCH_DURATION_MS) return { text: '进行中', className: 'match-status live' };
+    return { text: '已结束', className: 'match-status finished' };
+  }
+
+  function renderHome() {
+    var pair = getHomeMatchPair();
+    var currentCard = document.getElementById('current-match-card');
+    var followingCard = document.getElementById('following-match-card');
+    if (pair.current) {
+      var currentParts = dateParts(pair.current);
+      var status = currentMatchStatus(pair.current);
+      currentCard.dataset.matchId = pair.current.id;
+      currentCard.innerHTML = '<div class="home-match-top"><span id="current-match-title" class="home-match-label">本场比赛</span><span id="current-match-status" class="' + status.className + '">' + escapeHtml(status.text) + '</span></div>' +
+        '<div class="home-match-teams"><div class="home-match-team">' + escapeHtml(pair.current.teamA) + '</div><div class="versus">对</div><div class="home-match-team">' + escapeHtml(pair.current.teamB) + '</div></div>' +
+        '<div class="home-match-meta"><span>' + escapeHtml(currentParts.label) + '</span><span>' + escapeHtml(pair.current.time) + '</span><span>' + escapeHtml(pair.current.venue) + '</span><span>' + escapeHtml(pair.current.stage) + '</span></div>' +
+        '<button class="inline-button" type="button" data-go-to-tactics="true">记录本场战术</button>';
+    } else {
+      delete currentCard.dataset.matchId;
+      currentCard.innerHTML = '<div class="home-match-top"><span id="current-match-title" class="home-match-label">本场比赛</span></div><div class="empty-state">暂无比赛安排</div>';
+    }
+
+    if (pair.following) {
+      var followingParts = dateParts(pair.following);
+      followingCard.dataset.matchId = pair.following.id;
+      followingCard.innerHTML = '<div class="home-match-top"><span id="following-match-title" class="home-match-label">下一场比赛</span><span class="status-tag' + (pair.following.conditional ? ' pending' : '') + '">' + escapeHtml(pair.following.conditional ? '条件场次' : '待赛') + '</span></div>' +
+        '<div class="home-match-teams"><div class="home-match-team">' + escapeHtml(pair.following.teamA) + '</div><div class="versus">对</div><div class="home-match-team">' + escapeHtml(pair.following.teamB) + '</div></div>' +
+        '<div class="home-match-meta"><span>' + escapeHtml(followingParts.label) + '</span><span>' + escapeHtml(pair.following.time) + '</span><span>' + escapeHtml(pair.following.venue) + '</span><span>' + escapeHtml(pair.following.stage) + '</span></div>';
+    } else {
+      delete followingCard.dataset.matchId;
+      followingCard.innerHTML = '<div class="home-match-top"><span id="following-match-title" class="home-match-label">下一场比赛</span></div><div class="empty-state">当前赛程暂无下一场安排</div>';
+    }
+  }
+
+  function updateHomeMatchStatus() {
+    var pair = getHomeMatchPair();
+    var currentCard = document.getElementById('current-match-card');
+    var followingCard = document.getElementById('following-match-card');
+    var currentId = pair.current ? pair.current.id : '';
+    var followingId = pair.following ? pair.following.id : '';
+    if (currentCard.dataset.matchId !== currentId || followingCard.dataset.matchId !== followingId) {
+      renderHome();
+      renderScheduleView();
+      return;
+    }
+    if (!pair.current) return;
+    var status = currentMatchStatus(pair.current);
+    var statusElement = document.getElementById('current-match-status');
+    if (statusElement) {
+      statusElement.textContent = status.text;
+      statusElement.className = status.className;
+    }
+  }
+
+  function loadScores() {
+    var parsed = safeJsonParse(localStorage.getItem(SCORE_STORAGE_KEY), {});
+    var result = {};
+    Object.keys(parsed || {}).forEach(function (key) {
+      var value = parsed[key];
+      if (value && Number.isInteger(Number(value.a)) && Number.isInteger(Number(value.b)) && Number(value.a) >= 0 && Number(value.b) >= 0) {
+        result[key] = { a: Number(value.a), b: Number(value.b) };
+      }
+    });
+    return result;
+  }
+
+  function saveScores(scores) { localStorage.setItem(SCORE_STORAGE_KEY, JSON.stringify(scores)); }
+
+  function calculateStandings() {
+    var teams = ['深圳', '茂名', '中山', '韶关', '珠海', '惠州', '肇庆'];
+    var standings = {};
+    teams.forEach(function (team) { standings[team] = { team: team, wins: 0, losses: 0, difference: 0, points: 0 }; });
+    var scores = loadScores();
+    GROUP_MATCHES.forEach(function (match) {
+      if (!hasMatchStarted(match)) return;
+      var score = scores[match.scoreIndex];
+      if (!score) return;
+      standings[match.teamA].difference += score.a - score.b;
+      standings[match.teamB].difference += score.b - score.a;
+      if (score.a > score.b) {
+        standings[match.teamA].wins += 1;
+        standings[match.teamA].points += 2;
+        standings[match.teamB].losses += 1;
+        standings[match.teamB].points += 1;
+      } else if (score.b > score.a) {
+        standings[match.teamB].wins += 1;
+        standings[match.teamB].points += 2;
+        standings[match.teamA].losses += 1;
+        standings[match.teamA].points += 1;
+      }
+    });
+    return teams.map(function (team) { return standings[team]; }).sort(function (left, right) {
+      return right.points - left.points || right.difference - left.difference;
+    });
+  }
+
+  function standingsRows() {
+    return calculateStandings().map(function (row, index) {
+      return '<tr data-team="' + escapeHtml(row.team) + '" class="' + (row.team === TEAM_NAME ? 'highlight' : '') + '"><td>' + (index + 1) + '</td><td>' + escapeHtml(row.team) + '</td><td>' + row.wins + '</td><td>' + row.losses + '</td><td>' + (row.difference > 0 ? '+' : '') + row.difference + '</td><td>' + row.points + '</td></tr>';
+    }).join('');
+  }
+
+  function renderStandings() {
+    return '<h3 class="section-heading">A组实时排名</h3><div class="card card-pad standings-wrap"><table class="standings-table"><thead><tr><th>排名</th><th>队伍</th><th>胜</th><th>负</th><th>净胜分</th><th>积分</th></tr></thead><tbody>' + standingsRows() + '</tbody></table></div>';
+  }
+
+  function renderGroupMatch(match) {
+    if (!hasMatchStarted(match)) {
+      return '<article class="card pending-match">' + renderScheduleRow(match) + '<div class="pending-score-note">比赛开始后可录入比分</div></article>';
+    }
+    var scores = loadScores();
+    var saved = scores[match.scoreIndex];
+    return '<details class="card match-details" data-score-details="' + match.scoreIndex + '"><summary>' + renderScheduleRow(match) + '</summary>' +
+      '<div class="score-panel"><form class="score-entry-form" data-score-index="' + match.scoreIndex + '">' +
+      '<div class="score-form"><div class="field"><label for="score-' + match.scoreIndex + '-a">' + escapeHtml(match.teamA) + '</label><input id="score-' + match.scoreIndex + '-a" name="scoreA" type="number" min="0" inputmode="numeric" value="' + (saved ? saved.a : '') + '" required></div>' +
+      '<div class="score-separator">:</div>' +
+      '<div class="field"><label for="score-' + match.scoreIndex + '-b">' + escapeHtml(match.teamB) + '</label><input id="score-' + match.scoreIndex + '-b" name="scoreB" type="number" min="0" inputmode="numeric" value="' + (saved ? saved.b : '') + '" required></div></div>' +
+      '<div class="button-row"><button class="primary-button" type="submit">保存比分</button></div><div class="form-status" role="status" aria-live="polite">' + (saved ? '已保存：' + saved.a + ' : ' + saved.b : '录入后将自动更新排名') + '</div>' +
+      '</form></div></details>';
+  }
+
+  function renderPathView() {
+    var pathMatches = TEAM_MATCHES.slice(3);
+    var descriptions = [
+      'A组排名确定后，对阵B组对应名次。',
+      '根据8进4结果进入半决赛或5–8名排位；对手、时间和场地待定。',
+      '根据8月19日结果进入决赛、三四名或排位赛；对手、时间和场地待定。'
+    ];
+    return '<div class="path-grid">' + pathMatches.map(function (match, index) {
+      return '<article class="card path-card"><div class="path-date">' + escapeHtml(dateParts(match).label) + '</div><h3 class="path-title">' + escapeHtml(match.stage) + '</h3><div class="path-rule">' + escapeHtml(descriptions[index]) + '</div></article>';
+    }).join('') + '</div><div class="rule-note" style="margin-top:14px;">8月9日和10日为明确比赛日；即使对手与时间未定，也始终保留在赛程中。</div>';
+  }
+
+  function renderScheduleView() {
+    var content = document.getElementById('schedule-content');
+    if (scheduleView === 'team') {
+      var nextMatch = getNextMatch();
+      content.innerHTML = '<div class="schedule-list">' + TEAM_MATCHES.map(function (match) { return renderScheduleRow(match, { isNext: nextMatch && match.id === nextMatch.id }); }).join('') + '</div>';
+    } else if (scheduleView === 'group') {
+      content.innerHTML = '<div class="stack">' + GROUP_MATCHES.map(renderGroupMatch).join('') + '</div>' + renderStandings();
+    } else {
+      content.innerHTML = renderPathView();
+    }
+  }
+
+  function loadExternalScores() {
+    fetch('./scores.json', { cache: 'no-store' }).then(function (response) {
+      if (!response.ok) throw new Error('Score request failed');
+      return response.json();
+    }).then(function (externalScores) {
+      var localScores = loadScores();
+      var changed = false;
+      GROUP_MATCHES.forEach(function (match) {
+        if (!hasMatchStarted(match)) return;
+        var external = externalScores[String(match.scoreIndex)];
+        if (!localScores[match.scoreIndex] && external && external.a !== null && external.b !== null && Number.isInteger(Number(external.a)) && Number.isInteger(Number(external.b))) {
+          localScores[match.scoreIndex] = { a: Number(external.a), b: Number(external.b) };
+          changed = true;
+        }
+      });
+      if (changed) {
+        saveScores(localScores);
+        if (scheduleView === 'group') renderScheduleView();
+      }
+    }).catch(function () {
+      // Local score entry remains available when the crawler file cannot be reached.
+    });
+  }
+
+  function matchOptionLabel(match) {
+    return dateParts(match).day + '日 · ' + match.stage + ' · ' + getMatchLabel(match);
+  }
+
+  function populateMatchSelect(select) {
+    select.innerHTML = TEAM_MATCHES.map(function (match) { return '<option value="' + match.id + '">' + escapeHtml(matchOptionLabel(match)) + '</option>'; }).join('');
+    var next = getNextMatch();
+    if (next) select.value = next.id;
+  }
+
+  function renderPlayers() {
+    document.getElementById('player-options').innerHTML = PLAYERS.map(function (player) {
+      return '<div class="player-option"><input id="player-' + player.id + '" name="lineup" type="checkbox" value="' + player.id + '"><label for="player-' + player.id + '"><span class="jersey">' + player.number + '</span><span class="player-name">' + escapeHtml(player.name) + '<span class="player-year">' + player.year + '</span></span></label></div>';
+    }).join('');
+    document.getElementById('roster-grid').innerHTML = PLAYERS.map(function (player) {
+      return '<article class="card roster-card ' + (player.year === 2012 ? 'year-2012' : '') + '"><span class="jersey">' + player.number + '</span><div><strong>' + escapeHtml(player.name) + '</strong><div class="small muted">' + player.year + '年</div></div></article>';
+    }).join('');
+  }
+
+  function isValidTacticalRecord(record) {
+    var playerIds = PLAYERS.map(function (player) { return player.id; });
+    return record && typeof record.id === 'string' && TEAM_MATCHES.some(function (match) { return match.id === record.matchId; }) &&
+      [1, 2, 3, 4].indexOf(record.period) >= 0 && [null, 'A', 'B'].indexOf(record.segment) >= 0 &&
+      Array.isArray(record.playerIds) && record.playerIds.length === 5 && record.playerIds.every(function (id) { return playerIds.indexOf(id) >= 0; }) &&
+      typeof record.offenseTactic === 'string' && typeof record.defenseTactic === 'string' && typeof record.notes === 'string';
+  }
+
+  function loadTacticalRecords() {
+    var parsed = safeJsonParse(localStorage.getItem(TACTICS_STORAGE_KEY), []);
+    return Array.isArray(parsed) ? parsed.filter(isValidTacticalRecord) : [];
+  }
+
+  function saveTacticalRecords() { localStorage.setItem(TACTICS_STORAGE_KEY, JSON.stringify(tacticalRecords)); }
+
+  function getRecordKey(matchId, period, segment) { return matchId + '-' + period + '-' + (segment || 'full'); }
+
+  function getCurrentRecord() {
+    var matchId = document.getElementById('tactics-match').value;
+    var key = getRecordKey(matchId, selectedPeriod, selectedPeriod <= 2 ? selectedSegment : null);
+    return tacticalRecords.find(function (record) { return record.id === key; }) || null;
+  }
+
+  function selectedPlayerIds() {
+    return Array.from(document.querySelectorAll('input[name="lineup"]:checked')).map(function (input) { return input.value; });
+  }
+
+  function updateLineupCount() { document.getElementById('lineup-count').textContent = selectedPlayerIds().length + '/5'; }
+
+  function setTacticsStatus(message, type) {
+    var status = document.getElementById('tactics-status');
+    status.textContent = message;
+    status.className = 'form-status' + (type ? ' ' + type : '');
+  }
+
+  function clearTacticsFields() {
+    document.querySelectorAll('input[name="lineup"]').forEach(function (input) { input.checked = false; });
+    document.getElementById('offense-tactic').value = '';
+    document.getElementById('defense-tactic').value = '';
+    document.getElementById('review-notes').value = '';
+    updateLineupCount();
+  }
+
+  function hydrateTacticsForm() {
+    clearTacticsFields();
+    var record = getCurrentRecord();
+    if (record) {
+      record.playerIds.forEach(function (playerId) {
+        var input = document.getElementById('player-' + playerId);
+        if (input) input.checked = true;
+      });
+      document.getElementById('offense-tactic').value = record.offenseTactic;
+      document.getElementById('defense-tactic').value = record.defenseTactic;
+      document.getElementById('review-notes').value = record.notes;
+      setTacticsStatus('已载入当前节次的保存记录。', 'success');
+    } else {
+      setTacticsStatus('当前节次尚未保存记录。');
+    }
+    updateLineupCount();
+    renderReviewList();
+  }
+
+  function validateLineup(playerIds) {
+    var errors = [];
+    if (playerIds.length !== 5) errors.push('必须选择5名上场球员。');
+    var has2012Player = playerIds.some(function (playerId) {
+      var player = PLAYERS.find(function (item) { return item.id === playerId; });
+      return player && player.year === 2012;
+    });
+    if (!has2012Player) errors.push('每节至少需要1名2012年球员。');
+    if (selectedPeriod <= 2) {
+      var matchId = document.getElementById('tactics-match').value;
+      var otherSegment = selectedSegment === 'A' ? 'B' : 'A';
+      var otherRecord = tacticalRecords.find(function (record) { return record.id === getRecordKey(matchId, selectedPeriod, otherSegment); });
+      if (otherRecord) {
+        var repeats = playerIds.filter(function (playerId) { return otherRecord.playerIds.indexOf(playerId) >= 0; });
+        if (repeats.length) {
+          var repeatNames = repeats.map(function (playerId) { return PLAYERS.find(function (player) { return player.id === playerId; }).name; });
+          errors.push('A/B组球员不能重复：' + repeatNames.join('、') + '。');
+        }
+      }
+    }
+    return errors;
+  }
+
+  function renderReviewList() {
+    var matchId = document.getElementById('tactics-match').value;
+    var records = tacticalRecords.filter(function (record) { return record.matchId === matchId; }).sort(function (left, right) {
+      return left.period - right.period || String(left.segment || '').localeCompare(String(right.segment || ''));
+    });
+    var list = document.getElementById('review-list');
+    if (!records.length) {
+      list.innerHTML = '<div class="empty-state">还没有本场记录。保存后会按节次显示在这里。</div>';
+      return;
+    }
+    list.innerHTML = records.map(function (record) {
+      var names = record.playerIds.map(function (playerId) {
+        var player = PLAYERS.find(function (item) { return item.id === playerId; });
+        return player ? player.number + '号 ' + player.name : '';
+      }).filter(Boolean).join('、');
+      return '<article class="card review-card"><div class="review-head"><div><div class="review-title">第' + record.period + '节' + (record.segment ? ' · ' + record.segment + '组' : '') + '</div><div class="review-meta">阵容：' + escapeHtml(names) + '</div></div><button class="danger-button" type="button" data-delete-record="' + escapeHtml(record.id) + '">删除</button></div>' +
+        '<div class="review-meta">进攻：' + escapeHtml(record.offenseTactic || '未记录') + ' · 防守：' + escapeHtml(record.defenseTactic || '未记录') + '</div>' +
+        (record.notes ? '<div class="review-notes">' + escapeHtml(record.notes) + '</div>' : '') + '</article>';
+    }).join('');
+  }
+
+  function setPeriod(period) {
+    selectedPeriod = period;
+    document.querySelectorAll('[data-period]').forEach(function (button) {
+      var active = Number(button.dataset.period) === period;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    document.getElementById('segment-field').hidden = period > 2;
+    hydrateTacticsForm();
+  }
+
+  function setGameSegment(segment) {
+    selectedSegment = segment;
+    document.querySelectorAll('[data-game-segment]').forEach(function (button) {
+      var active = button.dataset.gameSegment === segment;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    hydrateTacticsForm();
+  }
+
+  function renderTacticsView() {
+    document.querySelectorAll('[data-tactics-view]').forEach(function (button) {
+      var active = button.dataset.tacticsView === tacticsView;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-selected', String(active));
+    });
+    ['record', 'roster'].forEach(function (view) {
+      document.getElementById('tactics-' + view + '-view').hidden = view !== tacticsView;
+    });
+  }
+
+  function loadEnergySelections() {
+    var parsed = safeJsonParse(localStorage.getItem(ENERGY_STORAGE_KEY), {});
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+  }
+
+  function energySelectionKey() { return document.getElementById('energy-match').value; }
+
+  function secureRandomUnit() {
+    if (window.crypto && window.crypto.getRandomValues) {
+      var randomValues = new Uint32Array(1);
+      window.crypto.getRandomValues(randomValues);
+      return randomValues[0] / 4294967296;
+    }
+    return Math.random();
+  }
+
+  function shuffledEnergyCards() {
+    var cards = ENERGY_CARDS.slice();
+    for (var index = cards.length - 1; index > 0; index -= 1) {
+      var swapIndex = Math.floor(secureRandomUnit() * (index + 1));
+      var current = cards[index];
+      cards[index] = cards[swapIndex];
+      cards[swapIndex] = current;
+    }
+    return cards;
+  }
+
+  function setCenteredEnergyCard(renderedIndex) {
+    var renderedCardCount = energyDeckOrder.length * ENERGY_DECK_COPIES;
+    var safeRenderedIndex = Math.max(0, Math.min(renderedCardCount - 1, renderedIndex));
+    if (safeRenderedIndex === energyCenteredRenderedIndex && document.querySelector('.deck-card.centered')) return;
+    var previous = document.querySelector('.deck-card.centered');
+    if (previous) previous.classList.remove('centered');
+    var next = document.querySelector('[data-energy-rendered-index="' + safeRenderedIndex + '"]');
+    if (next) next.classList.add('centered');
+    energyCenteredRenderedIndex = safeRenderedIndex;
+    energyCenteredIndex = safeRenderedIndex % energyDeckOrder.length;
+  }
+
+  function updateCenteredEnergyCard() {
+    var deck = document.getElementById('energy-deck');
+    setCenteredEnergyCard(Math.round(deck.scrollLeft / ENERGY_CARD_STEP));
+  }
+
+  function recenterEnergyDeck() {
+    if (!energyDeckSpan) return;
+    var deck = document.getElementById('energy-deck');
+    var target = null;
+    if (deck.scrollLeft < energyDeckSpan * 0.5) target = deck.scrollLeft + energyDeckSpan;
+    if (deck.scrollLeft > energyDeckSpan * 2.5) target = deck.scrollLeft - energyDeckSpan;
+    if (target === null) return;
+    var shift = target - deck.scrollLeft;
+    deck.classList.add('positioning');
+    deck.scrollLeft = target;
+    if (energyPointerStart !== null) energyPointerStart += shift;
+    updateCenteredEnergyCard();
+    window.requestAnimationFrame(function () { deck.classList.remove('positioning'); });
+  }
+
+  function markEnergyShuffled() {
+    if (energyHasShuffled) return;
+    energyHasShuffled = true;
+    var drawButton = document.getElementById('draw-energy');
+    drawButton.disabled = false;
+    drawButton.setAttribute('aria-label', '抽取中间这张牌');
+    document.getElementById('shuffle-status').textContent = '洗牌完成，停在有感觉的位置，抽取中间这张牌';
+  }
+
+  function prepareEnergyDeck() {
+    energyDeckOrder = shuffledEnergyCards();
+    energyCenteredIndex = 0;
+    energyCenteredRenderedIndex = energyDeckOrder.length;
+    energyDeckSpan = energyDeckOrder.length * ENERGY_CARD_STEP;
+    energyShuffleOrigin = energyDeckSpan;
+    energyHasShuffled = false;
+    energyPointerStart = null;
+    var deck = document.getElementById('energy-deck');
+    var deckMarkup = [];
+    for (var copyIndex = 0; copyIndex < ENERGY_DECK_COPIES; copyIndex += 1) {
+      energyDeckOrder.forEach(function (_, logicalIndex) {
+        var renderedIndex = copyIndex * energyDeckOrder.length + logicalIndex;
+        deckMarkup.push('<div class="deck-card' + (renderedIndex === energyCenteredRenderedIndex ? ' centered' : '') + '" data-energy-card-index="' + logicalIndex + '" data-energy-rendered-index="' + renderedIndex + '" aria-hidden="true"></div>');
+      });
+    }
+    deck.innerHTML = deckMarkup.join('');
+    deck.classList.add('positioning', 'initializing');
+    deck.scrollLeft = energyDeckSpan;
+    window.requestAnimationFrame(function () {
+      deck.scrollLeft = energyDeckSpan;
+      updateCenteredEnergyCard();
+      window.requestAnimationFrame(function () { deck.classList.remove('positioning', 'initializing'); });
+    });
+    document.getElementById('shuffle-status').textContent = '左右滑动牌组开始洗牌';
+    document.getElementById('draw-energy').disabled = true;
+    document.getElementById('draw-energy').setAttribute('aria-label', '抽取中间这张牌，需先左右滑动洗牌');
+    document.getElementById('energy-draw-flow').hidden = false;
+    document.getElementById('energy-result').classList.remove('visible');
+    var resultImage = document.getElementById('energy-card-image');
+    resultImage.removeAttribute('src');
+    resultImage.alt = '';
+    resultImage.classList.remove('reversed');
+  }
+
+  function formatEnergyDrawnAt(value) {
+    var date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    return '抽取时间：' + new Intl.DateTimeFormat('zh-CN', {
+      month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false
+    }).format(date);
+  }
+
+  function renderEnergySelection(card, selection, animate) {
+    var result = document.getElementById('energy-result');
+    var reversed = selection.orientation === 'reversed';
+    var reading = reversed ? card.reversed : card.upright;
+    var image = document.getElementById('energy-card-image');
+    var shell = document.getElementById('energy-face-shell');
+    document.getElementById('energy-draw-flow').hidden = true;
+    image.src = 'assets/tarot/' + card.file + '.webp';
+    image.alt = card.name + '，' + (reversed ? '逆位' : '正位');
+    image.classList.toggle('reversed', reversed);
+    document.getElementById('energy-card-name').textContent = card.name;
+    var orientation = document.getElementById('energy-card-orientation');
+    orientation.textContent = reversed ? '逆位 · 调整提示' : '正位';
+    orientation.classList.toggle('reversed', reversed);
+    document.getElementById('energy-card-theme').textContent = reading.theme;
+    document.getElementById('energy-card-message').textContent = reading.message;
+    document.getElementById('energy-card-team-phrase').innerHTML = '<strong>给球队的一句话</strong>' + escapeHtml(reading.teamPhrase);
+    document.getElementById('energy-card-action').innerHTML = '<strong>本场行动：</strong>' + escapeHtml(reading.action);
+    document.getElementById('energy-card-drawn-at').textContent = formatEnergyDrawnAt(selection.drawnAt);
+    result.classList.add('visible');
+    shell.classList.remove('revealing');
+    if (animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      window.requestAnimationFrame(function () { shell.classList.add('revealing'); });
+    }
+  }
+
+  function loadCurrentEnergyCard() {
+    var selections = loadEnergySelections();
+    var selection = selections[energySelectionKey()];
+    var validSelection = selection && typeof selection === 'object' &&
+      (selection.orientation === 'upright' || selection.orientation === 'reversed');
+    var card = validSelection ? ENERGY_CARDS.find(function (item) { return item.id === selection.cardId; }) : null;
+    if (card) {
+      renderEnergySelection(card, selection, false);
+      return;
+    }
+    prepareEnergyDeck();
+  }
+
+  function drawEnergyCard() {
+    if (!energyHasShuffled) {
+      document.getElementById('shuffle-status').textContent = '请先左右滑动牌组，再抽取中间这张牌';
+      return;
+    }
+    var selections = loadEnergySelections();
+    var key = energySelectionKey();
+    var existingSelection = selections[key];
+    var existing = existingSelection && ENERGY_CARDS.find(function (item) { return item.id === existingSelection.cardId; });
+    if (existing && (existingSelection.orientation === 'upright' || existingSelection.orientation === 'reversed')) {
+      renderEnergySelection(existing, existingSelection, false);
+      return;
+    }
+    var selectedCard = energyDeckOrder[energyCenteredIndex];
+    var selection = {
+      cardId: selectedCard.id,
+      orientation: secureRandomUnit() < 0.5 ? 'upright' : 'reversed',
+      drawnAt: new Date().toISOString()
+    };
+    selections[key] = selection;
+    localStorage.setItem(ENERGY_STORAGE_KEY, JSON.stringify(selections));
+    var drawButton = document.getElementById('draw-energy');
+    drawButton.disabled = true;
+    drawButton.classList.add('drawing');
+    document.getElementById('tarot-stage').classList.add('drawing');
+    document.getElementById('shuffle-status').textContent = '正在揭牌…';
+    tap([10, 60, 22]);
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var imageReady = new Promise(function (resolve) {
+      var preload = new Image();
+      preload.onload = function () {
+        if (typeof preload.decode === 'function') {
+          preload.decode().catch(function () {}).then(resolve);
+        } else {
+          resolve();
+        }
+      };
+      preload.onerror = resolve;
+      preload.src = 'assets/tarot/' + selectedCard.file + '.webp';
+    });
+    var animationReady = new Promise(function (resolve) { window.setTimeout(resolve, reduceMotion ? 0 : 260); });
+    Promise.all([imageReady, animationReady]).then(function () {
+      drawButton.classList.remove('drawing');
+      document.getElementById('tarot-stage').classList.remove('drawing');
+      renderEnergySelection(selectedCard, selection, true);
+      var result = document.getElementById('energy-result');
+      result.focus({ preventScroll: true });
+      result.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+  }
+
+  function tap(pattern) {
+    if (prefersReducedMotion) return;
+    if (navigator.vibrate) { try { navigator.vibrate(pattern); } catch (error) { /* 部分浏览器禁用触觉反馈 */ } }
+  }
+
+  function updateStandingsWithFlip() {
+    var body = document.querySelector('.standings-table tbody');
+    if (!body) return;
+    if (prefersReducedMotion) { body.innerHTML = standingsRows(); return; }
+
+    // FLIP：先量旧位置，重排后从旧位置回落，让名次变化被看见
+    var before = {};
+    body.querySelectorAll('tr[data-team]').forEach(function (row) {
+      before[row.dataset.team] = row.getBoundingClientRect().top;
+    });
+
+    body.innerHTML = standingsRows();
+
+    var moved = [];
+    body.querySelectorAll('tr[data-team]').forEach(function (row) {
+      var prev = before[row.dataset.team];
+      if (prev === undefined) return;
+      var delta = prev - row.getBoundingClientRect().top;
+      if (!delta) return;
+      row.style.transition = 'none';
+      row.style.transform = 'translateY(' + delta + 'px)';
+      moved.push(row);
+    });
+    if (!moved.length) return;
+
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        moved.forEach(function (row) {
+          row.style.transition = 'transform 480ms cubic-bezier(0.2, 0.9, 0.3, 1)';
+          row.style.transform = '';
+        });
+      });
+    });
+  }
+
+  function activatePage(pageId, updateHash) {
+    var safePage = ['home', 'schedule', 'tactics', 'energy'].indexOf(pageId) >= 0 ? pageId : 'home';
+    document.querySelectorAll('.page').forEach(function (page) { page.classList.toggle('active', page.id === 'page-' + safePage); });
+    var current = document.getElementById('page-' + safePage);
+    if (current && !prefersReducedMotion) {
+      current.querySelectorAll(':scope > *').forEach(function (block) {
+        block.style.animation = 'none';
+        void block.offsetWidth;
+        block.style.animation = '';
+      });
+    }
+    document.querySelectorAll('.nav-button').forEach(function (button) {
+      var active = button.dataset.page === safePage;
+      button.classList.toggle('active', active);
+      if (active) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
+    });
+    if (updateHash && window.location.hash !== '#' + safePage) window.location.hash = safePage;
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function initializeEvents() {
+    document.querySelectorAll('.nav-button').forEach(function (button) {
+      button.addEventListener('click', function () { tap(8); activatePage(button.dataset.page, true); });
+    });
+    document.addEventListener('click', function (event) {
+      var tacticsLink = event.target.closest('[data-go-to-tactics]');
+      if (tacticsLink) activatePage('tactics', true);
+    });
+    window.addEventListener('hashchange', function () { activatePage(window.location.hash.slice(1), false); });
+
+    document.querySelectorAll('[data-schedule-view]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        scheduleView = button.dataset.scheduleView;
+        document.querySelectorAll('[data-schedule-view]').forEach(function (item) {
+          var active = item === button;
+          item.classList.toggle('active', active);
+          item.setAttribute('aria-selected', String(active));
+        });
+        renderScheduleView();
+      });
+    });
+
+    document.getElementById('schedule-content').addEventListener('submit', function (event) {
+      var form = event.target.closest('.score-entry-form');
+      if (!form) return;
+      event.preventDefault();
+      var scoreA = Number(form.elements.scoreA.value);
+      var scoreB = Number(form.elements.scoreB.value);
+      var status = form.querySelector('.form-status');
+      if (!Number.isInteger(scoreA) || !Number.isInteger(scoreB) || scoreA < 0 || scoreB < 0) {
+        status.textContent = '请输入0或更大的整数比分。';
+        status.className = 'form-status error';
+        return;
+      }
+      var scores = loadScores();
+      scores[form.dataset.scoreIndex] = { a: scoreA, b: scoreB };
+      saveScores(scores);
+      status.textContent = '比分已保存，排名已更新。';
+      status.className = 'form-status success';
+      tap([12, 40, 18]);
+      updateStandingsWithFlip();
+    });
+
+    document.querySelectorAll('[data-tactics-view]').forEach(function (button) {
+      button.addEventListener('click', function () { tacticsView = button.dataset.tacticsView; renderTacticsView(); });
+    });
+    document.querySelectorAll('[data-period]').forEach(function (button) { button.addEventListener('click', function () { setPeriod(Number(button.dataset.period)); }); });
+    document.querySelectorAll('[data-game-segment]').forEach(function (button) { button.addEventListener('click', function () { setGameSegment(button.dataset.gameSegment); }); });
+    document.getElementById('player-options').addEventListener('change', updateLineupCount);
+    document.getElementById('tactics-match').addEventListener('change', hydrateTacticsForm);
+    document.getElementById('clear-tactics-form').addEventListener('click', function () { clearTacticsFields(); setTacticsStatus('当前输入已清空，已保存记录未删除。'); });
+    document.getElementById('tactics-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      var playerIds = selectedPlayerIds();
+      var errors = validateLineup(playerIds);
+      if (errors.length) { setTacticsStatus(errors.join(' '), 'error'); return; }
+      var matchId = document.getElementById('tactics-match').value;
+      var segment = selectedPeriod <= 2 ? selectedSegment : null;
+      var record = {
+        id: getRecordKey(matchId, selectedPeriod, segment),
+        matchId: matchId,
+        period: selectedPeriod,
+        segment: segment,
+        playerIds: playerIds,
+        offenseTactic: document.getElementById('offense-tactic').value.trim(),
+        defenseTactic: document.getElementById('defense-tactic').value.trim(),
+        notes: document.getElementById('review-notes').value.trim(),
+        updatedAt: new Date().toISOString()
+      };
+      tacticalRecords = tacticalRecords.filter(function (item) { return item.id !== record.id; });
+      tacticalRecords.push(record);
+      saveTacticalRecords();
+      renderReviewList();
+      setTacticsStatus('本节记录已保存到当前浏览器。', 'success');
+    });
+    document.getElementById('review-list').addEventListener('click', function (event) {
+      var deleteButton = event.target.closest('[data-delete-record]');
+      if (!deleteButton) return;
+      tacticalRecords = tacticalRecords.filter(function (record) { return record.id !== deleteButton.dataset.deleteRecord; });
+      saveTacticalRecords();
+      hydrateTacticsForm();
+      setTacticsStatus('记录已删除。', 'success');
+    });
+
+    document.getElementById('draw-energy').addEventListener('click', drawEnergyCard);
+    document.getElementById('energy-match').addEventListener('change', loadCurrentEnergyCard);
+    var energyDeck = document.getElementById('energy-deck');
+    energyDeck.addEventListener('pointerdown', function () { energyPointerStart = energyDeck.scrollLeft; });
+    energyDeck.addEventListener('pointerup', function () { energyPointerStart = null; });
+    energyDeck.addEventListener('pointercancel', function () { energyPointerStart = null; });
+    energyDeck.addEventListener('scroll', function () {
+      updateCenteredEnergyCard();
+      if (Math.abs(energyDeck.scrollLeft - energyShuffleOrigin) >= 24 || (energyPointerStart !== null && Math.abs(energyDeck.scrollLeft - energyPointerStart) >= 24)) {
+        markEnergyShuffled();
+      }
+      recenterEnergyDeck();
+    }, { passive: true });
+    energyDeck.addEventListener('keydown', function (event) {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      energyDeck.scrollBy({ left: event.key === 'ArrowRight' ? ENERGY_CARD_STEP * 2 : -ENERGY_CARD_STEP * 2, behavior: reduceMotion ? 'auto' : 'smooth' });
+      markEnergyShuffled();
+    });
+  }
+
+  function initializeApp() {
+    renderHome();
+    renderScheduleView();
+    renderPlayers();
+    populateMatchSelect(document.getElementById('tactics-match'));
+    populateMatchSelect(document.getElementById('energy-match'));
+    initializeEvents();
+    setPeriod(1);
+    renderTacticsView();
+    loadCurrentEnergyCard();
+    activatePage(window.location.hash.slice(1) || 'home', false);
+    loadExternalScores();
+    window.setInterval(updateHomeMatchStatus, 1000);
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeApp);
+  } else {
+    initializeApp();
+  }
+}());
+</script>
+</body>
+</html>
