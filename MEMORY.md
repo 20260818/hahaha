@@ -9,9 +9,12 @@ Provide coaches with a compact match-day workbench for confidence building, sche
 - The primary navigation contains four destinations: Home, Schedule, Tactics, and Energy.
 - Opponents and Tasks are removed end-to-end.
 - Home prioritizes one confidence prompt, the next match, and the complete tournament schedule.
+- Home has no visible page intro or "今日状态暗示" label; its next-match countdown is precise to the second.
 - The schedule must visibly include August 9 and August 10 even when opponent, time, or stage is still pending.
-- Tactics use switchable views rather than a flat layout and record match, period, lineup, tactics, and review notes.
+- Unstarted matches do not expose score inputs or contribute stored/external scores to standings.
+- Tactics switch only between live records and the roster; tactic names are free text and lineup choices use a horizontal scroll strip.
 - The Energy page includes a one-card pre-game tarot-inspired MVP that gives supportive action advice and never predicts winning or losing.
+- The tarot MVP uses 12 upright cards, one persisted card per match/day, no good/bad classification, and action-oriented interpretations; generic coaching-story sections are excluded.
 - MVP persistence uses browser localStorage.
 
 ## Implementation Constraints
@@ -31,9 +34,9 @@ Provide coaches with a compact match-day workbench for confidence building, sche
 
 ## Validation Snapshot
 
-- Inline JavaScript parsed successfully on 2026-08-03.
-- Desktop and 390px mobile browser checks showed no horizontal overflow.
-- Browser-tested flows: four-page navigation, score persistence and ranking update, tactical record persistence, five-player/2012-player/A-B duplicate validation, energy-card persistence, and August 9/10 schedule visibility.
+- Inline JavaScript parsed successfully on 2026-08-03 after the second UI revision.
+- Desktop and 390px mobile browser checks showed no horizontal overflow; the lineup strip scrolls independently at both widths.
+- Browser-tested flows: four-page navigation, one-second countdown updates, pre-start score gating with stale scores excluded from standings, free-text tactic entry, tactical validation/persistence, refined five-rule energy-card guidance, energy-card persistence, and August 9/10 schedule visibility.
 - Browser console warnings/errors: none during the final local run.
 
 ## External Source

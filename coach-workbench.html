@@ -90,6 +90,17 @@
   @keyframes page-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
   .page-heading { margin: 2px 0 4px; font-size: 24px; letter-spacing: -0.02em; }
   .page-intro { margin: 0 0 18px; color: var(--muted); font-size: 14px; }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
   .section-heading { margin: 28px 0 12px; font-size: 17px; }
   .section-heading:first-child { margin-top: 0; }
   .muted { color: var(--muted); }
@@ -114,8 +125,7 @@
     color: #fff;
     box-shadow: 0 14px 34px rgba(23, 33, 63, 0.18);
   }
-  .confidence-label { color: #ffc2aa; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; }
-  .confidence-copy { max-width: 720px; margin: 10px 0 0; font-size: clamp(20px, 3.6vw, 29px); font-weight: 800; line-height: 1.42; }
+  .confidence-copy { max-width: 720px; margin: 0; font-size: clamp(20px, 3.6vw, 29px); font-weight: 800; line-height: 1.42; }
   .confidence-action { margin-top: 12px; color: #dfe7ff; font-size: 14px; }
 
   .next-match {
@@ -204,11 +214,14 @@
   .match-details summary { list-style: none; cursor: pointer; }
   .match-details summary::-webkit-details-marker { display: none; }
   .match-details .schedule-row { border: 0; border-radius: 0; }
+  .pending-match { overflow: hidden; }
+  .pending-match .schedule-row { border: 0; border-radius: 0; }
+  .pending-score-note { padding: 0 15px 14px 97px; color: var(--muted); font-size: 13px; }
   .score-panel { padding: 0 16px 16px; border-top: 1px solid var(--rule); }
   .score-form { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 12px; padding-top: 15px; }
   .field { display: grid; gap: 7px; }
   .field label, .field-label { color: var(--ink); font-size: 13px; font-weight: 750; }
-  input[type="number"], select, textarea {
+  input[type="number"], input[type="text"], select, textarea {
     width: 100%;
     min-height: 46px;
     border: 1px solid #c9c9cf;
@@ -216,7 +229,7 @@
     background: #fff;
     color: var(--ink);
   }
-  input[type="number"], select { padding: 10px 12px; }
+  input[type="number"], input[type="text"], select { padding: 10px 12px; }
   textarea { min-height: 100px; padding: 11px 12px; resize: vertical; }
   .score-separator { padding-bottom: 12px; color: var(--muted); font-weight: 800; }
   .button-row { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 14px; }
@@ -248,12 +261,29 @@
   .path-rule { color: var(--muted); font-size: 14px; }
 
   .tactics-layout { display: grid; gap: 16px; }
-  .form-card { padding: 18px; }
+  .tactics-layout > * { min-width: 0; }
+  .form-card { min-width: 0; padding: 18px; }
   .form-grid { display: grid; gap: 14px; }
   .period-switch { --segments: 4; margin: 0; }
   .subsegment-switch { --segments: 2; margin: 0; }
-  .player-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
-  .player-option { position: relative; }
+  #tactics-form { padding: 15px; }
+  #tactics-form .form-grid { gap: 11px; }
+  #tactics-form .segmented-control { padding: 3px; border-radius: 12px; }
+  #tactics-form .segment-button { min-height: 44px; padding: 6px 5px; font-size: 13px; }
+  #tactics-form select { min-height: 44px; padding-block: 8px; }
+  #tactics-form fieldset { min-width: 0; }
+  .player-grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(148px, 168px);
+    gap: 9px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    padding: 2px 2px 10px;
+    scrollbar-width: thin;
+  }
+  .player-option { position: relative; scroll-snap-align: start; }
   .player-option input { position: absolute; opacity: 0; pointer-events: none; }
   .player-option label {
     display: flex;
@@ -282,12 +312,6 @@
   .roster-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .roster-card { display: flex; align-items: center; gap: 12px; padding: 14px; }
   .roster-card.year-2012 { border-color: #91bffd; }
-  .library-grid { display: grid; gap: 12px; }
-  .library-card { padding: 16px; }
-  .library-type { color: var(--accent-strong); font-size: 12px; font-weight: 850; letter-spacing: 0.06em; }
-  .library-card h3 { margin: 6px 0; font-size: 17px; }
-  .library-card p { margin: 0; color: var(--muted); font-size: 14px; }
-
   .energy-layout { display: grid; gap: 16px; }
   .energy-panel { padding: 18px; }
   .energy-disclaimer { margin: 8px 0 18px; color: var(--muted); font-size: 13px; }
@@ -329,10 +353,10 @@
   .energy-message { margin-top: 18px; padding: 15px; border-radius: 13px; background: var(--accent-soft); font-size: 16px; font-weight: 700; }
   .energy-action { margin-top: 12px; color: var(--muted); }
   .energy-action strong { color: var(--ink); }
-  .motivation-grid { display: grid; gap: 10px; margin-top: 12px; }
-  .motivation-item { padding: 14px; border-radius: 12px; background: var(--surface-subtle); }
-  .motivation-item strong { display: block; margin-bottom: 4px; }
-  .motivation-item p { margin: 0; color: var(--muted); font-size: 14px; }
+  .tarot-rules { margin-top: 12px; padding: 18px; }
+  .tarot-rules h3 { margin: 0 0 10px; font-size: 17px; }
+  .tarot-rules ol { margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px; }
+  .tarot-rules li + li { margin-top: 8px; }
 
   .tab-bar {
     position: fixed;
@@ -376,16 +400,15 @@
     .confidence-card, .next-match { min-height: 280px; display: flex; flex-direction: column; justify-content: center; }
     .tactics-layout { grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr); align-items: start; }
     .energy-layout { grid-template-columns: minmax(340px, 0.9fr) minmax(320px, 1.1fr); align-items: start; }
-    .path-grid, .library-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .path-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .roster-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .player-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
   @media (max-width: 520px) {
     .header-inner { padding: 15px 16px 12px; }
     .page { padding: 16px; }
     .schedule-row { grid-template-columns: 58px minmax(0, 1fr); }
     .schedule-row .status-tag { grid-column: 2; justify-self: start; }
-    .player-grid { grid-template-columns: 1fr; }
+    .pending-score-note { padding-left: 74px; }
     .score-form { grid-template-columns: 1fr auto 1fr; gap: 8px; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -406,12 +429,10 @@
 
 <main id="main-content">
   <section id="page-home" class="page active" aria-labelledby="home-heading">
-    <h2 id="home-heading" class="page-heading">今天，先把节奏拿回来</h2>
-    <p class="page-intro">赛前只看最重要的信息：信心、下一场和完整赛程。</p>
+    <h2 id="home-heading" class="sr-only">首页</h2>
 
     <div class="home-grid">
       <article class="confidence-card" aria-labelledby="confidence-title">
-        <div class="confidence-label">今日状态暗示</div>
         <p id="confidence-title" class="confidence-copy">你们今天会比平时更快进入比赛状态。</p>
         <div class="confidence-action">开场先守住三个回合，比赛会按照你们熟悉的节奏展开。</div>
       </article>
@@ -435,7 +456,7 @@
 
   <section id="page-schedule" class="page" aria-labelledby="schedule-heading">
     <h2 id="schedule-heading" class="page-heading">赛程</h2>
-    <p class="page-intro">按本队、全部小组赛和晋级路径切换，比分录入按场展开。</p>
+    <p class="page-intro">按本队、全部小组赛和晋级路径切换；比赛开始后才开放比分录入。</p>
 
     <div class="segmented-control" role="tablist" aria-label="赛程视图">
       <button class="segment-button active" type="button" role="tab" aria-selected="true" data-schedule-view="team">本队赛程</button>
@@ -449,10 +470,9 @@
     <h2 id="tactics-heading" class="page-heading">战术</h2>
     <p class="page-intro">按比赛和节次记录阵容、战术与调整点，赛后直接形成复盘时间线。</p>
 
-    <div class="segmented-control" role="tablist" aria-label="战术视图">
+    <div class="segmented-control" role="tablist" aria-label="战术视图" style="--segments:2;">
       <button class="segment-button active" type="button" role="tab" aria-selected="true" data-tactics-view="record">临场记录</button>
       <button class="segment-button" type="button" role="tab" aria-selected="false" data-tactics-view="roster">球员名单</button>
-      <button class="segment-button" type="button" role="tab" aria-selected="false" data-tactics-view="library">战术库</button>
     </div>
 
     <div id="tactics-record-view" class="tactics-view">
@@ -482,8 +502,6 @@
               </div>
             </div>
 
-            <div class="rule-note">规则提醒：每个记录单元选择5人；每节至少包含1名2012年球员；第一、二节A/B组球员不能重复。</div>
-
             <fieldset style="border:0;padding:0;margin:0;">
               <legend class="field-label" style="margin-bottom:8px;">上场阵容 <span id="lineup-count" class="muted">0/5</span></legend>
               <div id="player-options" class="player-grid"></div>
@@ -491,26 +509,12 @@
 
             <div class="field">
               <label for="offense-tactic">进攻战术</label>
-              <select id="offense-tactic">
-                <option value="">请选择</option>
-                <option>五外拉开</option>
-                <option>高位挡拆</option>
-                <option>牛角落位</option>
-                <option>转换快攻</option>
-                <option>底线发球战术</option>
-              </select>
+              <input id="offense-tactic" type="text" maxlength="80" placeholder="例如：五外拉开、高位挡拆">
             </div>
 
             <div class="field">
               <label for="defense-tactic">防守战术</label>
-              <select id="defense-tactic">
-                <option value="">请选择</option>
-                <option>全场人盯人</option>
-                <option>半场人盯人</option>
-                <option>2-3联防</option>
-                <option>1-2-2全场紧逼</option>
-                <option>换防</option>
-              </select>
+              <input id="defense-tactic" type="text" maxlength="80" placeholder="例如：全场人盯人、2-3联防">
             </div>
 
             <div class="field">
@@ -538,16 +542,6 @@
       <div id="roster-grid" class="roster-grid"></div>
     </div>
 
-    <div id="tactics-library-view" class="tactics-view" hidden>
-      <div class="library-grid">
-        <article class="card library-card"><div class="library-type">进攻</div><h3>五外拉开</h3><p>拉开禁区，为持球突破和弱侧切入制造空间。</p></article>
-        <article class="card library-card"><div class="library-type">进攻</div><h3>高位挡拆</h3><p>由内线高位掩护，持球人优先读防守选择突破、分球或顺下。</p></article>
-        <article class="card library-card"><div class="library-type">进攻</div><h3>牛角落位</h3><p>双高位起手，适合衔接手递手、切入和底角投篮。</p></article>
-        <article class="card library-card"><div class="library-type">防守</div><h3>全场人盯人</h3><p>上半场默认防守要求，统一对位、延误和换防口令。</p></article>
-        <article class="card library-card"><div class="library-type">防守</div><h3>2-3联防</h3><p>保护禁区和篮板，重点确认底角轮转与高位接应。</p></article>
-        <article class="card library-card"><div class="library-type">特殊</div><h3>最后一攻</h3><p>提前明确发起人、掩护点、第一选择和安全回收点。</p></article>
-      </div>
-    </div>
   </section>
 
   <section id="page-energy" class="page" aria-labelledby="energy-heading">
@@ -579,24 +573,16 @@
           <p id="energy-card-action" class="energy-action"></p>
         </article>
 
-        <details class="card details-card" open>
-          <summary>比赛前可以这样带队</summary>
-          <div class="details-body">
-            <div class="motivation-grid">
-              <div class="motivation-item"><strong>专注过程</strong><p>只谈下一球、下一防和下一次沟通，不提前讨论结果。</p></div>
-              <div class="motivation-item"><strong>语言塑造信念</strong><p>多说“准备好了”“相信队友”“把简单的事情做对”。</p></div>
-              <div class="motivation-item"><strong>稳定节奏</strong><p>暂停时先深呼吸，再用一句明确口令统一全队。</p></div>
-            </div>
-          </div>
-        </details>
-
-        <details class="card details-card">
-          <summary>教练能量故事</summary>
-          <div class="details-body">
-            <p>真正有效的鼓励不是忽略问题，而是在变化、失误和压力出现时，帮助球员立刻找到下一件可以做对的事情。</p>
-            <p>把功劳给球员，把责任担在肩上；你的平静、清晰和信任会传递给全队。</p>
-          </div>
-        </details>
+        <article class="card tarot-rules" aria-labelledby="tarot-rules-heading">
+          <h3 id="tarot-rules-heading">抽牌规则</h3>
+          <ol>
+            <li>先选择比赛，再带着一个清晰问题抽牌，例如“今天我们要守住什么？”</li>
+            <li>同一场比赛在同一天只能抽取一张；刷新页面不会更换牌面。</li>
+            <li>MVP仅使用12张正位牌，每张牌只提供能量主题、心理暗示和一项可执行建议。</li>
+            <li>牌面不预测胜负、比分或伤病，也不区分“好牌”和“坏牌”。</li>
+            <li>遇到提醒型牌面时，系统会把含义转成下一回合可以执行的动作。</li>
+          </ol>
+        </article>
       </div>
     </div>
   </section>
@@ -696,6 +682,7 @@
   }
 
   function isUpcoming(match) { return new Date(match.date).getTime() > Date.now(); }
+  function hasMatchStarted(match) { return new Date(match.date).getTime() <= Date.now(); }
 
   function getNextMatch() {
     for (var index = 0; index < TEAM_MATCHES.length; index += 1) {
@@ -726,9 +713,10 @@
     if (difference <= 0) return '即将开始';
     var days = Math.floor(difference / 86400000);
     var hours = Math.floor((difference % 86400000) / 3600000);
-    if (days > 0) return '还有 ' + days + ' 天 ' + hours + ' 小时';
-    if (hours > 0) return '还有 ' + hours + ' 小时';
-    return '即将开始';
+    var minutes = Math.floor((difference % 3600000) / 60000);
+    var seconds = Math.floor((difference % 60000) / 1000);
+    var clock = String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+    return days > 0 ? '还有 ' + days + '天 ' + clock : '还有 ' + clock;
   }
 
   function renderHome() {
@@ -736,11 +724,13 @@
     var nextCard = document.getElementById('next-match-card');
     if (nextMatch) {
       var parts = dateParts(nextMatch);
-      nextCard.innerHTML = '<div class="next-match-top"><span id="next-match-title">下一场比赛</span><span class="countdown">' + escapeHtml(countdownText(nextMatch)) + '</span></div>' +
+      nextCard.dataset.matchId = nextMatch.id;
+      nextCard.innerHTML = '<div class="next-match-top"><span id="next-match-title">下一场比赛</span><span id="next-match-countdown" class="countdown">' + escapeHtml(countdownText(nextMatch)) + '</span></div>' +
         '<div class="next-match-teams"><div class="next-match-team">' + escapeHtml(nextMatch.teamA) + '</div><div class="versus">VS</div><div class="next-match-team">' + escapeHtml(nextMatch.teamB) + '</div></div>' +
         '<div class="next-match-meta"><span>' + escapeHtml(parts.label) + '</span><span>' + escapeHtml(nextMatch.time) + '</span><span>' + escapeHtml(nextMatch.venue) + '</span><span>' + escapeHtml(nextMatch.stage) + '</span></div>' +
         '<button class="inline-button" type="button" data-go-to-tactics="true">记录本场战术</button>';
     } else {
+      delete nextCard.dataset.matchId;
       nextCard.innerHTML = '<div class="next-match-top"><span id="next-match-title">赛事已结束</span></div><div class="next-match-teams" style="grid-template-columns:1fr;"><div class="next-match-team">把经验带回下一场</div></div>';
     }
 
@@ -748,6 +738,18 @@
     document.getElementById('home-schedule').innerHTML = TEAM_MATCHES.map(function (match) {
       return renderScheduleRow(match, { isNext: match.id === nextId });
     }).join('');
+  }
+
+  function updateNextMatchCountdown() {
+    var nextMatch = getNextMatch();
+    var nextCard = document.getElementById('next-match-card');
+    if (!nextMatch || nextCard.dataset.matchId !== nextMatch.id) {
+      renderHome();
+      renderScheduleView();
+      return;
+    }
+    var countdown = document.getElementById('next-match-countdown');
+    if (countdown) countdown.textContent = countdownText(nextMatch);
   }
 
   function loadScores() {
@@ -770,6 +772,7 @@
     teams.forEach(function (team) { standings[team] = { team: team, wins: 0, losses: 0, difference: 0, points: 0 }; });
     var scores = loadScores();
     GROUP_MATCHES.forEach(function (match) {
+      if (!hasMatchStarted(match)) return;
       var score = scores[match.scoreIndex];
       if (!score) return;
       standings[match.teamA].difference += score.a - score.b;
@@ -802,6 +805,9 @@
   }
 
   function renderGroupMatch(match) {
+    if (!hasMatchStarted(match)) {
+      return '<article class="card pending-match">' + renderScheduleRow(match) + '<div class="pending-score-note">比赛开始后可录入比分</div></article>';
+    }
     var scores = loadScores();
     var saved = scores[match.scoreIndex];
     return '<details class="card match-details" data-score-details="' + match.scoreIndex + '"><summary>' + renderScheduleRow(match) + '</summary>' +
@@ -845,6 +851,7 @@
       var localScores = loadScores();
       var changed = false;
       GROUP_MATCHES.forEach(function (match) {
+        if (!hasMatchStarted(match)) return;
         var external = externalScores[String(match.scoreIndex)];
         if (!localScores[match.scoreIndex] && external && external.a !== null && external.b !== null && Number.isInteger(Number(external.a)) && Number.isInteger(Number(external.b))) {
           localScores[match.scoreIndex] = { a: Number(external.a), b: Number(external.b) };
@@ -917,7 +924,7 @@
   function clearTacticsFields() {
     document.querySelectorAll('input[name="lineup"]').forEach(function (input) { input.checked = false; });
     document.getElementById('offense-tactic').value = '';
-    document.getElementById('defense-tactic').value = selectedPeriod <= 2 ? '全场人盯人' : '';
+    document.getElementById('defense-tactic').value = '';
     document.getElementById('review-notes').value = '';
     updateLineupCount();
   }
@@ -1012,7 +1019,7 @@
       button.classList.toggle('active', active);
       button.setAttribute('aria-selected', String(active));
     });
-    ['record', 'roster', 'library'].forEach(function (view) {
+    ['record', 'roster'].forEach(function (view) {
       document.getElementById('tactics-' + view + '-view').hidden = view !== tacticsView;
     });
   }
@@ -1154,8 +1161,8 @@
         period: selectedPeriod,
         segment: segment,
         playerIds: playerIds,
-        offenseTactic: document.getElementById('offense-tactic').value,
-        defenseTactic: document.getElementById('defense-tactic').value,
+        offenseTactic: document.getElementById('offense-tactic').value.trim(),
+        defenseTactic: document.getElementById('defense-tactic').value.trim(),
         notes: document.getElementById('review-notes').value.trim(),
         updatedAt: new Date().toISOString()
       };
@@ -1190,7 +1197,7 @@
     loadCurrentEnergyCard();
     activatePage(window.location.hash.slice(1) || 'home', false);
     loadExternalScores();
-    window.setInterval(renderHome, 3600000);
+    window.setInterval(updateNextMatchCountdown, 1000);
     if (window.lucide) window.lucide.createIcons();
   }
 

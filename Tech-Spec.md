@@ -13,7 +13,7 @@ Date: 2026-08-03
 
 - `activePage`: home, schedule, tactics, or energy.
 - `scheduleView`: team, group, or path.
-- `tacticsView`: record, roster, or library.
+- `tacticsView`: record or roster.
 - `selectedMatchId`, `selectedPeriod`, and `selectedSegment` remain local UI state.
 - Tactical records persist under a versioned localStorage key.
 - Energy-card selections persist under a versioned key derived from match ID and local date.
@@ -42,12 +42,19 @@ Each curated card has an ID, name, theme, confidence cue, action, and visual acc
 
 ## Interaction and Accessibility
 
-- Primary controls use `button`, `select`, `input`, and `textarea` elements.
+- Primary controls use `button`, `select`, `input`, and `textarea` elements; tactic names use labeled text inputs.
 - Active tabs expose `aria-selected` or `aria-current`.
 - Inputs have visible labels and inline error/status text.
 - Focus indicators remain visible.
 - Touch targets are at least 44x44px with at least 8px separation where practical.
+- The lineup selector uses a contained horizontal scroll strip with scroll snapping and must not increase the document width.
 - Motion respects `prefers-reduced-motion`.
+
+## Time-Gated Behavior
+
+- The next-match countdown updates once per second and renders `days + HH:MM:SS` when at least one full day remains, otherwise `HH:MM:SS`.
+- Group-match score forms render only when the scheduled start timestamp is not in the future.
+- Standings and optional `scores.json` hydration ignore scores for matches whose scheduled start timestamp is still in the future.
 
 ## Verification
 
@@ -58,6 +65,8 @@ Each curated card has an ID, name, theme, confidence cue, action, and visual acc
 5. Create a tactical record, refresh, and confirm persistence.
 6. Draw an energy card, refresh, and confirm persistence.
 7. Confirm August 9 and August 10 appear in rendered content.
+8. Confirm an unstarted group match has no score inputs and does not change standings even if stale local score data exists.
+9. Confirm the countdown changes every second and the lineup strip scrolls independently at desktop and mobile widths.
 
 ## Risks
 
