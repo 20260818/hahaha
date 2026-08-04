@@ -453,6 +453,7 @@
   .form-grid { display: grid; gap: 16px; }
   .period-switch { --segments: 4; margin: 0; }
   .subsegment-switch { --segments: 2; margin: 0; }
+  .segment-info { padding: 11px 16px; border: 2px solid var(--line); border-radius: var(--r-sm); background: var(--accent-soft); color: var(--accent-deep); font-size: 14px; font-weight: 500; letter-spacing: 0.05em; }
   #tactics-form { padding: 20px; }
   #tactics-form .form-grid { gap: 14px; }
   #tactics-form .segmented-control { padding: 4px; }
@@ -802,9 +803,9 @@
     <details class="card details-card">
       <summary>赛事信息</summary>
       <div class="details-body info-grid">
-        <div class="info-row"><span>比赛地点</span><strong>茂名市</strong></div>
+        <div class="info-row"><span>比赛地点</span><strong>茂名市 · 电白体育馆（复赛）</strong></div>
         <div class="info-row"><span>比赛方式</span><strong>4×10分钟</strong></div>
-        <div class="info-row"><span>特殊规则</span><strong>一二节分A/B组</strong></div>
+        <div class="info-row"><span>特殊规则</span><strong>第一节A组整节、第二节B组整节</strong></div>
         <div class="info-row"><span>防守要求</span><strong>上半场全场人盯人</strong></div>
         <div class="info-row"><span>本地数据</span><strong>仅保存在当前浏览器</strong></div>
       </div>
@@ -848,11 +849,8 @@
             </div>
 
             <div id="segment-field" class="field">
-              <span class="field-label">上半场分组</span>
-              <div class="segmented-control subsegment-switch" role="group" aria-label="A/B分组">
-                <button class="segment-button active" type="button" data-game-segment="A" aria-pressed="true">A组 · 前5分钟</button>
-                <button class="segment-button" type="button" data-game-segment="B" aria-pressed="false">B组 · 后5分钟</button>
-              </div>
+              <span class="field-label">本节分组</span>
+              <div class="segment-info" id="segment-info-text">第一节 · A组整节</div>
             </div>
 
             <fieldset style="border:0;padding:0;margin:0;">
@@ -992,8 +990,8 @@
     GROUP_MATCHES[2],
     GROUP_MATCHES[4],
     { id: 'qf', date: '2026-08-08T14:30:00+08:00', teamA: '深圳', teamB: '待定', time: '14:30', venue: '待定', stage: '8进4', conditional: true },
-    { id: 'sf', date: '2026-08-09T12:00:00+08:00', teamA: '深圳', teamB: '待定', time: '待定', venue: '待定', stage: '半决赛 / 5–8名排位', conditional: true },
-    { id: 'final', date: '2026-08-10T12:00:00+08:00', teamA: '深圳', teamB: '待定', time: '待定', venue: '待定', stage: '决赛 / 排位赛', conditional: true }
+    { id: 'sf', date: '2026-08-09T10:00:00+08:00', teamA: '深圳', teamB: '待定', time: '10:00 / 16:00', venue: '电白体育馆', stage: '半决赛(16:00) / 5–8名排位(10:00)', conditional: true },
+    { id: 'final', date: '2026-08-10T14:30:00+08:00', teamA: '深圳', teamB: '待定', time: '14:30 / 16:00', venue: '电白体育馆', stage: '决赛(16:00) / 3-4名(14:30)', conditional: true }
   ];
 
   var PLAYERS = [
@@ -1310,8 +1308,8 @@
     var pathMatches = TEAM_MATCHES.slice(3);
     var descriptions = [
       'B组排名确定后，对阵A组对应名次。',
-      '根据8进4结果进入半决赛或5–8名排位；对手、时间和场地待定。',
-      '根据8月9日结果进入决赛、三四名或排位赛；对手、时间和场地待定。'
+      '根据8进4结果进入半决赛(16:00)或5–8名排位(10:00)；场地：电白体育馆。',
+      '根据8月9日结果进入决赛(16:00)、三四名(14:30)或排位赛；场地：电白体育馆。'
     ];
     return '<div class="path-grid">' + pathMatches.map(function (match, index) {
       return '<article class="card path-card"><div class="path-date">' + escapeHtml(dateParts(match).label) + '</div><h3 class="path-title">' + escapeHtml(match.stage) + '</h3><div class="path-rule">' + escapeHtml(descriptions[index]) + '</div></article>';
@@ -1390,9 +1388,15 @@
 
   function getRecordKey(matchId, period, segment) { return matchId + '-' + period + '-' + (segment || 'full'); }
 
+  function periodSegment(period) {
+    if (period === 1) return 'A';
+    if (period === 2) return 'B';
+    return null;
+  }
+
   function getCurrentRecord() {
     var matchId = document.getElementById('tactics-match').value;
-    var key = getRecordKey(matchId, selectedPeriod, selectedPeriod <= 2 ? selectedSegment : null);
+    var key = getRecordKey(matchId, selectedPeriod, periodSegment(selectedPeriod));
     return tacticalRecords.find(function (record) { return record.id === key; }) || null;
   }
 
@@ -1443,15 +1447,16 @@
       return player && player.year === 2012;
     });
     if (!has2012Player) errors.push('每节至少需要1名2012年球员。');
-    if (selectedPeriod <= 2) {
+    if (selectedPeriod === 1 || selectedPeriod === 2) {
       var matchId = document.getElementById('tactics-match').value;
-      var otherSegment = selectedSegment === 'A' ? 'B' : 'A';
-      var otherRecord = tacticalRecords.find(function (record) { return record.id === getRecordKey(matchId, selectedPeriod, otherSegment); });
+      var otherPeriod = selectedPeriod === 1 ? 2 : 1;
+      var otherSegment = periodSegment(otherPeriod);
+      var otherRecord = tacticalRecords.find(function (record) { return record.id === getRecordKey(matchId, otherPeriod, otherSegment); });
       if (otherRecord) {
         var repeats = playerIds.filter(function (playerId) { return otherRecord.playerIds.indexOf(playerId) >= 0; });
         if (repeats.length) {
           var repeatNames = repeats.map(function (playerId) { return PLAYERS.find(function (player) { return player.id === playerId; }).name; });
-          errors.push('A/B组球员不能重复：' + repeatNames.join('、') + '。');
+          errors.push('A/B组球员不能重复（第1节A组与第2节B组）：' + repeatNames.join('、') + '。');
         }
       }
     }
@@ -1481,22 +1486,21 @@
 
   function setPeriod(period) {
     selectedPeriod = period;
+    selectedSegment = periodSegment(period);
     document.querySelectorAll('[data-period]').forEach(function (button) {
       var active = Number(button.dataset.period) === period;
       button.classList.toggle('active', active);
       button.setAttribute('aria-pressed', String(active));
     });
-    document.getElementById('segment-field').hidden = period > 2;
-    hydrateTacticsForm();
-  }
-
-  function setGameSegment(segment) {
-    selectedSegment = segment;
-    document.querySelectorAll('[data-game-segment]').forEach(function (button) {
-      var active = button.dataset.gameSegment === segment;
-      button.classList.toggle('active', active);
-      button.setAttribute('aria-pressed', String(active));
-    });
+    var segmentField = document.getElementById('segment-field');
+    var segmentInfo = document.getElementById('segment-info-text');
+    if (period <= 2) {
+      segmentField.hidden = false;
+      var groupName = selectedSegment === 'A' ? 'A组整节' : 'B组整节';
+      segmentInfo.textContent = '第' + period + '节 · ' + groupName;
+    } else {
+      segmentField.hidden = true;
+    }
     hydrateTacticsForm();
   }
 
@@ -1819,7 +1823,6 @@
       button.addEventListener('click', function () { tacticsView = button.dataset.tacticsView; renderTacticsView(); });
     });
     document.querySelectorAll('[data-period]').forEach(function (button) { button.addEventListener('click', function () { setPeriod(Number(button.dataset.period)); }); });
-    document.querySelectorAll('[data-game-segment]').forEach(function (button) { button.addEventListener('click', function () { setGameSegment(button.dataset.gameSegment); }); });
     document.getElementById('player-options').addEventListener('change', updateLineupCount);
     document.getElementById('tactics-match').addEventListener('change', hydrateTacticsForm);
     document.getElementById('clear-tactics-form').addEventListener('click', function () { clearTacticsFields(); setTacticsStatus('当前输入已清空，已保存记录未删除。'); });
@@ -1829,7 +1832,7 @@
       var errors = validateLineup(playerIds);
       if (errors.length) { setTacticsStatus(errors.join(' '), 'error'); return; }
       var matchId = document.getElementById('tactics-match').value;
-      var segment = selectedPeriod <= 2 ? selectedSegment : null;
+      var segment = periodSegment(selectedPeriod);
       var record = {
         id: getRecordKey(matchId, selectedPeriod, segment),
         matchId: matchId,
