@@ -1360,13 +1360,19 @@
       GROUP_MATCHES.forEach(function (match) {
         if (!hasMatchStarted(match)) return;
         var external = externalScores[String(match.scoreIndex)];
-        if (!localScores[match.scoreIndex] && external && external.a !== null && external.b !== null && Number.isInteger(Number(external.a)) && Number.isInteger(Number(external.b))) {
-          localScores[match.scoreIndex] = { a: Number(external.a), b: Number(external.b) };
-          changed = true;
+        if (external && external.a !== null && external.b !== null && Number.isInteger(Number(external.a)) && Number.isInteger(Number(external.b))) {
+          var extA = Number(external.a);
+          var extB = Number(external.b);
+          var local = localScores[match.scoreIndex];
+          if (!local || local.a !== extA || local.b !== extB) {
+            localScores[match.scoreIndex] = { a: extA, b: extB };
+            changed = true;
+          }
         }
       });
       if (changed) {
         saveScores(localScores);
+        renderHome();
         if (scheduleView === 'group') renderScheduleView();
       }
     }).catch(function () {
