@@ -351,6 +351,8 @@
   }
   .status-tag.pending { background: var(--tile); color: var(--ink-soft); }
   .status-tag.next { background: var(--accent-soft); color: var(--accent-deep); }
+  .status-tag.finished { background: var(--tile); color: var(--ink-soft); opacity: 0.7; }
+  .status-tag.live { background: var(--leaf-soft); color: var(--leaf); }
 
   .details-card { margin-top: 16px; overflow: hidden; }
   .details-card summary { min-height: 54px; padding: 16px 22px; cursor: pointer; font-weight: 500; letter-spacing: 0.08em; }
@@ -1128,6 +1130,11 @@
 
   function isUpcoming(match) { return new Date(match.date).getTime() > Date.now(); }
   function hasMatchStarted(match) { return new Date(match.date).getTime() <= Date.now(); }
+  function isMatchFinished(match) { return Date.now() >= new Date(match.date).getTime() + HOME_MATCH_DURATION_MS; }
+  function isMatchLive(match) {
+    var start = new Date(match.date).getTime();
+    return start <= Date.now() && Date.now() < start + HOME_MATCH_DURATION_MS;
+  }
 
   function getNextMatch() {
     for (var index = 0; index < TEAM_MATCHES.length; index += 1) {
@@ -1160,8 +1167,23 @@
     var settings = options || {};
     var parts = dateParts(match);
     var nextClass = settings.isNext ? ' next' : '';
-    var tagClass = match.conditional ? ' pending' : (settings.isNext ? ' next' : '');
-    var tagText = match.conditional ? '待定条件场次' : (settings.isNext ? '下一场' : '待赛');
+    var tagClass, tagText;
+    if (match.conditional) {
+      tagClass = ' pending';
+      tagText = '待定条件场次';
+    } else if (isMatchFinished(match)) {
+      tagClass = ' finished';
+      tagText = '已结束';
+    } else if (isMatchLive(match)) {
+      tagClass = ' live';
+      tagText = '进行中';
+    } else if (settings.isNext) {
+      tagClass = ' next';
+      tagText = '下一场';
+    } else {
+      tagClass = ' pending';
+      tagText = '待赛';
+    }
     return '<div class="schedule-row' + nextClass + '">' +
       '<div class="date-block"><div class="date-day">' + escapeHtml(parts.weekday) + '</div><div class="date-number">' + parts.day + '</div><div class="date-day">8月</div></div>' +
       '<div><div class="match-title">' + escapeHtml(getMatchLabel(match)) + '</div><div class="match-meta"><span>' + escapeHtml(match.time) + '</span><span>' + escapeHtml(match.venue) + '</span><span>' + escapeHtml(match.stage) + '</span></div></div>' +
